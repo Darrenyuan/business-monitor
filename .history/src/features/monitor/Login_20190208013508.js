@@ -85,6 +85,9 @@ export class Login extends Component {
                     <FormattedMessage id="logout" />
                   </Button>
                 </Form>
+                <Button type="primary" onClick={this.handleClickLogout}>
+                  <FormattedMessage id="logout" />
+                </Button>
               </div>
             ) : (
               <div>

@@ -8,8 +8,6 @@ const enMessages = {
   login_in_message: 'welcome back',
   login_alert_message: 'warning',
   login_alert_description: 'login error， please check your username or password',
-  login_id: 'USERID:',
-  login_userInfo_name: 'USERNAME:',
   logout: 'logout',
   home: 'home',
   navigate_to_login: 'go to login',

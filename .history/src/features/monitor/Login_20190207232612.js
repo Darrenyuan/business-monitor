@@ -14,16 +14,6 @@ const onClose = e => {
   console.log(e, 'I was closed.');
 };
 
-const formItemLayout = {
-  labelCol: {
-    xs: { span: 24 },
-    sm: { span: 8 },
-  },
-  wrapperCol: {
-    xs: { span: 24 },
-    sm: { span: 16 },
-  },
-};
 export class Login extends Component {
   static propTypes = {
     monitor: PropTypes.object.isRequired,
@@ -62,29 +52,17 @@ export class Login extends Component {
     const passwordPlaceHolder = this.props.intl.formatMessage({ id: 'login_password' });
     const userNameMessage = this.props.intl.formatMessage({ id: 'login_username_message' });
     const passwordMessage = this.props.intl.formatMessage({ id: 'login_password_message' });
-    const alertMessage = this.props.intl.formatMessage({ id: 'login_alert_message' });
-    const alertDescription = this.props.intl.formatMessage({ id: 'login_alert_description' });
     const hasLogIn =
       this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized);
-    const loginIdLable = this.props.intl.formatMessage({ id: 'login_id' });
-    const userNameLable = this.props.intl.formatMessage({ id: 'login_userInfo_name' });
     return (
       <div className="monitor-login">
         <div>
           <div className="monitor-login-form-wrapper">
             {hasLogIn ? (
               <div>
-                <Form>
-                  <Form.Item {...formItemLayout} label={loginIdLable}>
-                    <Input value={this.props.monitor.loginData.userId} disabled="true" />
-                  </Form.Item>
-                  <Form.Item {...formItemLayout} label={userNameLable}>
-                    <Input value={this.props.monitor.loginData.username} disabled="true" />
-                  </Form.Item>
-                  <Button type="primary" onClick={this.handleClickLogout}>
-                    <FormattedMessage id="logout" />
-                  </Button>
-                </Form>
+                <Button type="primary" onClick={this.handleClickLogout}>
+                  <FormattedMessage id="logout" />
+                </Button>
               </div>
             ) : (
               <div>
@@ -138,9 +116,9 @@ export class Login extends Component {
                   <div>
                     {' '}
                     <Alert
-                      message={alertMessage}
-                      description={alertDescription}
-                      type="warning"
+                      message="Error Text"
+                      description="Error Description Error Description Error Description Error Description Error Description Error Description"
+                      type="error"
                       closable
                       onClose={onClose}
                     />

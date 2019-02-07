@@ -66,8 +66,6 @@ export class Login extends Component {
     const alertDescription = this.props.intl.formatMessage({ id: 'login_alert_description' });
     const hasLogIn =
       this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized);
-    const loginIdLable = this.props.intl.formatMessage({ id: 'login_id' });
-    const userNameLable = this.props.intl.formatMessage({ id: 'login_userInfo_name' });
     return (
       <div className="monitor-login">
         <div>
@@ -75,16 +73,29 @@ export class Login extends Component {
             {hasLogIn ? (
               <div>
                 <Form>
-                  <Form.Item {...formItemLayout} label={loginIdLable}>
+                  <Form.Item {...formItemLayout} label="E-mail">
                     <Input value={this.props.monitor.loginData.userId} disabled="true" />
                   </Form.Item>
-                  <Form.Item {...formItemLayout} label={userNameLable}>
-                    <Input value={this.props.monitor.loginData.username} disabled="true" />
-                  </Form.Item>
-                  <Button type="primary" onClick={this.handleClickLogout}>
-                    <FormattedMessage id="logout" />
-                  </Button>
+                  <Form.Item {...formItemLayout} label="E-mail" />
+                  <Input value={this.props.monitor.loginData.userId} disabled="true" />
                 </Form>
+                <div style={{ 'white-space': 'nowrap', width: '50%' }} align="center">
+                  <label>
+                    {' '}
+                    <FormattedMessage id="login_id" />
+                  </label>
+                  <Input value={this.props.monitor.loginData.userId} disabled="true" />
+                </div>
+                <div style={{ 'white-space': 'nowrap', width: '50%' }} align="center">
+                  <label>
+                    {' '}
+                    <FormattedMessage id="login_userInfo_name" />
+                  </label>
+                  <Input value={this.props.monitor.loginData.username} disabled="true" />
+                </div>
+                <Button type="primary" onClick={this.handleClickLogout}>
+                  <FormattedMessage id="logout" />
+                </Button>
               </div>
             ) : (
               <div>

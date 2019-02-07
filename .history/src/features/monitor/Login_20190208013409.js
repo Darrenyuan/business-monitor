@@ -79,12 +79,26 @@ export class Login extends Component {
                     <Input value={this.props.monitor.loginData.userId} disabled="true" />
                   </Form.Item>
                   <Form.Item {...formItemLayout} label={userNameLable}>
-                    <Input value={this.props.monitor.loginData.username} disabled="true" />
+                    <Input value={this.props.monitor.loginData.userId} disabled="true" />
                   </Form.Item>
-                  <Button type="primary" onClick={this.handleClickLogout}>
-                    <FormattedMessage id="logout" />
-                  </Button>
                 </Form>
+                <div style={{ 'white-space': 'nowrap', width: '50%' }} align="center">
+                  <label>
+                    {' '}
+                    <FormattedMessage id="login_id" />
+                  </label>
+                  <Input value={this.props.monitor.loginData.userId} disabled="true" />
+                </div>
+                <div style={{ 'white-space': 'nowrap', width: '50%' }} align="center">
+                  <label>
+                    {' '}
+                    <FormattedMessage id="login_userInfo_name" />
+                  </label>
+                  <Input value={this.props.monitor.loginData.username} disabled="true" />
+                </div>
+                <Button type="primary" onClick={this.handleClickLogout}>
+                  <FormattedMessage id="logout" />
+                </Button>
               </div>
             ) : (
               <div>

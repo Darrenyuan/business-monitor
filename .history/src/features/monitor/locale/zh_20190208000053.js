@@ -9,8 +9,6 @@ const zhMessages = {
   logout: '登出',
   login_alert_message: '提示',
   login_alert_description: '登入出错，请检查用户名或者密码',
-  login_id: '用户ID:',
-  login_userInfo_name: '用户名称:',
   home: '首页',
   navigate_to_login: '进入登录页面',
   greeting: '你好',

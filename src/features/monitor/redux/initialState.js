@@ -9,6 +9,8 @@ const initialState = {
   loginPending: false,
   loginError: null,
   language: 'zh',
+  logoutPending: false,
+  logoutError: null,
 };
 
 export default initialState;

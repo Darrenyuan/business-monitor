@@ -10,11 +10,13 @@ import initialState from './initialState';
 import { reducer as loginReducer } from './login';
 import { reducer as languageSetZhReducer } from './languageSetZh';
 import { reducer as languageSetEnReducer } from './languageSetEn';
+import { reducer as logoutReducer } from './logout';
 
 const reducers = [
   loginReducer,
   languageSetZhReducer,
   languageSetEnReducer,
+  logoutReducer,
 ];
 
 export default function reducer(state = initialState, action) {
