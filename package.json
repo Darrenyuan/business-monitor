@@ -114,6 +114,7 @@
   "description": "business-monitor created by Rekit.",
   "devDependencies": {
     "antd": "^3.13.1",
+    "cors": "^2.8.5",
     "react-intl": "^2.8.0"
   }
 }

@@ -5,6 +5,7 @@ import {
   MONITOR_LOGOUT_DISMISS_ERROR,
 } from './constants';
 import axios from 'axios';
+import { apiLogout } from '../axios/api';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
 export function logout(args = {}) {
@@ -22,7 +23,8 @@ export function logout(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const doRequest = axios.get('http://localhost:8080/logout');
+      // const doRequest = axios.get('http://localhost:8080/logout');
+      const doRequest = apiLogout();
       doRequest.then(
         res => {
           dispatch({

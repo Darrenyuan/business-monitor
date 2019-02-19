@@ -76,10 +76,10 @@ export class Login extends Component {
               <div>
                 <Form>
                   <Form.Item {...formItemLayout} label={loginIdLable}>
-                    <Input value={this.props.monitor.loginData.userId} disabled="true" />
+                    <Input value={this.props.monitor.loginData.userId} disabled={true} />
                   </Form.Item>
                   <Form.Item {...formItemLayout} label={userNameLable}>
-                    <Input value={this.props.monitor.loginData.username} disabled="true" />
+                    <Input value={this.props.monitor.loginData.username} disabled={true} />
                   </Form.Item>
                   <Button type="primary" onClick={this.handleClickLogout}>
                     <FormattedMessage id="logout" />
