@@ -43,7 +43,7 @@ export class Layout extends Component {
                     </div>
                   </Content>
                   <Footer style={{ textAlign: 'center' }}>
-                    Ant Design ©2018 Created by Ant UED
+                    Copyright © 2008 - 2019 中建三局第一建设工程有限责任公司
                   </Footer>
                 </AntLayout>
               </AntLayout>

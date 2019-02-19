@@ -24,8 +24,7 @@ const enMessages = {
   sidePanel_account_link: 'create',
   sidePanel_previlige_link: 'assign',
   sidePanel_project: 'project',
-  welcome_info:
-    ' Welcome to  China Construction Third Engineering Bureau Co. Ltd ‘s Quality Management System',
+  welcome_info: ' Welcome to Project HSE Management System',
   forbidden_403: '403: forbidden',
 };
 
