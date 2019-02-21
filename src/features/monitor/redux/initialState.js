@@ -11,6 +11,12 @@ const initialState = {
   language: 'zh',
   logoutPending: false,
   logoutError: null,
+  getAvailableTitlePending: false,
+  getAvailableTitleError: null,
+  createUserPending: false,
+  createUserError: null,
+  createProjectPending: false,
+  createProjectError: null,
 };
 
 export default initialState;

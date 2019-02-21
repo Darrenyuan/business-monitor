@@ -1,17 +1,19 @@
 import {
-  MONITOR_LOGOUT_BEGIN,
-  MONITOR_LOGOUT_SUCCESS,
-  MONITOR_LOGOUT_FAILURE,
-  MONITOR_LOGOUT_DISMISS_ERROR,
+  MONITOR_CREATE_USER_BEGIN,
+  MONITOR_CREATE_USER_SUCCESS,
+  MONITOR_CREATE_USER_FAILURE,
+  MONITOR_CREATE_USER_DISMISS_ERROR,
 } from './constants';
-import { apiLogout } from '../axios/api';
+
+import { apiCreateUser } from '../axios/api';
+
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-export function logout(args = {}) {
+export function createUser(args = {}) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
-      type: MONITOR_LOGOUT_BEGIN,
+      type: MONITOR_CREATE_USER_BEGIN,
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -22,20 +24,19 @@ export function logout(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      // const doRequest = axios.get('http://localhost:8080/logout');
-      const doRequest = apiLogout();
+      const doRequest = apiCreateUser({ username: args.username, title: args.title });
       doRequest.then(
         res => {
           dispatch({
-            type: MONITOR_LOGOUT_SUCCESS,
-            data: res,
+            type: MONITOR_CREATE_USER_SUCCESS,
+            data: res.data,
           });
           resolve(res);
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.
         err => {
           dispatch({
-            type: MONITOR_LOGOUT_FAILURE,
+            type: MONITOR_CREATE_USER_FAILURE,
             data: { error: err },
           });
           reject(err);
@@ -49,44 +50,46 @@ export function logout(args = {}) {
 
 // Async action saves request error by default, this method is used to dismiss the error info.
 // If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissLogoutError() {
+export function dismissCreateUserError() {
   return {
-    type: MONITOR_LOGOUT_DISMISS_ERROR,
+    type: MONITOR_CREATE_USER_DISMISS_ERROR,
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case MONITOR_LOGOUT_BEGIN:
+    case MONITOR_CREATE_USER_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        logoutPending: true,
-        logoutError: null,
+        createUserPending: true,
+        createUserError: null,
+        createUserDataId: null,
       };
 
-    case MONITOR_LOGOUT_SUCCESS:
+    case MONITOR_CREATE_USER_SUCCESS:
       // The request is success
       return {
         ...state,
-        logoutPending: false,
-        logoutError: null,
-        loginData: null,
+        createUserPending: false,
+        createUserError: null,
+        createUserDataId: action.data.data,
       };
 
-    case MONITOR_LOGOUT_FAILURE:
+    case MONITOR_CREATE_USER_FAILURE:
       // The request is failed
       return {
         ...state,
-        logoutPending: false,
-        logoutError: action.data.error,
+        createUserPending: false,
+        createUserError: action.data.error,
+        crateUserDataId: null,
       };
 
-    case MONITOR_LOGOUT_DISMISS_ERROR:
+    case MONITOR_CREATE_USER_DISMISS_ERROR:
       // Dismiss the request failure error
       return {
         ...state,
-        logoutError: null,
+        createUserError: null,
       };
 
     default:

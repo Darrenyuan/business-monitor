@@ -5,7 +5,6 @@ import {
   MONITOR_LOGIN_DISMISS_ERROR,
 } from './constants';
 
-import axios from 'axios';
 import { apiLongin } from '../axios/api';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga

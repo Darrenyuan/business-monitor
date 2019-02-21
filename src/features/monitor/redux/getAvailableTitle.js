@@ -1,17 +1,17 @@
 import {
-  MONITOR_LOGOUT_BEGIN,
-  MONITOR_LOGOUT_SUCCESS,
-  MONITOR_LOGOUT_FAILURE,
-  MONITOR_LOGOUT_DISMISS_ERROR,
+  MONITOR_GET_AVAILABLE_TITLE_BEGIN,
+  MONITOR_GET_AVAILABLE_TITLE_SUCCESS,
+  MONITOR_GET_AVAILABLE_TITLE_FAILURE,
+  MONITOR_GET_AVAILABLE_TITLE_DISMISS_ERROR,
 } from './constants';
-import { apiLogout } from '../axios/api';
+import { apiGetAvailableTitle } from '../axios/api';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
 // If you prefer redux-saga, you can use rekit-plugin-redux-saga: https://github.com/supnate/rekit-plugin-redux-saga
-export function logout(args = {}) {
+export function getAvailableTitle(args = {}) {
   return dispatch => {
     // optionally you can have getState as the second argument
     dispatch({
-      type: MONITOR_LOGOUT_BEGIN,
+      type: MONITOR_GET_AVAILABLE_TITLE_BEGIN,
     });
 
     // Return a promise so that you could control UI flow without states in the store.
@@ -22,20 +22,19 @@ export function logout(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      // const doRequest = axios.get('http://localhost:8080/logout');
-      const doRequest = apiLogout();
+      const doRequest = apiGetAvailableTitle();
       doRequest.then(
         res => {
           dispatch({
-            type: MONITOR_LOGOUT_SUCCESS,
-            data: res,
+            type: MONITOR_GET_AVAILABLE_TITLE_SUCCESS,
+            data: res.data,
           });
           resolve(res);
         },
         // Use rejectHandler as the second argument so that render errors won't be caught.
         err => {
           dispatch({
-            type: MONITOR_LOGOUT_FAILURE,
+            type: MONITOR_GET_AVAILABLE_TITLE_FAILURE,
             data: { error: err },
           });
           reject(err);
@@ -49,44 +48,44 @@ export function logout(args = {}) {
 
 // Async action saves request error by default, this method is used to dismiss the error info.
 // If you don't want errors to be saved in Redux store, just ignore this method.
-export function dismissLogoutError() {
+export function dismissGetAvailableTitleError() {
   return {
-    type: MONITOR_LOGOUT_DISMISS_ERROR,
+    type: MONITOR_GET_AVAILABLE_TITLE_DISMISS_ERROR,
   };
 }
 
 export function reducer(state, action) {
   switch (action.type) {
-    case MONITOR_LOGOUT_BEGIN:
+    case MONITOR_GET_AVAILABLE_TITLE_BEGIN:
       // Just after a request is sent
       return {
         ...state,
-        logoutPending: true,
-        logoutError: null,
+        getAvailableTitlePending: true,
+        getAvailableTitleError: null,
       };
 
-    case MONITOR_LOGOUT_SUCCESS:
+    case MONITOR_GET_AVAILABLE_TITLE_SUCCESS:
       // The request is success
       return {
         ...state,
-        logoutPending: false,
-        logoutError: null,
-        loginData: null,
+        getAvailableTitlePending: false,
+        getAvailableTitleError: null,
+        availvableTitleData: action.data.data,
       };
 
-    case MONITOR_LOGOUT_FAILURE:
+    case MONITOR_GET_AVAILABLE_TITLE_FAILURE:
       // The request is failed
       return {
         ...state,
-        logoutPending: false,
-        logoutError: action.data.error,
+        getAvailableTitlePending: false,
+        getAvailableTitleError: action.data.error,
       };
 
-    case MONITOR_LOGOUT_DISMISS_ERROR:
+    case MONITOR_GET_AVAILABLE_TITLE_DISMISS_ERROR:
       // Dismiss the request failure error
       return {
         ...state,
-        logoutError: null,
+        getAvailableTitleError: null,
       };
 
     default:

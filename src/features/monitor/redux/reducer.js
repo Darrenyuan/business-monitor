@@ -11,12 +11,18 @@ import { reducer as loginReducer } from './login';
 import { reducer as languageSetZhReducer } from './languageSetZh';
 import { reducer as languageSetEnReducer } from './languageSetEn';
 import { reducer as logoutReducer } from './logout';
+import { reducer as getAvailableTitleReducer } from './getAvailableTitle';
+import { reducer as createUserReducer } from './createUser';
+import { reducer as createProjectReducer } from './createProject';
 
 const reducers = [
   loginReducer,
   languageSetZhReducer,
   languageSetEnReducer,
   logoutReducer,
+  getAvailableTitleReducer,
+  createUserReducer,
+  createProjectReducer,
 ];
 
 export default function reducer(state = initialState, action) {
