@@ -14,6 +14,8 @@ import { reducer as logoutReducer } from './logout';
 import { reducer as getAvailableTitleReducer } from './getAvailableTitle';
 import { reducer as createUserReducer } from './createUser';
 import { reducer as createProjectReducer } from './createProject';
+import { reducer as getAvailableProjectsReducer } from './getAvailableProjects';
+import { reducer as getAvailableProjectsSizeReducer } from './getAvailableProjectsSize';
 
 const reducers = [
   loginReducer,
@@ -23,6 +25,8 @@ const reducers = [
   getAvailableTitleReducer,
   createUserReducer,
   createProjectReducer,
+  getAvailableProjectsReducer,
+  getAvailableProjectsSizeReducer,
 ];
 
 export default function reducer(state = initialState, action) {

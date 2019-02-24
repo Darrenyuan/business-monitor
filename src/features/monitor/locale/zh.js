@@ -50,8 +50,8 @@ const zhMessages = {
   project_creation_label_name: '工程名称',
   project_creation_label_start_time: '起始时间',
   project_creation_label_end_time: '结束时间',
-  project_creation_label_overview: '工程概况',
   project_creation_label_location: '工程地点',
+  project_creation_label_overview: '工程概况',
   project_creation_label_design_unit: '设计单位',
   project_creation_label_monitor_unit: '监理单位',
   project_creation_label_construction_unit: '建造单位',
@@ -61,6 +61,18 @@ const zhMessages = {
   project_creation_error_description: '网络错误',
   project_creation_button_submit: '创建新项目',
   project_creation_button_reset: '重置',
+  projects_table_title_id: '主键',
+  projects_table_title_name: '工程名称',
+  projects_table_title_startTime: '起始时间',
+  projects_table_title_endTime: '结束时间',
+  projects_table_title_location: '工程地点',
+  projects_table_title_overview: '工程概况',
+  projects_table_title_designUnit: '设计单位',
+  projects_table_title_monitorUnit: '监理单位',
+  projects_table_title_constructionUnit: '建造单位',
+  projects_table_title_createTime: '创建时间',
+  projects_table_title_operator: '操作',
+  projects_table_title_operator_value: '详情',
 };
 
 export default zhMessages;

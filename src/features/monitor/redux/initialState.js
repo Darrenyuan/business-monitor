@@ -17,6 +17,10 @@ const initialState = {
   createUserError: null,
   createProjectPending: false,
   createProjectError: null,
+  getAvailableProjectsPending: false,
+  getAvailableProjectsError: null,
+  getAvailableProjectsSizePending: false,
+  getAvailableProjectsSizeError: null,
 };
 
 export default initialState;

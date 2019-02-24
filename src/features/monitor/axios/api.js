@@ -49,3 +49,16 @@ export function apiCreateProject(args = {}) {
     constructionUnit: args.constructionUnit,
   });
 }
+
+export function apiGetAvailableProjects(args = {}) {
+  return instance.post(baseUrl + '/project/all', {
+    current: args.current,
+    pageSize: args.pageSize,
+    total: args.total,
+    defaultCurrent: args.defaultCurrent,
+  });
+}
+
+export function apiGetAvailableProjectsSize(args = {}) {
+  return instance.get(baseUrl + '/project/size');
+}
