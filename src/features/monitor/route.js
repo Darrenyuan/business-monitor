@@ -13,13 +13,15 @@ import {
   Layout,
   ToggleLanguage,
   Projects,
-  Project,
   ProjectCreation,
   Account,
   Previlige,
   Page403,
+  AccountStep1,
+  AccountStep2,
+  AccountStep3,
 } from './';
-
+import Issues from './Issues';
 export default {
   path: 'monitor',
   name: 'Monitor',
@@ -30,16 +32,16 @@ export default {
     { path: 'login', name: 'Login', component: Login },
     { path: 'togglelanguage', name: 'Toggle language', component: ToggleLanguage },
     {
-      path: 'projects',
+      path: 'projects/:page',
       roles: ['admin', 'leader', 'projectManager', 'projectUser', 'monitorManager', 'monitorUser'],
       name: 'Projects',
       component: Projects,
     },
     {
-      path: 'project/:id',
+      path: 'project/:projectId/issues/:page',
       roles: ['admin', 'leader', 'projectManager', 'projectUser', 'monitorManager', 'monitorUser'],
-      name: 'Project',
-      component: Project,
+      name: 'Issues',
+      component: Issues,
     },
     {
       path: 'project/action/create',
@@ -60,5 +62,8 @@ export default {
       component: Previlige,
     },
     { path: '403', name: 'Page 403', component: Page403 },
+    { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
+    { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
+    { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },
   ],
 };

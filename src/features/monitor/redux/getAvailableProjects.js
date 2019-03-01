@@ -24,7 +24,7 @@ export function getAvailableProjects(args = {}) {
       // doRequest is a placeholder Promise. You should replace it with your own logic.
       // See the real-word example at:  https://github.com/supnate/rekit/blob/master/src/features/home/redux/fetchRedditReactjsList.js
       // args.error here is only for test coverage purpose.
-      const doRequest = apiGetAvailableProjects();
+      const doRequest = apiGetAvailableProjects(args);
       doRequest.then(
         res => {
           dispatch({
@@ -64,7 +64,6 @@ export function reducer(state, action) {
         ...state,
         getAvailableProjectsPending: true,
         getAvailableProjectsError: null,
-        getAvailableProjectsData: null,
       };
 
     case MONITOR_GET_AVAILABLE_PROJECTS_SUCCESS:
@@ -82,7 +81,6 @@ export function reducer(state, action) {
         ...state,
         getAvailableProjectsPending: false,
         getAvailableProjectsError: action.data.error,
-        getAvailableProjectsData: null,
       };
 
     case MONITOR_GET_AVAILABLE_PROJECTS_DISMISS_ERROR:

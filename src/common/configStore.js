@@ -3,14 +3,13 @@ import thunk from 'redux-thunk';
 import { routerMiddleware } from 'react-router-redux';
 import history from './history';
 import rootReducer from './rootReducer';
+import { loadState, saveState } from './sessionStorage';
+import throttle from 'lodash/throttle';
 
 const router = routerMiddleware(history);
 
 // NOTE: Do not change middleares delaration pattern since rekit plugins may register middlewares to it.
-const middlewares = [
-  thunk,
-  router,
-];
+const middlewares = [thunk, router];
 
 let devToolsExtension = f => f;
 
@@ -27,10 +26,23 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default function configureStore(initialState) {
-  const store = createStore(rootReducer, initialState, compose(
-    applyMiddleware(...middlewares),
-    devToolsExtension
-  ));
+  const serializedState = loadState();
+  if (serializedState) {
+    initialState = serializedState;
+  }
+  const store = createStore(
+    rootReducer,
+    initialState,
+    compose(
+      applyMiddleware(...middlewares),
+      devToolsExtension,
+    ),
+  );
+  store.subscribe(
+    throttle(() => {
+      saveState(store.getState());
+    }, 1000),
+  );
 
   /* istanbul ignore if  */
   if (module.hot) {

@@ -67,7 +67,7 @@ export class SidePanel extends Component {
                 </Link>
               </Menu.Item>
               <Menu.Item key="4">
-                <Link to="/monitor/projects">
+                <Link to="/monitor/projects/1">
                   <FormattedMessage id="sidePanel_projects_link" />
                 </Link>
               </Menu.Item>

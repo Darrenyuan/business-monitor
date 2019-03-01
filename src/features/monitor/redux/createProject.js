@@ -64,7 +64,6 @@ export function reducer(state, action) {
         ...state,
         createProjectPending: true,
         createProjectError: null,
-        createProjectDataId: null,
       };
 
     case MONITOR_CREATE_PROJECT_SUCCESS:
@@ -82,7 +81,6 @@ export function reducer(state, action) {
         ...state,
         createProjectPending: false,
         createProjectError: action.data.error,
-        createProjectDataId: null,
       };
 
     case MONITOR_CREATE_PROJECT_DISMISS_ERROR:

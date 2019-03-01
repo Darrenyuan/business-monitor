@@ -64,7 +64,6 @@ export function reducer(state, action) {
         ...state,
         getAvailableProjectsSizePending: true,
         getAvailableProjectsSizeError: null,
-        getAvailableProjectsSizeData: null,
       };
 
     case MONITOR_GET_AVAILABLE_PROJECTS_SIZE_SUCCESS:
@@ -82,7 +81,6 @@ export function reducer(state, action) {
         ...state,
         getAvailableProjectsSizePending: false,
         getAvailableProjectsSizeError: action.data.error,
-        getAvailableProjectsSizeData: null,
       };
 
     case MONITOR_GET_AVAILABLE_PROJECTS_SIZE_DISMISS_ERROR:

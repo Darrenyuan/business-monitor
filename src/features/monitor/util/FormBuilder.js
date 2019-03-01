@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Col, Form, Icon, Row, Tooltip } from "antd";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { Col, Form, Icon, Row, Tooltip } from 'antd';
+import { injectIntl, FormattedMessage } from 'react-intl';
 
 const FormItem = Form.Item;
 
 const defaultFormItemLayout = {
   labelCol: { span: 8 },
-  wrapperCol: { span: 16 }
+  wrapperCol: { span: 16 },
 };
 
 function pickProps(source, props) {
@@ -27,12 +28,12 @@ class FormBuilder extends Component {
   static propTypes = {
     meta: PropTypes.object.isRequired,
     form: PropTypes.object.isRequired,
-    disabled: PropTypes.bool
+    disabled: PropTypes.bool,
   };
 
   static defaultProps = {
     disabled: false,
-    one: false
+    one: false,
   };
 
   constructor(props) {
@@ -53,7 +54,7 @@ class FormBuilder extends Component {
       <span>
         {element.label}
         <Tooltip title={element.tooltip}>
-          {" "}
+          {' '}
           <Icon type="question-circle-o" />
         </Tooltip>
       </span>
@@ -64,27 +65,26 @@ class FormBuilder extends Component {
     const formItemProps = {
       key: element.key,
       colon: meta.colon,
-      ...(meta.formItemLayout ||
-        (element.label ? defaultFormItemLayout : null)),
+      ...(meta.formItemLayout || (element.label ? defaultFormItemLayout : null)),
       label,
       ...pickProps(element, [
-        "help",
-        "extra",
-        "labelCol",
-        "wrapperCol",
-        "colon",
-        "hasFeedback",
-        "validateStatus",
-        "hasFeedback"
+        'help',
+        'extra',
+        'labelCol',
+        'wrapperCol',
+        'colon',
+        'hasFeedback',
+        'validateStatus',
+        'hasFeedback',
       ]),
-      ...element.formItemProps
+      ...element.formItemProps,
     };
 
     if (element.render) {
       return element.render.call(this, {
         formItemProps,
         element,
-        disabled: this.props.disabled
+        disabled: this.props.disabled,
       });
     }
 
@@ -95,39 +95,30 @@ class FormBuilder extends Component {
         ...rules,
         {
           required: true,
-          message: `${element.label ||
-            element.key} is required.` // default to English, if needs localization, pass message to it.
-        }
+          message: `${element.label || element.key} is required.`, // default to English, if needs localization, pass message to it.
+        },
       ];
     }
     const fieldProps = {
       ...pickProps(element, [
-        "getValueFromEvent",
-        "initialValue",
-        "normalize",
-        "trigger",
-        "valuePropName",
-        "validateTrigger",
-        "validateFirst"
+        'getValueFromEvent',
+        'initialValue',
+        'normalize',
+        'trigger',
+        'valuePropName',
+        'validateTrigger',
+        'validateFirst',
       ]),
       rules,
-      ...element.fieldProps
+      ...element.fieldProps,
     };
 
     // Handle widget props
     const wp = element.widgetProps || {};
     const widgetProps = {
-      ...pickProps(element, [
-        "placeholder",
-        "type",
-        "className",
-        "class"
-      ]),
+      ...pickProps(element, ['placeholder', 'type', 'className', 'class']),
       ...wp,
-      disabled:
-        element.disabled ||
-        wp.disabled ||
-        this.props.disabled
+      disabled: element.disabled || wp.disabled || this.props.disabled,
     };
 
     if (!element.id) {
@@ -137,13 +128,8 @@ class FormBuilder extends Component {
     const { getFieldDecorator } = this.props.form;
     return (
       <FormItem {...formItemProps}>
-        {getFieldDecorator(
-          element.id || element.key,
-          fieldProps
-        )(
-          <element.widget {...widgetProps}>
-            {element.children || null}
-          </element.widget>
+        {getFieldDecorator(element.id || element.key, fieldProps)(
+          <element.widget {...widgetProps}>{element.children || null}</element.widget>,
         )}
       </FormItem>
     );
@@ -162,23 +148,21 @@ class FormBuilder extends Component {
         cols.push(
           <Col key={j} span={colspan.toString()}>
             {elements[i + j]}
-          </Col>
+          </Col>,
         );
       }
       rows.push(
         <Row key={i} gutter={gutter}>
           {cols}
-        </Row>
+        </Row>,
       );
     }
     return rows;
   }
 
   render() {
-    return this.renderLayout(
-      this.getMeta().elements.map(this.renderElement)
-    );
+    return this.renderLayout(this.getMeta().elements.map(this.renderElement));
   }
 }
 
-export default FormBuilder;
+export default injectIntl(FormBuilder);
