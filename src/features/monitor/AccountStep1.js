@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
+import { Button, DatePicker, Form, Input, InputNumber, Select, Alert, Modal } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { apiIfUserNameExist } from './axios/api';
 import FormBuilder from './util/FormBuilder';
@@ -11,6 +11,13 @@ import FormBuilder from './util/FormBuilder';
 const Option = Select.Option;
 
 export class AccountStep1 extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      nameExist: false,
+    };
+  }
+
   static propTypes = {
     monitor: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
@@ -19,17 +26,30 @@ export class AccountStep1 extends Component {
   componentDidMount() {
     this.props.form.setFieldsValue(this.props.allValues);
   }
-  checkUsernameExisit = (rule, value, callback) => {
+  checkUsernameExisit = () => {
     const form = this.props.form;
-    if (value) {
-      const message = this.props.intl.formatMessage({ id: 'account_step1_usernmae_exsit' });
-      apiIfUserNameExist({ username: value })
-        .then(res => (res.data.data ? callback(message) : callback()))
-        .catch(err => callback(err));
-    }
-    callback();
+    const message = this.props.intl.formatMessage({ id: 'account_step1_usernmae_exsit' });
+    let result = true;
+    let username = form.getFieldValue('username');
+    let responseData;
+    apiIfUserNameExist({ username: username }).then(res => {
+      responseData = res.data.data;
+      this.setState({ ...this.state, nameExist: res.data.data });
+      if (responseData) {
+        Modal.warn({ title: '重名' });
+      } else {
+        Modal.success({ title: '没有重名' });
+      }
+    });
   };
-
+  handleChange = event => {
+    let stepState = this.props.monitor.stepState;
+    this.props.form.setFieldsValue({ username: event.target.value });
+    this.props.actions.syncStepState({
+      ...stepState,
+      username: event.target.value,
+    });
+  };
   render() {
     const formMeta = {
       colon: true,
@@ -39,13 +59,29 @@ export class AccountStep1 extends Component {
           key: 'username',
           label: this.props.intl.formatMessage({ id: 'login_username' }),
           widget: Input,
-          rules: [{ validator: this.checkUsernameExisit }],
+          required: true,
+          widgetProps: { onChange: this.handleChange },
         },
       ],
     };
     return (
       <div className="monitor-account-step-1">
-        <FormBuilder meta={formMeta} form={this.props.form} />
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <FormBuilder meta={formMeta} form={this.props.form} />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <Button onClick={this.checkUsernameExisit} type="primary">
+                  <FormattedMessage id="account_step1_username_button_check" />
+                </Button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     );
   }

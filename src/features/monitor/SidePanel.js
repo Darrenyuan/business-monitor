@@ -84,7 +84,7 @@ export class SidePanel extends Component {
               }
             >
               <Menu.Item key="5">
-                <Link to="/monitor/account/create">
+                <Link to="/monitor/account/create/step">
                   <FormattedMessage id="sidePanel_account_link" />
                 </Link>
               </Menu.Item>

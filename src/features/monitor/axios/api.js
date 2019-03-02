@@ -38,6 +38,15 @@ export function apiCreateUser(args = {}) {
     title: args.title,
   });
 }
+
+export function apiCreateStepUser(args = {}) {
+  return instance.post(baseUrl + '/user/step', {
+    username: args.username,
+    title: args.title,
+    projectId: args.projectId,
+    projectName: args.projectName,
+  });
+}
 export function apiIfUserNameExist(args = {}) {
   return instance.get(`${baseUrl}/user/check?username=${args.username}`);
 }
@@ -56,12 +65,7 @@ export function apiCreateProject(args = {}) {
 }
 
 export function apiGetAvailableProjects(args = {}) {
-  return instance.post(baseUrl + '/project/all', {
-    current: args.page,
-    pageSize: args.pageSize,
-    total: args.total,
-    defaultCurrent: args.defaultCurrent,
-  });
+  return instance.get(baseUrl + '/project/all');
 }
 
 export function apiGetAvailableProjectsSize(args = {}) {

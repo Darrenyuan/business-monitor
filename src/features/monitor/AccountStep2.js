@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { Button, DatePicker, Form, Input, InputNumber, Select, Alert } from 'antd';
 import FormBuilder from './util/FormBuilder';
+import { injectIntl, FormattedMessge } from 'react-intl';
 
 const Option = Select.Option;
 export class AccountStep2 extends Component {
@@ -15,8 +16,16 @@ export class AccountStep2 extends Component {
   componentDidMount() {
     this.props.actions.getAvailableTitle();
   }
+  handleChange = value => {
+    const stepState = this.props.monitor.stepState;
+    this.props.form.setFieldsValue({ title: value });
+    this.props.actions.syncStepState({ ...stepState, title: value });
+  };
   render() {
     const titles = this.props.monitor.availvableTitleData;
+    if (!titles) {
+      return <div />;
+    }
     let titleOptions = [];
     const titleLength = titles.length;
     for (var i = 0; i < titleLength; i++) {
@@ -39,6 +48,7 @@ export class AccountStep2 extends Component {
           widget: Select,
           children: titleOptions,
           required: true,
+          widgetProps: { onChange: this.handleChange },
         },
       ],
     };
@@ -67,4 +77,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AccountStep2);
+)(injectIntl(AccountStep2));

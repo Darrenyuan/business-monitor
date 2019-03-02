@@ -95,7 +95,10 @@ class FormBuilder extends Component {
         ...rules,
         {
           required: true,
-          message: `${element.label || element.key} is required.`, // default to English, if needs localization, pass message to it.
+          message:
+            `${element.label || element.key}` +
+            this.props.intl.formatMessage({ id: 'formBuilder_is_required' }),
+          //this.props.intl.formatMessage({ id: 'formBuilder_is_required' }), // default to English, if needs localization, pass message to it.
         },
       ];
     }

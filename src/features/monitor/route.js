@@ -20,6 +20,7 @@ import {
   AccountStep1,
   AccountStep2,
   AccountStep3,
+  AccountStep4,
 } from './';
 import Issues from './Issues';
 export default {
@@ -50,7 +51,7 @@ export default {
       component: ProjectCreation,
     },
     {
-      path: 'account/create',
+      path: 'account/create/step',
       roles: ['admin', 'projectManager', 'monitorManager'],
       name: 'Account',
       component: Account,
@@ -62,8 +63,9 @@ export default {
       component: Previlige,
     },
     { path: '403', name: 'Page 403', component: Page403 },
-    { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
-    { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
-    { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },
+    // { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
+    // { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
+    // { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },
+    // { path: 'account/create/step/4', name: 'Account step 4', component: AccountStep4 },
   ],
 };

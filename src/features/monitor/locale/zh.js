@@ -99,6 +99,10 @@ const zhMessages = {
   issue_search_label_search: '搜索',
   issue_search_label_reset: '重置',
   account_step1_usernmae_exsit: '用户名已经存在',
+  account_step3_no_need_bind: '管理员默认于所有项目绑定',
+  account_step1_username_message: '重名',
+  account_step1_username_button_check: '是否重名',
+  account_step1_username_description: '用户名已经存在,请更换用户名',
 };
 
 export default zhMessages;

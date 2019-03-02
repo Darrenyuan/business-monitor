@@ -21,6 +21,7 @@ import { reducer as getAvailableProjectIssuesSizeReducer } from './getAvailableP
 import { reducer as fetchProjectListReducer } from './fetchProjectList';
 import { reducer as fetchProjectReducer } from './fetchProject';
 import { reducer as fetchIssueListReducer } from './fetchIssueList';
+import { reducer as syncStepStateReducer } from './syncStepState';
 
 const reducers = [
   loginReducer,
@@ -37,6 +38,7 @@ const reducers = [
   fetchProjectListReducer,
   fetchProjectReducer,
   fetchIssueListReducer,
+  syncStepStateReducer,
 ];
 
 export default function reducer(state = initialState, action) {

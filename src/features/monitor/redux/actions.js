@@ -12,3 +12,4 @@ export { getAvailableProjectIssuesSize, dismissGetAvailableProjectIssuesSizeErro
 export { fetchProjectList, dismissFetchProjectListError } from './fetchProjectList';
 export { fetchProject, dismissFetchProjectError } from './fetchProject';
 export { fetchIssueList, dismissFetchIssueListError } from './fetchIssueList';
+export { syncStepState } from './syncStepState';
