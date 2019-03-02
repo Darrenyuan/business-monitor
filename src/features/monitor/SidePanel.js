@@ -89,8 +89,8 @@ export class SidePanel extends Component {
                 </Link>
               </Menu.Item>
               <Menu.Item key="6">
-                <Link to="/monitor/previlige">
-                  <FormattedMessage id="sidePanel_previlige_link" />
+                <Link to="/monitor/account/reset">
+                  <FormattedMessage id="sidePanel_reset_password_link" />
                 </Link>
               </Menu.Item>
             </SubMenu>

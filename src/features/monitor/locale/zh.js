@@ -26,6 +26,7 @@ const zhMessages = {
   sidePanel_account_link: '创建',
   sidePanel_previlige_link: '授权',
   sidePanel_project: '项目',
+  sidePanel_reset_password_link: '重置密码',
   welcome_info: '欢迎使用中建三局一公司项目质量安全管理系统',
   forbidden_403: '403: 没有权限',
   account_title_label: '职位',

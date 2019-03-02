@@ -13,3 +13,4 @@ export { default as AccountStep1 } from './AccountStep1';
 export { default as AccountStep2 } from './AccountStep2';
 export { default as AccountStep3 } from './AccountStep3';
 export { default as AccountStep4 } from './AccountStep4';
+export { default as ResetPassword } from './ResetPassword';
