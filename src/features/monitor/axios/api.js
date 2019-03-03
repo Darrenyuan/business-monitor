@@ -1,11 +1,18 @@
 import axios from 'axios';
+import { logout } from '../redux/actions';
 let baseUrl = 'http://localhost:8080';
 
 let imageUrl = 'http://localhost:7070';
-
+let option = {
+  baseURL: baseUrl,
+  timeout: 5000,
+  crossdomain: true,
+  withCredentials: true,
+};
 if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://212.64.74.113/api';
   imageUrl = 'http://212.64.74.113';
+  option = { ...option, crossdomain: false, baseURL: baseUrl };
 }
 
 export const URL = imageUrl;
@@ -13,8 +20,17 @@ export const URL = imageUrl;
 const instance = axios.create({
   baseURL: baseUrl,
   timeout: 5000,
-  // crossdomain: true,
+  crossdomain: true,
   withCredentials: true,
+});
+instance.interceptors.response.use(res => {
+  if (res.data.status === 500) {
+    logout();
+    window.location.href = '/monitor/login';
+    return;
+  } else {
+    return res;
+  }
 });
 
 export function apiLongin(args = {}) {
@@ -37,6 +53,10 @@ export function apiCreateUser(args = {}) {
     username: args.username,
     title: args.title,
   });
+}
+
+export function apiResetPassword(args = {}) {
+  return instance.put(`/password?password=${args.password}&newPassword=${args.newPassword}`);
 }
 
 export function apiCreateStepUser(args = {}) {

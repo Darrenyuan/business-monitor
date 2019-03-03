@@ -15,6 +15,10 @@ export class AccountStep2 extends Component {
   };
   componentDidMount() {
     this.props.actions.getAvailableTitle();
+    const stepState = this.props.monitor.stepState;
+    const form = this.props.form;
+    form.setFieldsValue(this.props.allValues);
+    form.setFieldsValue({ title: stepState.title });
   }
   handleChange = value => {
     const stepState = this.props.monitor.stepState;

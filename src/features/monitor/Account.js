@@ -49,6 +49,7 @@ export class Account extends Component {
           Modal.success({
             title: '提交成功',
           });
+          this.props.actions.syncStepState({ nameExist: true });
         } else {
           Modal.warn({ title: '提交失败' });
         }
@@ -166,7 +167,12 @@ export class Account extends Component {
                 上一步
               </Button>
 
-              <Button onClick={this.handleNext} type="primary" ref={this.state.nextButtonRef}>
+              <Button
+                onClick={this.handleNext}
+                type="primary"
+                disabled={this.props.monitor.stepState.nameExist}
+                ref={this.state.nextButtonRef}
+              >
                 {this.getCurrentStep() === this.getSteps().length - 1 ? '完成' : '下一步'}
               </Button>
             </div>

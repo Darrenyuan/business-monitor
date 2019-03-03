@@ -15,8 +15,11 @@ import {
   Checkbox,
   Button,
   AutoComplete,
+  Divider,
+  Modal,
 } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
+import { apiResetPassword } from './axios/api';
 
 const { Option } = Select;
 const AutoCompleteOption = AutoComplete.Option;
@@ -72,6 +75,17 @@ export class ResetPassword extends Component {
       if (!err) {
         console.log('Received values of form: ', values);
       }
+      apiResetPassword(values).then(res => {
+        const responseData = res.data.data;
+        if (responseData) {
+          Modal.success({
+            title: this.props.intl.formatMessage({ id: 'reset_password_modal_success' }),
+          });
+        } else {
+          Modal.warn({ title: this.props.intl.formatMessage({ id: 'reset_password_modal_fail' }) });
+        }
+      });
+      console.log('succuess');
     });
   };
 
@@ -82,7 +96,7 @@ export class ResetPassword extends Component {
 
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
+    if (value && value !== form.getFieldValue('newPassword')) {
       callback('Two passwords that you enter is inconsistent!');
     } else {
       callback();
@@ -97,16 +111,6 @@ export class ResetPassword extends Component {
     callback();
   };
 
-  handleWebsiteChange = value => {
-    let autoCompleteResult;
-    if (!value) {
-      autoCompleteResult = [];
-    } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-    }
-    this.setState({ autoCompleteResult });
-  };
-
   render() {
     const { getFieldDecorator } = this.props.form;
     const { autoCompleteResult } = this.state;
@@ -118,7 +122,7 @@ export class ResetPassword extends Component {
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 16 },
+        sm: { span: 5 },
       },
     };
     const tailFormItemLayout = {
@@ -128,35 +132,42 @@ export class ResetPassword extends Component {
           offset: 0,
         },
         sm: {
-          span: 16,
-          offset: 8,
+          span: 7,
+          offset: 3,
         },
       },
     };
 
+    const formatMessage = this.props.intl.formatMessage;
     return (
       <div className="monitor-reset-password">
+        <h2 style={{ textAlign: 'left', margin: '0 40px' }} {...formItemLayout}>
+          <FormattedMessage id="reset_password_header" />
+        </h2>
+        <Divider />
         <Form onSubmit={this.handleSubmit}>
-          <Form.Item {...formItemLayout} label="E-mail">
-            {getFieldDecorator('email', {
-              rules: [
-                {
-                  type: 'email',
-                  message: 'The input is not valid E-mail!',
-                },
-                {
-                  required: true,
-                  message: 'Please input your E-mail!',
-                },
-              ],
-            })(<Input />)}
-          </Form.Item>
-          <Form.Item {...formItemLayout} label="Password">
+          <Form.Item
+            {...formItemLayout}
+            label={formatMessage({ id: 'reset_password_password_label' })}
+          >
             {getFieldDecorator('password', {
               rules: [
                 {
                   required: true,
-                  message: 'Please input your password!',
+                  message: formatMessage({ id: 'reset_password_password_message' }),
+                },
+              ],
+            })(<Input type="password" />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={formatMessage({ id: 'reset_password_new_password_label' })}
+          >
+            {getFieldDecorator('newPassword', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'reset_password_new_password_message' }),
                 },
                 {
                   validator: this.validateToNextPassword,
@@ -164,12 +175,15 @@ export class ResetPassword extends Component {
               ],
             })(<Input type="password" />)}
           </Form.Item>
-          <Form.Item {...formItemLayout} label="Confirm Password">
+          <Form.Item
+            {...formItemLayout}
+            label={formatMessage({ id: 'reset_password_confirm_password_title' })}
+          >
             {getFieldDecorator('confirm', {
               rules: [
                 {
                   required: true,
-                  message: 'Please confirm your password!',
+                  message: formatMessage({ id: 'reset_password_confirm_password_message' }),
                 },
                 {
                   validator: this.compareToFirstPassword,
@@ -179,7 +193,7 @@ export class ResetPassword extends Component {
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
-              Register
+              <FormattedMessage id="reset_password_button" />
             </Button>
           </Form.Item>
         </Form>

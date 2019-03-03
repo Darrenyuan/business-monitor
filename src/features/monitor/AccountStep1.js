@@ -24,7 +24,10 @@ export class AccountStep1 extends Component {
   };
 
   componentDidMount() {
-    this.props.form.setFieldsValue(this.props.allValues);
+    const form = this.props.form;
+    const stepState = this.props.monitor.stepState;
+    form.setFieldsValue(this.props.allValues);
+    form.setFieldsValue({ username: stepState.username });
   }
   checkUsernameExisit = () => {
     const form = this.props.form;
@@ -35,9 +38,12 @@ export class AccountStep1 extends Component {
     apiIfUserNameExist({ username: username }).then(res => {
       responseData = res.data.data;
       this.setState({ ...this.state, nameExist: res.data.data });
+      const stepState = this.props.monitor.stepState;
       if (responseData) {
+        this.props.actions.syncStepState({ ...stepState, nameExist: true });
         Modal.warn({ title: '重名' });
       } else {
+        this.props.actions.syncStepState({ ...stepState, nameExist: false });
         Modal.success({ title: '没有重名' });
       }
     });

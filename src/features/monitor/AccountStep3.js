@@ -19,6 +19,8 @@ export class AccountStep3 extends Component {
     if ('admin' !== form.getFieldValue('title')) {
       this.props.actions.getAvailableProjects();
     }
+    const stepState = this.props.monitor.stepState;
+    form.setFieldsValue({ project: stepState.projectId });
   }
   handleSelect = value => {
     this.props.form.setFieldsValue({ project: value });
@@ -38,7 +40,8 @@ export class AccountStep3 extends Component {
 
   render() {
     const form = this.props.form;
-    if ('admin' == form.getFieldValue('title')) {
+    const stepState = this.props.monitor.stepState;
+    if ('admin' === stepState.title || 'leader' === stepState.title) {
       return (
         <div>
           <FormattedMessage id="account_step3_no_need_bind" />

@@ -49,6 +49,9 @@ const initialState = {
     fetchIssueListPending: false,
     fetchIssueListError: null,
   },
+  stepState: {
+    nameExist: true,
+  },
 };
 
 export default initialState;

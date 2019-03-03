@@ -17,10 +17,12 @@ export function reducer(state, action) {
       return {
         ...state,
         stepState: {
+          ...state.stepState,
           username: action.data.username,
           projectId: action.data.projectId,
           projectName: action.data.projectName,
           title: action.data.title,
+          nameExist: action.data.nameExist,
         },
       };
 

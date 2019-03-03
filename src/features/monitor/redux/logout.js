@@ -63,6 +63,7 @@ export function reducer(state, action) {
         ...state,
         logoutPending: true,
         logoutError: null,
+        loginData: null,
       };
 
     case MONITOR_LOGOUT_SUCCESS:
