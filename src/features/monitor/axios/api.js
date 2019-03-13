@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { logout } from '../redux/actions';
-let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://192.168.0.200:8080/imageserver';
 
 let imageUrl = 'http://localhost:7070';
 let option = {

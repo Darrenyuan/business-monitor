@@ -72,15 +72,28 @@ export class Projects extends Component {
   };
   getColumns() {
     return [
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_id' }),
-        dataIndex: 'id',
-        key: 'id',
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_id' }),
+      //   dataIndex: 'id',
+      //   key: 'id',
+      // },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        render: (text, record) => {
+          const path = `/monitor/project/${record.id}/issues/1`;
+          return (
+            <div>
+              <Link to={path}>{record.name}</Link>
+            </div>
+          );
+        },
+      },
+      {
+        title: this.props.intl.formatMessage({ id: 'projects_table_title_price' }),
+        dataIndex: 'price',
+        key: 'price',
       },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_startTime' }),
@@ -106,32 +119,32 @@ export class Projects extends Component {
           return <span>{local}</span>;
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_location' }),
-        dataIndex: 'location',
-        key: 'location',
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_location' }),
+      //   dataIndex: 'location',
+      //   key: 'location',
+      // },
 
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_overview' }),
-        dataIndex: 'overview',
-        key: 'overview',
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_designUnit' }),
-        dataIndex: 'designUnit',
-        key: 'designUnit',
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_monitorUnit' }),
-        dataIndex: 'monitorUnit',
-        key: 'monitorUnit',
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_constructionUnit' }),
-        dataIndex: 'constructionUnit',
-        key: 'constructionUnit',
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_overview' }),
+      //   dataIndex: 'overview',
+      //   key: 'overview',
+      // },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_designUnit' }),
+      //   dataIndex: 'designUnit',
+      //   key: 'designUnit',
+      // },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_monitorUnit' }),
+      //   dataIndex: 'monitorUnit',
+      //   key: 'monitorUnit',
+      // },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_constructionUnit' }),
+      //   dataIndex: 'constructionUnit',
+      //   key: 'constructionUnit',
+      // },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_createTime' }),
         dataIndex: 'createTime',
@@ -144,21 +157,21 @@ export class Projects extends Component {
           return <span>{local}</span>;
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_operator' }),
-        dataIndex: 'id',
-        key: 'operator',
-        render: id => {
-          const path = `/monitor/project/${id}/issues/1`;
-          return (
-            <div>
-              <Link to={path}>
-                <FormattedMessage id="projects_table_title_operator_value" />
-              </Link>
-            </div>
-          );
-        },
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'projects_table_title_operator' }),
+      //   dataIndex: 'id',
+      //   key: 'operator',
+      //   render: id => {
+      //     const path = `/monitor/project/${id}/issues/1`;
+      //     return (
+      //       <div>
+      //         <Link to={path}>
+      //           <FormattedMessage id="projects_table_title_operator_value" />
+      //         </Link>
+      //       </div>
+      //     );
+      //   },
+      // },
     ];
   }
   render() {

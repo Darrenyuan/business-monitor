@@ -66,6 +66,7 @@ const zhMessages = {
   project_creation_button_reset: '重置',
   projects_table_title_id: '主键',
   projects_table_title_name: '工程名称',
+  projects_table_title_price: '工程造价',
   projects_table_title_startTime: '起始时间',
   projects_table_title_endTime: '结束时间',
   projects_table_title_location: '工程地点',

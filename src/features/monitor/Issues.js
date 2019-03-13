@@ -315,10 +315,62 @@ export class Issues extends Component {
     }
 
     const { page, total } = this.props.monitor.issueList;
+    const { byId } = this.props.monitor.projectList;
+    const project = byId[this.state.projectId];
 
     return (
       <div className="monitor-project">
         <table>
+          <tr>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_name" />
+              </label>
+            </td>
+            <td>
+              <input name="projectName" type="text" value={project.name} disabled />
+            </td>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_location" />
+              </label>
+            </td>
+            <td>
+              <input name="txtSearch" type="text" value={project.location} disabled />
+            </td>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_overview" />
+              </label>
+            </td>
+            <td>
+              <input name="projectName" type="text" value={project.overview} disabled />
+            </td>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_designUnit" />
+              </label>
+            </td>
+            <td>
+              <input name="projectName" type="text" value={project.designUnit} disabled />
+            </td>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_monitorUnit" />
+              </label>
+            </td>
+            <td>
+              <input name="projectName" type="text" value={project.monitorUnit} disabled />
+            </td>
+            <td>
+              <label>
+                <FormattedMessage id="projects_table_title_constructionUnit" />
+              </label>
+            </td>
+            <td>
+              <input name="projectName" type="text" value={project.constructionUnit} disabled />
+            </td>
+          </tr>
           <tr>
             <td>
               <label>
