@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
+import _ from 'lodash';
 
 export class ProjectCreation extends Component {
   constructor(props) {
@@ -29,60 +30,19 @@ export class ProjectCreation extends Component {
       if (errors) {
         return;
       }
+      const timeArray = values.time;
+      let args = _.omit(values, 'time');
+      const startTime = timeArray[0];
+      const endTime = timeArray[1];
+
       console.log('Submit form: ', values);
-      this.props.actions.createProject(values);
+      this.props.actions.createProject({ ...args, startTime: startTime, endTime: endTime });
     });
   }
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const formMeta = {
-      colon: true,
-      columns: 1,
-      elements: [
-        {
-          key: 'name',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_name' }),
-          widget: Input,
-          required: true,
-        },
-        {
-          key: 'startTime',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_start_time' }),
-          widget: DatePicker,
-        },
-        {
-          key: 'endTime',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_end_time' }),
-          widget: DatePicker,
-        },
-        {
-          key: 'location',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_location' }),
-          widget: Input,
-        },
-        {
-          key: 'overview',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_overview' }),
-          widget: Input,
-        },
-        {
-          key: 'designUnit',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_design_unit' }),
-          widget: Input,
-        },
-        {
-          key: 'monitorUnit',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_monitor_unit' }),
-          widget: Input,
-        },
-        {
-          key: 'constructionUnit',
-          label: this.props.intl.formatMessage({ id: 'project_creation_label_construction_unit' }),
-          widget: Input,
-        },
-      ],
-    };
+    const RangePicker = DatePicker.RangePicker;
     const createProjectSuccessMessage = this.props.intl.formatMessage({
       id: 'project_creation_success_message',
     });
@@ -95,11 +55,168 @@ export class ProjectCreation extends Component {
     const createProjectErrorDescription = this.props.intl.formatMessage({
       id: 'project_creation_error_description',
     });
+
+    const formItemLayout = {
+      labelCol: {
+        xs: { span: 4 },
+        sm: { span: 2 },
+      },
+      wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 12 },
+      },
+    };
+    const tailFormItemLayout = {
+      wrapperCol: {
+        xs: {
+          span: 24,
+          offset: 4,
+        },
+        sm: {
+          span: 16,
+          offset: 2,
+        },
+      },
+    };
+    const rangeConfig = {
+      rules: [
+        {
+          type: 'array',
+          required: true,
+          message: this.props.intl.formatMessage({
+            id: 'project_creation_label_range_time_validation_message',
+          }),
+        },
+      ],
+    };
     return (
       <div className="monitor-project-creation">
-        <Form onSubmit={this.handleSubmit} layout="horizontal" style={{ width: '400px' }}>
-          <FormBuilder meta={formMeta} form={this.props.form} />
-          <div style={{ textAlign: 'center' }}>
+        <Form labelAlign="left" layout="horizontal" onSubmit={this.handleSubmit}>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_name' })}
+          >
+            {getFieldDecorator('name', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_cost' })}
+          >
+            {getFieldDecorator('cost', {
+              rules: [
+                {
+                  required: true,
+                },
+              ],
+            })(<InputNumber min={1} style={{ float: 'left' }} max={100000000000} />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_range_time' })}
+          >
+            {getFieldDecorator('time', rangeConfig)(
+              <RangePicker style={{ float: 'left' }} showTime />,
+            )}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_location' })}
+          >
+            {getFieldDecorator('location', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_overview' })}
+          >
+            {getFieldDecorator('overview', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_design_unit' })}
+          >
+            {getFieldDecorator('designUnit', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({ id: 'project_creation_label_monitor_unit' })}
+          >
+            {getFieldDecorator('monitorUnit', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <Form.Item
+            {...formItemLayout}
+            label={this.props.intl.formatMessage({
+              id: 'project_creation_label_construction_unit',
+            })}
+          >
+            {getFieldDecorator('constructionUnit', {
+              rules: [
+                {
+                  required: true,
+                  min: 1,
+                  max: 200,
+                  message: this.props.intl.formatMessage({
+                    id: 'project_creation_label_validation_message',
+                  }),
+                },
+              ],
+            })(<Input />)}
+          </Form.Item>
+          <div {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">
               <FormattedMessage id="project_creation_button_submit" />
             </Button>

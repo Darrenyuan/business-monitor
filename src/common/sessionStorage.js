@@ -58,3 +58,23 @@ export const saveIssueListPageSize = projectListPageSize => {
     // ignore
   }
 };
+
+export const loadReLogin = () => {
+  try {
+    const serializedReLogin = sessionStorage.getItem('reLogin');
+    if (serializedReLogin === null) {
+      return false;
+    }
+    return JSON.parse(serializedReLogin);
+  } catch (err) {
+    return false;
+  }
+};
+
+export const saveReLogin = reLogin => {
+  try {
+    sessionStorage.setItem('reLogin', reLogin);
+  } catch (err) {
+    // ignore
+  }
+};

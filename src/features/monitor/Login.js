@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Form, Icon, Input, Button, Alert } from 'antd';
+import { loadReLogin } from '../../common/sessionStorage';
 
 function hasErrors(fieldsError) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
@@ -66,7 +67,7 @@ export class Login extends Component {
     const alertDescription = this.props.intl.formatMessage({ id: 'login_alert_description' });
     const hasLogIn =
       this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized);
-    const needRelogin = this.props.monitor.needRelogin;
+    const needRelogin = loadReLogin();
     const loginIdLable = this.props.intl.formatMessage({ id: 'login_id' });
     const userNameLable = this.props.intl.formatMessage({ id: 'login_userInfo_name' });
     if (needRelogin) {
@@ -111,28 +112,6 @@ export class Login extends Component {
                     </Button>
                   </Form.Item>
                 </Form>
-                {Boolean(this.props.monitor.loginPending) && (
-                  <div>
-                    <FormattedMessage id="login_pending_message" />
-                  </div>
-                )}
-                {this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized) && (
-                  <div>
-                    <FormattedMessage id="login_in_message" />
-                  </div>
-                )}
-                {Boolean(this.props.monitor.loginError) && (
-                  <div>
-                    {' '}
-                    <Alert
-                      message={alertMessage}
-                      description={alertDescription}
-                      type="warning"
-                      closable
-                      onClose={onClose}
-                    />
-                  </div>
-                )}
               </div>
             </div>
           </div>

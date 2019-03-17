@@ -4,6 +4,7 @@ import {
   MONITOR_LOGIN_FAILURE,
   MONITOR_LOGIN_DISMISS_ERROR,
 } from './constants';
+import { saveReLogin } from '../../../common/sessionStorage';
 
 import { apiLongin } from '../axios/api';
 // Rekit uses redux-thunk for async actions by default: https://github.com/gaearon/redux-thunk
@@ -30,6 +31,7 @@ export function login(args = {}) {
       const doRequest = apiLongin({ username: args.username, password: args.password });
       doRequest.then(
         res => {
+          saveReLogin(false);
           dispatch({
             type: MONITOR_LOGIN_SUCCESS,
             data: res.data,

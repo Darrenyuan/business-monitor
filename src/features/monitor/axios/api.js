@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { needReLogin } from '../redux/actions';
+import { saveReLogin } from '../../../common/sessionStorage';
 // let baseUrl = 'http://192.168.0.200:8080/imageserver';
 let baseUrl = 'http://localhost:8080';
 
@@ -26,7 +26,7 @@ const instance = axios.create({
 });
 instance.interceptors.response.use(res => {
   if (res.data.status === 500) {
-    needReLogin();
+    saveReLogin(true);
     window.location.href = '/monitor/login';
     return;
   } else {
@@ -75,6 +75,7 @@ export function apiIfUserNameExist(args = {}) {
 export function apiCreateProject(args = {}) {
   return instance.post(baseUrl + '/project', {
     name: args.name,
+    cost: args.cost,
     startTime: args.startTime,
     endTime: args.endTime,
     overview: args.overview,
