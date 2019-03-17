@@ -8,6 +8,7 @@
 const initialState = {
   loginPending: false,
   loginError: null,
+  loginData: null,
   language: 'zh',
   logoutPending: false,
   logoutError: null,
@@ -52,6 +53,7 @@ const initialState = {
   stepState: {
     nameExist: true,
   },
+  reLogin: false,
 };
 
 export default initialState;

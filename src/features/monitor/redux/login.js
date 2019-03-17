@@ -74,6 +74,7 @@ export function reducer(state, action) {
       return {
         ...state,
         loginData: action.data.data,
+        reLogin: false,
         loginPending: false,
         loginError: null,
       };

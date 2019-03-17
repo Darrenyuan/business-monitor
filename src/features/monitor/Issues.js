@@ -33,13 +33,42 @@ export class Issues extends Component {
     this.state = {
       search: '',
       projectId: this.props.match.params.projectId,
-      keyword: 0,
-      dimension: 0,
+      type: 0,
+      status: 0,
+      interaction: 0,
       keywordMapList: keywordDataListList[0],
       pageSize: loadIssueListPageSize(),
+      hasInteraction: this.hasInteraction(),
     };
+
     this.fetchData = this.fetchData.bind(this);
   }
+  hasInteraction = () => {
+    const loginData = this.props.monitor.loginData;
+    const interactionRoleList = [
+      'admin',
+      'projectManager',
+      'leader',
+      'projectDirector',
+      'produceDirector',
+      'professionalForeman',
+      'securityGuard',
+      'qualityInspector',
+      'materialStaff',
+    ];
+    let result = false;
+    if (loginData) {
+      const { roles } = loginData;
+      roles.forEach(function(item, index, array) {
+        const roleName = item.roleName;
+        if (interactionRoleList.includes(roleName)) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  };
+
   initData() {
     while (dimensionDataList.length > 0) {
       dimensionDataList.pop();
@@ -115,8 +144,9 @@ export class Issues extends Component {
       page: page,
       pageSize: this.state.pageSize,
       projectId: this.state.projectId,
-      keyword: this.state.keyword,
-      dimension: this.state.dimension,
+      type: this.state.type,
+      status: this.state.status,
+      interaction: this.state.interaction,
     });
   }
 
@@ -160,7 +190,7 @@ export class Issues extends Component {
             case 4:
               return (
                 <span>
-                  <FormattedMessage id="issue_content_type_security" />
+                  <FormattedMessage id="issue_content_type_other" />
                 </span>
               );
             default:
@@ -173,12 +203,13 @@ export class Issues extends Component {
         dataIndex: 'imagePath',
         key: 'imagePath',
         render: imagePath => {
-          let path = URL + '/resources/' + imagePath;
-          return (
-            <div>
-              <img src={path} alt="image" height="100" width="100" />
-            </div>
-          );
+          // let path = URL + '/resources/' + imagePath;
+          // return (
+          //   <div>
+          //     <img src={path} alt="image" height="100" width="100" />
+          //   </div>
+          // );
+          return <div />;
         },
       },
       {
@@ -287,13 +318,29 @@ export class Issues extends Component {
       keyword: value,
     });
   };
+  handleStatusChange = value => {
+    this.setState({
+      status: value,
+    });
+  };
+  handleTypeChange = value => {
+    this.setState({
+      type: value,
+    });
+  };
+  handleInteractionChange = value => {
+    this.setState({
+      interaction: value,
+    });
+  };
   handleSearch = () => {
     this.fetchData(this.props.match.params.page || '1');
   };
   handleReset = () => {
     this.setState({
-      dimension: 0,
-      keyword: 0,
+      type: 0,
+      status: 0,
+      interaction: 0,
     });
     this.fetchData(this.props.match.params.page || '1');
   };
@@ -304,8 +351,9 @@ export class Issues extends Component {
       page: current,
       pageSize: this.state.pageSize,
       projectId: this.state.projectId,
-      keyword: this.state.keyword,
-      dimension: this.state.dimension,
+      type: this.state.type,
+      status: this.state.status,
+      interaction: this.state.interaction,
     });
     this.forceUpdate();
   };
@@ -317,108 +365,165 @@ export class Issues extends Component {
     const { page, total } = this.props.monitor.issueList;
     const { byId } = this.props.monitor.projectList;
     const project = byId[this.state.projectId];
-
+    const typeList = [];
+    typeList.push({
+      key: 1,
+      value: this.props.intl.formatMessage({ id: 'issue_content_type_material' }),
+    });
+    typeList.push({
+      key: 2,
+      value: this.props.intl.formatMessage({ id: 'issue_content_type_quality' }),
+    });
+    typeList.push({
+      key: 3,
+      value: this.props.intl.formatMessage({ id: 'issue_content_type_security' }),
+    });
+    typeList.push({
+      key: 4,
+      value: this.props.intl.formatMessage({ id: 'issue_content_type_other' }),
+    });
+    const statusList = [
+      {
+        key: 1,
+        value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_feed_back' }),
+      },
+      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_confirm' }) },
+      { key: 3, value: this.props.intl.formatMessage({ id: 'issue_content_status_confirm' }) },
+    ];
+    const interactionList = [
+      { key: 1, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_inner' }) },
+      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_outer' }) },
+    ];
+    console.log('============>hasInteraction=' + this.state.hasInteraction);
     return (
       <div className="monitor-project">
+        <h1>
+          <FormattedMessage id="issue_content_h1" />
+        </h1>
         <table>
-          <tr>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_name" />
-              </label>
-            </td>
-            <td>
-              <input name="projectName" type="text" value={project.name} disabled />
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_location" />
-              </label>
-            </td>
-            <td>
-              <input name="txtSearch" type="text" value={project.location} disabled />
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_overview" />
-              </label>
-            </td>
-            <td>
-              <input name="projectName" type="text" value={project.overview} disabled />
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_designUnit" />
-              </label>
-            </td>
-            <td>
-              <input name="projectName" type="text" value={project.designUnit} disabled />
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_monitorUnit" />
-              </label>
-            </td>
-            <td>
-              <input name="projectName" type="text" value={project.monitorUnit} disabled />
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="projects_table_title_constructionUnit" />
-              </label>
-            </td>
-            <td>
-              <input name="projectName" type="text" value={project.constructionUnit} disabled />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label>
-                <FormattedMessage id="issue_search_label_dimension" />
-              </label>
-            </td>
-            <td>
-              <Select
-                style={{ width: 120 }}
-                value={this.state.dimension === 0 ? '' : this.state.dimension}
-                onChange={this.handleDimensionChange}
-              >
-                {dimensionDataList.map(dimensionMap => (
-                  <Option key={dimensionMap.value} value={dimensionMap.key}>
-                    {dimensionMap.value}
-                  </Option>
-                ))}
-              </Select>
-            </td>
-            <td>
-              <label>
-                <FormattedMessage id="issue_search_label_keyword" />
-              </label>
-            </td>
-            <td>
-              <Select
-                style={{ width: 120 }}
-                value={this.state.keyword === 0 ? '' : this.state.keyword}
-                onChange={this.handleKeywordChange}
-              >
-                {this.state.keywordMapList.map(map => (
-                  <Option key={map.value} value={map.key}>
-                    {map.value}
-                  </Option>
-                ))}
-              </Select>
-            </td>
-            <td>
-              <Button type="primary" icon="search" onClick={this.handleSearch}>
-                <FormattedMessage id="issue_search_label_search" />
-              </Button>
-            </td>
-            <td>
-              <Button type="primary" icon="reload" onClick={this.handleReset}>
-                <FormattedMessage id="issue_search_label_reset" />
-              </Button>
-            </td>
-          </tr>
+          <tbody>
+            <tr>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_name" />
+                </label>
+              </td>
+              <td>
+                <input name="projectName" type="text" value={project.name} disabled />
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_location" />
+                </label>
+              </td>
+              <td>
+                <input name="txtSearch" type="text" value={project.location} disabled />
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_overview" />
+                </label>
+              </td>
+              <td>
+                <input name="projectName" type="text" value={project.overview} disabled />
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_designUnit" />
+                </label>
+              </td>
+              <td>
+                <input name="projectName" type="text" value={project.designUnit} disabled />
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_monitorUnit" />
+                </label>
+              </td>
+              <td>
+                <input name="projectName" type="text" value={project.monitorUnit} disabled />
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="projects_table_title_constructionUnit" />
+                </label>
+              </td>
+              <td>
+                <input name="projectName" type="text" value={project.constructionUnit} disabled />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label>
+                  <FormattedMessage id="issue_search_label_type" />
+                </label>
+              </td>
+              <td>
+                <Select
+                  style={{ width: 120 }}
+                  value={this.state.type === 0 ? '' : this.state.type}
+                  onChange={this.handleTypeChange}
+                >
+                  {typeList.map(typeMap => (
+                    <Option key={typeMap.value} value={typeMap.key}>
+                      {typeMap.value}
+                    </Option>
+                  ))}
+                </Select>
+              </td>
+              <td>
+                <label>
+                  <FormattedMessage id="issue_search_label_status" />
+                </label>
+              </td>
+              <td>
+                <Select
+                  style={{ width: 120 }}
+                  value={this.state.status === 0 ? '' : this.state.status}
+                  onChange={this.handleStatusChange}
+                >
+                  {statusList.map(statusMap => (
+                    <Option key={statusMap.value} value={statusMap.key}>
+                      {statusMap.value}
+                    </Option>
+                  ))}
+                </Select>
+              </td>
+              {Boolean(this.state.hasInteraction) && (
+                <td>
+                  <label>
+                    <FormattedMessage id="issue_search_label_interaction" />
+                  </label>
+                </td>
+              )}
+              {Boolean(this.state.hasInteraction) && (
+                <td>
+                  <Select
+                    style={{ width: 120 }}
+                    value={this.state.interaction === 0 ? '' : this.state.interaction}
+                    onChange={this.handleInteractionChange}
+                  >
+                    {interactionList.map(interactionMap => (
+                      <Option key={interactionMap.value} value={interactionMap.key}>
+                        {interactionMap.value}
+                      </Option>
+                    ))}
+                  </Select>
+                </td>
+              )}
+
+              <td>
+                <Button type="primary" icon="search" onClick={this.handleSearch}>
+                  <FormattedMessage id="issue_search_label_search" />
+                </Button>
+              </td>
+              <td>
+                <Button type="primary" icon="reload" onClick={this.handleReset}>
+                  <FormattedMessage id="issue_search_label_reset" />
+                </Button>
+              </td>
+            </tr>
+          </tbody>
         </table>
         <br />
 

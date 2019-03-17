@@ -66,8 +66,79 @@ export class Login extends Component {
     const alertDescription = this.props.intl.formatMessage({ id: 'login_alert_description' });
     const hasLogIn =
       this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized);
+    const needRelogin = this.props.monitor.needRelogin;
     const loginIdLable = this.props.intl.formatMessage({ id: 'login_id' });
     const userNameLable = this.props.intl.formatMessage({ id: 'login_userInfo_name' });
+    if (needRelogin) {
+      return (
+        <div className="monitor-login">
+          <div>
+            <div className="monitor-login-form-wrapper">
+              <div>
+                <Form layout="inline" onSubmit={this.handleSubmit}>
+                  <Form.Item
+                    validateStatus={userNameError ? 'error' : ''}
+                    help={userNameError || ''}
+                  >
+                    {getFieldDecorator('username', {
+                      rules: [{ required: true, message: userNameMessage }],
+                    })(
+                      <Input
+                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        placeholder={userNamePlaceHolder}
+                        onChange={e => this.setState({ username: e.target.value })}
+                      />,
+                    )}
+                  </Form.Item>
+                  <Form.Item
+                    validateStatus={passwordError ? 'error' : ''}
+                    help={passwordError || ''}
+                  >
+                    {getFieldDecorator('password', {
+                      rules: [{ required: true, message: passwordMessage }],
+                    })(
+                      <Input
+                        prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        type="password"
+                        placeholder={passwordPlaceHolder}
+                        onChange={e => this.setState({ password: e.target.value })}
+                      />,
+                    )}
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
+                      <FormattedMessage id="login_submit_value" />
+                    </Button>
+                  </Form.Item>
+                </Form>
+                {Boolean(this.props.monitor.loginPending) && (
+                  <div>
+                    <FormattedMessage id="login_pending_message" />
+                  </div>
+                )}
+                {this.props.monitor.loginData && Boolean(this.props.monitor.loginData.authorized) && (
+                  <div>
+                    <FormattedMessage id="login_in_message" />
+                  </div>
+                )}
+                {Boolean(this.props.monitor.loginError) && (
+                  <div>
+                    {' '}
+                    <Alert
+                      message={alertMessage}
+                      description={alertDescription}
+                      type="warning"
+                      closable
+                      onClose={onClose}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="monitor-login">
         <div>

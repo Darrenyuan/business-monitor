@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import SidePanel from './SidePanel';
-import { IntlProvider, addLocaleData } from 'react-intl';
+import { IntlProvider, addLocaleData, FormattedMessage } from 'react-intl';
 import enMessages from './locale/en';
 import zhMessages from './locale/zh';
 import { connect } from 'react-redux';
@@ -13,6 +13,8 @@ import en_GB from 'antd/lib/locale-provider/en_GB';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
+import 'react-sticky-header/styles.css';
+import StickyHeader from 'react-sticky-header';
 
 export class Layout extends Component {
   consturctor(props) {
@@ -36,7 +38,12 @@ export class Layout extends Component {
               <AntLayout style={{ minHeight: '100vh', background: '#fff' }}>
                 <SidePanel />
                 <AntLayout>
-                  <Header style={{ background: '#fff', padding: 0 }} />
+                  <Header style={{ background: '#0197E3', padding: 0 }}>
+                    <h2>
+                      <FormattedMessage id="header_info" />
+                    </h2>
+                  </Header>
+
                   <Content style={{ margin: '0 16px' }}>
                     <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                       <div className="monitor-page-container">{this.props.children}</div>

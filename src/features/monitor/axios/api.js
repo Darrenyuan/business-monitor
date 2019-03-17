@@ -1,6 +1,7 @@
 import axios from 'axios';
-import { logout } from '../redux/actions';
-let baseUrl = 'http://192.168.0.200:8080/imageserver';
+import { needReLogin } from '../redux/actions';
+// let baseUrl = 'http://192.168.0.200:8080/imageserver';
+let baseUrl = 'http://localhost:8080';
 
 let imageUrl = 'http://localhost:7070';
 let option = {
@@ -25,7 +26,7 @@ const instance = axios.create({
 });
 instance.interceptors.response.use(res => {
   if (res.data.status === 500) {
-    logout();
+    needReLogin();
     window.location.href = '/monitor/login';
     return;
   } else {
@@ -133,6 +134,6 @@ export function apiFetchIssueList(args = {}) {
   return instance.get(
     `${baseUrl}/issues?projectId=${args.projectId}&page=${args.page}&pageSize=${
       args.pageSize
-    }&keyword=${args.keyword}&dimension=${args.dimension}`,
+    }&type=${args.type}&status=${args.status}&interaction=${args.interaction}`,
   );
 }

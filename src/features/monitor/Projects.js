@@ -91,9 +91,9 @@ export class Projects extends Component {
         },
       },
       {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_price' }),
-        dataIndex: 'price',
-        key: 'price',
+        title: this.props.intl.formatMessage({ id: 'projects_table_title_cost' }),
+        dataIndex: 'cost',
+        key: 'cost',
       },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_startTime' }),
@@ -181,6 +181,9 @@ export class Projects extends Component {
     const { page, total, pageSize } = this.props.monitor.projectList;
     return (
       <div className="monitor-projects">
+        <h1>
+          <FormattedMessage id="projects_content_h1" />
+        </h1>
         <Table
           dataSource={this.getDataSource(this.props.monitor)}
           columns={this.getColumns()}
