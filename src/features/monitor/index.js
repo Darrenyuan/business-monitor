@@ -14,3 +14,6 @@ export { default as AccountStep2 } from './AccountStep2';
 export { default as AccountStep3 } from './AccountStep3';
 export { default as AccountStep4 } from './AccountStep4';
 export { default as ResetPassword } from './ResetPassword';
+export { default as ModalAccountCreate } from './ModalAccountCreate';
+export { default as ModalAccountDisable } from './ModalAccountDisable';
+export { default as ModalAccountEnable } from './ModalAccountEnable';
