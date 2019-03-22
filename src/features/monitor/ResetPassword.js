@@ -189,7 +189,7 @@ export class ResetPassword extends Component {
                   validator: this.compareToFirstPassword,
                 },
               ],
-            })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
+            })(<Input type="password" onChange={this.handleConfirmBlur} />)}
           </Form.Item>
           <Form.Item {...tailFormItemLayout}>
             <Button type="primary" htmlType="submit">

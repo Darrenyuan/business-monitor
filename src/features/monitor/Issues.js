@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Link } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -9,7 +9,7 @@ import { URL } from './axios/api';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 import { loadIssueListPageSize } from '../../common/sessionStorage';
-
+import Lightbox from 'react-images';
 const pageSize = 10;
 const getItems = monitor => monitor.issueList.items;
 const getById = monitor => monitor.issueList.byId;
@@ -39,6 +39,9 @@ export class Issues extends Component {
       keywordMapList: keywordDataListList[0],
       pageSize: loadIssueListPageSize(),
       hasInteraction: this.hasInteraction(),
+      imagePath: [],
+      lightboxIsOpen: false,
+      currentImage: 0,
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -149,7 +152,31 @@ export class Issues extends Component {
       interaction: this.state.interaction,
     });
   }
+  closeLightbox = () => {
+    this.setState({
+      imagePath: [],
+      lightboxIsOpen: false,
+      currentImage: 0,
+    });
+  };
 
+  handleClick = paths => {
+    const imageObjectList = [];
+    paths.forEach(path => {
+      const obj = { src: URL + path };
+      imageObjectList.push(obj);
+    });
+    this.setState({
+      imagePath: imageObjectList,
+      lightboxIsOpen: true,
+    });
+  };
+  gotoPrevLightboxImage = () => {
+    this.setState({ currentImage: this.state.currentImage > 0 ? this.state.currentImage - 1 : 0 });
+  };
+  gotoNextLightboxImage = () => {
+    this.setState({ currentImage: this.state.currentImage + 1 });
+  };
   getColumns() {
     return [
       {
@@ -203,13 +230,8 @@ export class Issues extends Component {
         dataIndex: 'imagePath',
         key: 'imagePath',
         render: imagePath => {
-          // let path = URL + '/resources/' + imagePath;
-          // return (
-          //   <div>
-          //     <img src={path} alt="image" height="100" width="100" />
-          //   </div>
-          // );
-          return <div />;
+          var paths = JSON.parse(imagePath);
+          return <Button onClick={() => this.handleClick(paths)}>查看</Button>;
         },
       },
       {
@@ -533,6 +555,7 @@ export class Issues extends Component {
           rowKey="id"
           pagination={false}
           loading={this.props.monitor.issueList.fetchIssueListPending}
+          scroll={{ x: true }}
         />
         <Pagination
           current={page}
@@ -542,6 +565,14 @@ export class Issues extends Component {
           onShowSizeChange={this.handleSizeChange}
           showSizeChanger={true}
           pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
+        />
+        <Lightbox
+          images={this.state.imagePath}
+          isOpen={this.state.lightboxIsOpen}
+          onClose={this.closeLightbox}
+          onClickPrev={this.gotoPrevLightboxImage}
+          onClickNext={this.gotoNextLightboxImage}
+          currentImage={this.state.currentImage}
         />
       </div>
     );

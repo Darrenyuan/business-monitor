@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 import { loadProjectListPageSize, saveProjectListPageSize } from '../../common/sessionStorage';
-
+import Lightbox from 'react-images';
 const getItems = monitor => monitor.projectList.items;
 const getById = monitor => monitor.projectList.byId;
 const dataSourceSelector = createSelector(
@@ -190,6 +190,7 @@ export class Projects extends Component {
           rowKey="id"
           pagination={false}
           loading={this.props.monitor.projectList.fetchProjectListPending}
+          scroll={{ x: true }}
         />
         <Pagination
           current={page}

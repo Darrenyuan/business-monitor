@@ -17,3 +17,4 @@ export { default as ResetPassword } from './ResetPassword';
 export { default as ModalAccountCreate } from './ModalAccountCreate';
 export { default as ModalAccountDisable } from './ModalAccountDisable';
 export { default as ModalAccountEnable } from './ModalAccountEnable';
+export { default as BindProject } from './BindProject';

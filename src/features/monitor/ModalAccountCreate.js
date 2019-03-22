@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Select, Option } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -10,9 +10,10 @@ export class ModalAccountCreate extends Component {
     monitor: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired,
   };
+  componentDidMount() {}
 
   render() {
-    const {getFieldDecorator} = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -35,9 +36,16 @@ export class ModalAccountCreate extends Component {
         },
       },
     };
-    return (
-      <div className="monitor-modal-account-create">Page Content: monitor/ModalAccountCreate</div>
+
+    const prefixSelector = getFieldDecorator('prefix', {
+      initialValue: '86',
+    })(
+      <Select style={{ width: 70 }}>
+        <Option value="86">+86</Option>
+        <Option value="87">+87</Option>
+      </Select>,
     );
+    return <div className="monitor-modal-account-create" />;
   }
 }
 

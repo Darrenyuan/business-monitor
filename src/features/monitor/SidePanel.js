@@ -93,6 +93,11 @@ export class SidePanel extends Component {
                   <FormattedMessage id="sidePanel_reset_password_link" />
                 </Link>
               </Menu.Item>
+              <Menu.Item key="8">
+                <Link to="/monitor/bindproject">
+                  <FormattedMessage id="sidePanel_bind_project" />
+                </Link>
+              </Menu.Item>
             </SubMenu>
             <Menu.Item key="7">
               <Icon type="file" />

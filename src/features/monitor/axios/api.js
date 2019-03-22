@@ -3,7 +3,7 @@ import { saveReLogin } from '../../../common/sessionStorage';
 // let baseUrl = 'http://192.168.0.200:8080/imageserver';
 let baseUrl = 'http://localhost:8080';
 
-let imageUrl = 'http://localhost:7070';
+let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
   baseURL: baseUrl,
   timeout: 5000,
@@ -12,7 +12,7 @@ let option = {
 };
 if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://212.64.74.113/api';
-  imageUrl = 'http://212.64.74.113';
+  imageUrl = 'http://212.64.74.113/resources';
   option = { ...option, crossdomain: false, baseURL: baseUrl };
 }
 
@@ -136,5 +136,10 @@ export function apiFetchIssueList(args = {}) {
     `${baseUrl}/issues?projectId=${args.projectId}&page=${args.page}&pageSize=${
       args.pageSize
     }&type=${args.type}&status=${args.status}&interaction=${args.interaction}`,
+  );
+}
+export function apiBindProject(args = {}) {
+  return instance.put(
+    `${baseUrl}/user/bindproject?username=${args.username}&projectId=${args.projectId}`,
   );
 }

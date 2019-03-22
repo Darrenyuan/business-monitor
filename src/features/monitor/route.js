@@ -22,6 +22,7 @@ import {
   AccountStep3,
   AccountStep4,
   ResetPassword,
+  BindProject,
 } from './';
 import Issues from './Issues';
 export default {
@@ -93,6 +94,7 @@ export default {
     },
     { path: '403', name: 'Page 403', component: Page403 },
     { path: 'account/reset', name: 'Reset password', component: ResetPassword },
+    { path: 'bindproject', name: 'Bind project', component: BindProject },
     // { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
     // { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
     // { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },
