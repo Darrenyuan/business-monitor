@@ -1,11 +1,12 @@
-import React, { Component, Link } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Table, Pagination, Input, Select, Button } from 'antd';
+import { Table, Pagination, Input, Select, Button, Drawer } from 'antd';
 import { FormattedMessage, injectIntl, IntlMessageFormat } from 'react-intl';
 import { URL } from './axios/api';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 import { loadIssueListPageSize } from '../../common/sessionStorage';
@@ -42,6 +43,7 @@ export class Issues extends Component {
       imagePath: [],
       lightboxIsOpen: false,
       currentImage: 0,
+      visible: false,
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -137,6 +139,18 @@ export class Issues extends Component {
     }
   }
 
+  showDrawer = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  onClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
   handlePageChange = newPage => {
     this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${newPage}`);
     // this.props.fetchList(newPage);
@@ -180,14 +194,14 @@ export class Issues extends Component {
   getColumns() {
     return [
       {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_id' }),
-        dataIndex: 'id',
-        key: 'id',
-      },
-      {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        render: (text, record) => {
+          console.log(text, record);
+          const path = `/monitor/issues/${record.id}`;
+          return <div>{<Link to={path}>{record.name}</Link>}</div>;
+        },
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_type' }),
@@ -422,56 +436,87 @@ export class Issues extends Component {
         <h1>
           <FormattedMessage id="issue_content_h1" />
         </h1>
+
+        <Drawer
+          title="项目详情"
+          placement="right"
+          closable={false}
+          onClose={this.onClose}
+          visible={this.state.visible}
+          width="15%"
+        >
+          <table>
+            <tbody>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_name" />
+                  </label>
+                </td>
+                <td>
+                  <input name="projectName" type="text" value={project.name} disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_location" />
+                  </label>
+                </td>
+                <td>
+                  <input name="txtSearch" type="text" value={project.location} disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_overview" />
+                  </label>
+                </td>
+                <td>
+                  <textarea name="projectName" type="text" value={project.overview} disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_designUnit" />
+                  </label>
+                </td>
+                <td>
+                  <input name="projectName" type="text" value={project.designUnit} disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_monitorUnit" />
+                  </label>
+                </td>
+                <td>
+                  <input name="projectName" type="text" value={project.monitorUnit} disabled />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <label>
+                    <FormattedMessage id="projects_table_title_constructionUnit" />
+                  </label>
+                </td>
+                <td>
+                  <input name="projectName" type="text" value={project.constructionUnit} disabled />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </Drawer>
         <table>
           <tbody>
             <tr>
               <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_name" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.name} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_location" />
-                </label>
-              </td>
-              <td>
-                <input name="txtSearch" type="text" value={project.location} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_overview" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.overview} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_designUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.designUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_monitorUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.monitorUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_constructionUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.constructionUnit} disabled />
+                <Button type="primary" onClick={this.showDrawer}>
+                  项目详情
+                </Button>
               </td>
             </tr>
             <tr>

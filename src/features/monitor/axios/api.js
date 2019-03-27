@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
-// let baseUrl = 'http://192.168.0.200:8080/imageserver';
-let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://192.168.0.200:8080/imageserver';
+// let baseUrl = 'http://localhost:8080';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
@@ -142,4 +142,8 @@ export function apiBindProject(args = {}) {
   return instance.put(
     `${baseUrl}/user/bindproject?username=${args.username}&projectId=${args.projectId}`,
   );
+}
+
+export function apiFetchCommentList(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}/comments`);
 }

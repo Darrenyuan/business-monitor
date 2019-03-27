@@ -89,6 +89,7 @@ export class ProjectCreation extends Component {
         },
       ],
     };
+    const { TextArea } = Input;
     return (
       <div className="monitor-project-creation">
         <Form labelAlign="left" layout="horizontal" onSubmit={this.handleSubmit}>
@@ -155,13 +156,13 @@ export class ProjectCreation extends Component {
                 {
                   required: true,
                   min: 1,
-                  max: 200,
+                  max: 2000,
                   message: this.props.intl.formatMessage({
                     id: 'project_creation_label_validation_message',
                   }),
                 },
               ],
-            })(<Input />)}
+            })(<TextArea autosize={{ minRows: 3, maxRows: 6 }} />)}
           </Form.Item>
           <Form.Item
             {...formItemLayout}
