@@ -107,7 +107,7 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
-            <Menu.Item key="9">
+            <Menu.Item key="issuesList">
               <Icon type="issues-close" />
               <span>
                 <Link to="/monitor/issuesList">
@@ -115,7 +115,7 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
-            <Menu.Item key="10">
+            <Menu.Item key="accountList">
               <Icon type="team" />
               <span>
                 <Link to="/monitor/accountList">
