@@ -27,7 +27,7 @@ function renderRouteConfigV3(routes, contextPath) {
       if (!hasRole) {
         item = {
           ...item,
-          component: () => <Redirect to="/monitor/403" />,
+          component: () => <Redirect to="/login" />,
           children: [],
         };
       }

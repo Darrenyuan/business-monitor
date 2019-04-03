@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../monitor/redux/actions';
-import { Form, Icon, Input, Button, Alert, Row, Col } from 'antd';
+import { Form, Icon, Input, Button, Row } from 'antd';
 
 export class Login extends Component {
   state = {
@@ -43,7 +43,8 @@ export class Login extends Component {
     let loginSubmitButtonText = '';
     let usernameLabel = '';
     let passwordLabel = '';
-    if ('en' == this.props.monitor.language) {
+
+    if (this.props.monitor && 'en' == this.props.monitor.language) {
       userNameMessage = 'Please input your username!';
       userNamePlaceHolder = 'username';
       passwordMessage = 'Please input your Password!';
