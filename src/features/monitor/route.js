@@ -15,6 +15,7 @@ import {
   Projects,
   ProjectCreation,
   Account,
+  // Home,
   Previlige,
   Page403,
   AccountStep1,
@@ -25,6 +26,7 @@ import {
   BindProject,
 } from './';
 import Issues from './Issues';
+import Home from './Home';
 export default {
   path: 'monitor',
   name: 'Monitor',
@@ -34,6 +36,7 @@ export default {
     { path: 'welcompage', name: 'Welcome page', component: WelComePage },
     { path: 'login', name: 'Login', component: Login },
     { path: 'togglelanguage', name: 'Toggle language', component: ToggleLanguage },
+    { path: 'home', name: 'home', component: Home },
     {
       path: 'projects/:page',
       roles: [

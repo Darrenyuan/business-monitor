@@ -23,6 +23,7 @@ import { reducer as fetchProjectReducer } from './fetchProject';
 import { reducer as fetchIssueListReducer } from './fetchIssueList';
 import { reducer as syncStepStateReducer } from './syncStepState';
 import { reducer as needReLoginReducer } from './needReLogin';
+import { reducer as fetchSeachProjectListReducer } from './fetchSeachProjectList';
 
 const reducers = [
   loginReducer,
@@ -41,6 +42,7 @@ const reducers = [
   fetchIssueListReducer,
   syncStepStateReducer,
   needReLoginReducer,
+  fetchSeachProjectListReducer,
 ];
 
 export default function reducer(state = initialState, action) {
