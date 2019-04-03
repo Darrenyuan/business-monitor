@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 import configStore from './common/configStore';
 import routeConfig from './common/routeConfig';
 import Root from './Root';
-let cors = require('cors');
 
 const store = configStore();
 

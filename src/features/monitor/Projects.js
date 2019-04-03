@@ -10,8 +10,6 @@ import {
   Form,
   Input,
   InputNumber,
-  Select,
-  Alert,
   Pagination,
   Table,
   Icon,
@@ -24,7 +22,6 @@ import { apiFetchProject } from './axios/api';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { loadProjectListPageSize, saveProjectListPageSize } from '../../common/sessionStorage';
-import Lightbox from 'react-images';
 
 const getItems = monitor => monitor.searchProjectList.items;
 const getById = monitor => monitor.searchProjectList.byId;

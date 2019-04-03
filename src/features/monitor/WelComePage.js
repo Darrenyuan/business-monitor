@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
-import { Calendar } from 'antd';
 
 export default class WelComePage extends Component {
   static propTypes = {};

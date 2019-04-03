@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Table, Pagination, Input, Select, Button,DatePicker,Breadcrumb,Modal } from 'antd';
-import { FormattedMessage, injectIntl, IntlMessageFormat } from 'react-intl';
+import { Table, Pagination, Input, Select, Button, DatePicker, Breadcrumb } from 'antd';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
@@ -12,7 +12,6 @@ import { createSelector } from 'reselect';
 import { loadIssueListPageSize } from '../../common/sessionStorage';
 import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
-const pageSize = 10;
 const getItems = monitor => monitor.issueList.items;
 const getById = monitor => monitor.issueList.byId;
 const dataSourceSelector = createSelector(
@@ -34,14 +33,14 @@ export class IssuesList extends Component {
     this.initData();
     this.state = {
       search: '',
-      projectId: this.props.match.params.projectId ?this.props.match.params.projectId:0,
+      projectId: this.props.match.params.projectId ? this.props.match.params.projectId : 0,
       type: 0,
       status: 0,
       interaction: 0,
       projectName: '',
       issueName: '',
-      startTime:"",
-      endTime: "",
+      startTime: '',
+      endTime: '',
       keywordMapList: keywordDataListList[0],
       pageSize: loadIssueListPageSize(),
       hasInteraction: this.hasInteraction(),
@@ -135,7 +134,7 @@ export class IssuesList extends Component {
     }
   }
 
-  componentDidUpdate(prevProps,prevStatus) {
+  componentDidUpdate(prevProps, prevStatus) {
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
     if (prevPage !== page && !this.props.monitor.issueList.fetchIssueListPending) {
@@ -156,9 +155,9 @@ export class IssuesList extends Component {
       type: this.state.type,
       status: this.state.status,
       interaction: this.state.interaction,
-      projectName:this.state.projectName,
+      projectName: this.state.projectName,
       issueName: this.state.issueName,
-      startTime:this.state.startTime,
+      startTime: this.state.startTime,
       endTime: this.state.endTime,
     });
   }
@@ -231,7 +230,7 @@ export class IssuesList extends Component {
                 </span>
               );
             default:
-              return <span key={0}/>;
+              return <span key={0} />;
           }
         },
       },
@@ -243,25 +242,25 @@ export class IssuesList extends Component {
           switch (status) {
             case 1:
               return (
-                <span style={{color:"red"}} key={5}>
+                <span style={{ color: 'red' }} key={5}>
                   <FormattedMessage id="issue_content_status_wait_feed_back" />
                 </span>
               );
             case 2:
               return (
-                <span style={{color:"blue"}} key={6}>
+                <span style={{ color: 'blue' }} key={6}>
                   <FormattedMessage id="issue_content_status_wait_confirm" />
                 </span>
               );
             case 3:
               return (
-                <span style={{color:"green"}} key={7}>
+                <span style={{ color: 'green' }} key={7}>
                   <FormattedMessage id="issue_content_status_confirm" />
                 </span>
               );
 
             default:
-              return <span key={8}/>;
+              return <span key={8} />;
           }
         },
       },
@@ -289,7 +288,7 @@ export class IssuesList extends Component {
                 </span>
               );
             default:
-              return <span key={13}/>;
+              return <span key={13} />;
           }
         },
       },
@@ -304,19 +303,20 @@ export class IssuesList extends Component {
             .format('YYYY-MM-DD HH:mm:ss');
           return <span>{local}</span>;
         },
-        
       },
       {
         title: this.props.intl.formatMessage({ id: 'sidePanel_operation' }),
         dataIndex: 'id',
         key: 'id',
-        render:(text, record)=> {
+        render: (text, record) => {
           const path = `/monitor/issuesList/issuesDetail/${record.id}`;
           return (
             <div>
-              <Link to={path}>{ this.props.intl.formatMessage({ id: 'sidePanel_viewDetails' })}</Link>
+              <Link to={path}>
+                {this.props.intl.formatMessage({ id: 'sidePanel_viewDetails' })}
+              </Link>
             </div>
-            )
+          );
         },
       },
     ];
@@ -358,8 +358,8 @@ export class IssuesList extends Component {
       interaction: 0,
       projectName: '',
       issueName: '',
-      startTime: "",
-      endTime: "",
+      startTime: '',
+      endTime: '',
     });
     this.fetchData(this.props.match.params.page || '1');
   };
@@ -372,7 +372,7 @@ export class IssuesList extends Component {
     if (this.props.monitor.issueList.fetchIssueListError) {
       return <div>{this.props.monitor.issueList.fetchIssueListError.error}</div>;
     }
-    console.log('thisissues',this);
+    console.log('thisissues', this);
     const { page, total } = this.props.monitor.issueList;
     const { byId } = this.props.monitor.projectList;
     let issueList = [];
@@ -382,9 +382,9 @@ export class IssuesList extends Component {
         issueList.unshift(byId[key]);
       }
     }
-    if(this.state.projectId === 0){
-      project = issueList
-    }else{
+    if (this.state.projectId === 0) {
+      project = issueList;
+    } else {
       project = byId[this.state.projectId];
     }
     const typeList = [];
@@ -421,18 +421,23 @@ export class IssuesList extends Component {
       <div className="monitor-project">
         <div className="title_Breadcrumb">
           <Breadcrumb>
-          <Breadcrumb.Item>{this.props.intl.formatMessage({ id: 'sidePanel_welcome_link' })}</Breadcrumb.Item>
-          <Breadcrumb.Item>{this.props.intl.formatMessage({ id: 'issue_content_h1' })}</Breadcrumb.Item>
-        </Breadcrumb>
+            <Breadcrumb.Item>
+              {this.props.intl.formatMessage({ id: 'sidePanel_welcome_link' })}
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {this.props.intl.formatMessage({ id: 'issue_content_h1' })}
+            </Breadcrumb.Item>
+          </Breadcrumb>
         </div>
-        
+
         <table>
           <tbody>
             <tr>
               <td className="table_title">
                 <label>
-                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
-                     onChange={e => {
+                  <Input
+                    placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
+                    onChange={e => {
                       this.setState({ issueName: e.target.value });
                     }}
                     value={this.state.issueName}
@@ -441,7 +446,8 @@ export class IssuesList extends Component {
               </td>
               <td className="table_title">
                 <label>
-                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' })}
+                  <Input
+                    placeholder={this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' })}
                     onChange={e => {
                       this.setState({ projectName: e.target.value });
                     }}
@@ -452,7 +458,11 @@ export class IssuesList extends Component {
               <td className="table_title">
                 <Select
                   style={{ width: 120 }}
-                  value={this.state.type === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' }) : this.state.type}
+                  value={
+                    this.state.type === 0
+                      ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' })
+                      : this.state.type
+                  }
                   onChange={this.handleTypeChange}
                 >
                   {typeList.map(typeMap => (
@@ -465,7 +475,11 @@ export class IssuesList extends Component {
               <td className="table_title">
                 <Select
                   style={{ width: 120 }}
-                  value={this.state.status === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' }) : this.state.status}
+                  value={
+                    this.state.status === 0
+                      ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' })
+                      : this.state.status
+                  }
                   onChange={this.handleStatusChange}
                 >
                   {statusList.map(statusMap => (
@@ -479,7 +493,11 @@ export class IssuesList extends Component {
                 <td className="table_title">
                   <Select
                     style={{ width: 120 }}
-                    value={this.state.interaction === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' }) : this.state.interaction}
+                    value={
+                      this.state.interaction === 0
+                        ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' })
+                        : this.state.interaction
+                    }
                     onChange={this.handleInteractionChange}
                   >
                     {interactionList.map(interactionMap => (
@@ -490,22 +508,30 @@ export class IssuesList extends Component {
                   </Select>
                 </td>
               )}
-              <td className="table_title"> 
+              <td className="table_title">
                 <DatePicker
-                placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
-                onChange={(date) => {
-                  this.setState({
-                    startTime: moment
-                      .utc(date)
-                      .toDate()
-                      .toISOString(),
-                  });
-                }} />
+                  placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
+                  onChange={date => {
+                    this.setState({
+                      startTime: moment
+                        .utc(date)
+                        .toDate()
+                        .toISOString(),
+                    });
+                  }}
+                />
               </td>
-              <td className="table_title">                
+              <td className="table_title">
                 <DatePicker
                   placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueEndTime' })}
-                  onChange={(date) => { this.setState({ endTime: moment .utc(date).toDate().toISOString(),});}}
+                  onChange={date => {
+                    this.setState({
+                      endTime: moment
+                        .utc(date)
+                        .toDate()
+                        .toISOString(),
+                    });
+                  }}
                 />
               </td>
               <td className="table_title">

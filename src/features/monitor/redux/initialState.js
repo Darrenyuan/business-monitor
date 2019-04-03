@@ -38,7 +38,7 @@ const initialState = {
     fetchProjectPending: false,
     fetchProjectError: null,
   },
-  searchProjectList:{
+  searchProjectList: {
     items: [],
     page: 1,
     pageSize: 3,

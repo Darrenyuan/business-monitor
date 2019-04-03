@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabs, Pagination, Input, Select, Button, Table } from 'antd';
-import { FormattedMessage, injectIntl, IntlMessageFormat } from 'react-intl';
+import { Tabs, Pagination, Input, Table } from 'antd';
+import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
-import moment from 'moment';
 import { createSelector } from 'reselect';
 import { loadIssueListPageSize, saveIssueListPageSize } from '../../common/sessionStorage';
 import Lightbox from 'react-images';
-const pageSize = 10;
 const getItems = monitor => monitor.issueList.items;
 const getById = monitor => monitor.issueList.byId;
 const dataSourceSelector = createSelector(
@@ -23,7 +21,6 @@ const dataSourceSelector = createSelector(
     return items.map(id => byId[id]);
   },
 );
-const Option = Select.Option;
 const dimensionDataList = [];
 const keywordDataListList = [];
 
@@ -240,7 +237,6 @@ export class Issues extends Component {
                   <FormattedMessage id="issue_content_type_security" />
                 </span>
               );
-              break;
             case 4:
               return (
                 <span>
@@ -430,18 +426,6 @@ export class Issues extends Component {
       key: 4,
       value: this.props.intl.formatMessage({ id: 'issue_content_type_other' }),
     });
-    const statusList = [
-      {
-        key: 1,
-        value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_feed_back' }),
-      },
-      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_confirm' }) },
-      { key: 3, value: this.props.intl.formatMessage({ id: 'issue_content_status_confirm' }) },
-    ];
-    const interactionList = [
-      { key: 1, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_inner' }) },
-      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_outer' }) },
-    ];
     return (
       <div className="monitor-project">
         <div className="issues-header">

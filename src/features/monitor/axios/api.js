@@ -11,20 +11,15 @@ let option = {
   crossdomain: true,
   withCredentials: true,
 };
-// if (process.env.NODE_ENV === 'production') {
-//   baseUrl = 'http://212.64.74.113/api';
-//   imageUrl = 'http://212.64.74.113/resources';
-//   option = { ...option, crossdomain: false, baseURL: baseUrl };
-// }
+if (process.env.NODE_ENV === 'production') {
+  baseUrl = 'http://212.64.74.113/api';
+  imageUrl = 'http://212.64.74.113/resources';
+  option = { ...option, crossdomain: false, baseURL: baseUrl };
+}
 
 export const URL = imageUrl;
 
-const instance = axios.create({
-  baseURL: baseUrl,
-  timeout: 5000,
-  crossdomain: true,
-  withCredentials: true,
-});
+const instance = axios.create(option);
 instance.interceptors.response.use(res => {
   if (res.data.status === 500) {
     saveReLogin(true);

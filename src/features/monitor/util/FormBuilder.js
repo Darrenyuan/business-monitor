@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Col, Form, Icon, Row, Tooltip } from 'antd';
-import { injectIntl, FormattedMessage } from 'react-intl';
+import { injectIntl } from 'react-intl';
 
 const FormItem = Form.Item;
 
@@ -17,13 +17,6 @@ function pickProps(source, props) {
   });
   return target;
 }
-
-let ID_SEED = 0;
-function getId() {
-  ID_SEED += 1;
-  return `form_builder_id_${ID_SEED}`;
-}
-
 class FormBuilder extends Component {
   static propTypes = {
     meta: PropTypes.object.isRequired,

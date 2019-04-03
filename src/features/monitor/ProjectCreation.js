@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Button, DatePicker, Form, Input, InputNumber, Select, Alert } from 'antd';
-import FormBuilder from './util/FormBuilder';
+import { Button, DatePicker, Form, Input, InputNumber, Alert } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';

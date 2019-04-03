@@ -11,8 +11,4 @@ export { default as Account } from './Account';
 export { default as Previlige } from './Previlige';
 export { default as Page403 } from './Page403';
 export { default as ResetPassword } from './ResetPassword';
-export { default as ModalAccountCreate } from './ModalAccountCreate';
-export { default as ModalAccountDisable } from './ModalAccountDisable';
-export { default as ModalAccountEnable } from './ModalAccountEnable';
-export { default as BindProject } from './BindProject';
 export { default as IssueDetail } from './IssueDetail';

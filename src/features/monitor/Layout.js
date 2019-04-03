@@ -6,7 +6,7 @@ import zhMessages from './locale/zh';
 import { connect } from 'react-redux';
 import * as en from 'react-intl/locale-data/en';
 import * as zh from 'react-intl/locale-data/zh';
-import { Layout as AntLayout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout as AntLayout } from 'antd';
 import { LocaleProvider } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import en_GB from 'antd/lib/locale-provider/en_GB';
@@ -14,7 +14,6 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
 import 'react-sticky-header/styles.css';
-import StickyHeader from 'react-sticky-header';
 
 export class Layout extends Component {
   consturctor(props) {
@@ -29,7 +28,7 @@ export class Layout extends Component {
     const antLocale = 'zh' !== this.props.monitor.language ? en_GB : zh_CN;
     const antLanguage = 'zh' !== this.props.monitor.language ? 'en-gb' : 'zh-cn';
     moment.locale(antLanguage);
-    const { Header, Footer, Sider, Content } = AntLayout;
+    const { Header, Footer, Content } = AntLayout;
     return (
       <div className="monitor-layout">
         <LocaleProvider locale={antLocale}>

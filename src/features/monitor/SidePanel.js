@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
-import { Layout as AntLayout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout as AntLayout, Menu, Icon } from 'antd';
 
 export class SidePanel extends Component {
   static propTypes = {
@@ -22,7 +22,7 @@ export class SidePanel extends Component {
     this.setState({ collapsed });
   };
   render() {
-    const { Header, Content, Footer, Sider } = AntLayout;
+    const { Sider } = AntLayout;
     const SubMenu = Menu.SubMenu;
     return (
       <div className="monitor-side-panel">
@@ -122,7 +122,7 @@ export class SidePanel extends Component {
               <span>
                 <Link to="/monitor/accountList">
                   <FormattedMessage id="account_List" />
-                  </Link>
+                </Link>
               </span>
             </Menu.Item>
             <Menu.Item key="9">

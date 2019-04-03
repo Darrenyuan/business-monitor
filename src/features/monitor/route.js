@@ -7,6 +7,14 @@
 // Learn more from: http://rekit.js.org/docs/routing.html
 // This is the JSON way to define React Router rules in a Rekit app.
 // Learn more from: http://rekit.js.org/docs/routing.html
+// This is the JSON way to define React Router rules in a Rekit app.
+// Learn more from: http://rekit.js.org/docs/routing.html
+// This is the JSON way to define React Router rules in a Rekit app.
+// Learn more from: http://rekit.js.org/docs/routing.html
+// This is the JSON way to define React Router rules in a Rekit app.
+// Learn more from: http://rekit.js.org/docs/routing.html
+// This is the JSON way to define React Router rules in a Rekit app.
+// Learn more from: http://rekit.js.org/docs/routing.html
 import {
   Login,
   WelComePage,
@@ -19,7 +27,6 @@ import {
   Previlige,
   Page403,
   ResetPassword,
-  BindProject,
   IssueDetail,
 } from './';
 import Issues from './Issues';
@@ -98,7 +105,6 @@ export default {
     },
     { path: '403', name: 'Page 403', component: Page403 },
     { path: 'account/reset', name: 'Reset password', component: ResetPassword },
-    { path: 'bindproject', name: 'Bind project', component: BindProject },
     {
       path: 'issues/:id',
       name: 'Issue detail',

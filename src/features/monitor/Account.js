@@ -1,14 +1,10 @@
 import React, { Component } from 'react';
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, Alert, Steps } from 'antd';
-import FormBuilder from './util/FormBuilder';
-import { FormattedMessage, injectIntl } from 'react-intl';
+import { Form } from 'antd';
+import { injectIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import _ from 'lodash';
-
-const Option = Select.Option;
 
 export class Account extends Component {
   constructor(props) {
