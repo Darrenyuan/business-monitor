@@ -1,0 +1,185 @@
+@import '../../styles/mixins';
+@import '~antd/dist/antd.css';
+
+
+.title_Breadcrumb {
+  .ant-breadcrumb {
+    font-size: 18px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+}
+.title_Title {
+  div,h2{
+    float: left;
+  }
+  h2{
+    color: #666;
+  }
+  .title {
+    width: 300px;
+    text-align: left;
+    line-height: 35px;
+  }
+  .status {
+    width: 70px;
+    color: #fff;
+    margin-left: 150px;
+    background-color: #e57b85;
+    line-height: 39px;
+    border-radius: 46%;
+  }
+  .status1{
+    background-color: #008891;
+  }
+  .status2{
+    background-color: #24d197;
+  }
+}
+.title_Title::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.title_Bottom{
+  margin-top: 10px;
+  div{
+    float: left;
+  }
+  
+  .people,
+  .time{
+    margin-right: 55px;
+  }
+}
+.title_Bottom::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.content_Tabs{
+  margin-top: 20px;
+  text-align: left
+}
+.content_input {
+  color: #000;
+}
+.ant-form-item-label{
+  text-align: left
+}
+.issue_img{
+  height: 260px;
+  border: 1px solid #ccc;
+  .imgs {
+    float: left;
+    transform: rotate(90deg);
+    margin-top: 60px;
+    margin-right: -7%;
+    .img_item{
+      width: 240px;
+      height: 120px;
+    }
+  }
+  .imgs + .imgs {
+    margin-left: 60px;
+  }
+  .imgs:hover{
+    cursor:pointer;
+  }
+}
+.issue_img::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.issue_description{
+  height: 200px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  span{
+    text-indent: 1em;
+    display: block;
+    line-height: 28px;
+  }
+}
+.minHeight{
+  height: 665px;
+  overflow-y:auto;
+  overflow-x: hidden;
+}
+.content_feedback{
+  margin-top: 10px;
+  height: 40px;
+  line-height: 40px;
+  div{
+    float: left;
+  }
+  .time,.people{
+    margin-right: 150px;
+  }
+  .status{
+    width: 70px;
+    color: #fff;
+    margin-left: 50px;
+    background-color: #008891;
+    text-align: center;
+    border-radius: 46%;
+  }
+  .status2{
+    background-color: #24d197;
+  }
+  .notpass{
+    background-color: #b00404;
+  }
+}
+.content_feedback::after{
+  content: "";
+  display: block;
+  clear: both;
+}
+.dataImg,.noimg{
+  position: absolute;
+  width: 226px;
+  height: 205px;
+  background-image: url("../../images/timgs.png");
+  background-repeat: no-repeat;
+  top: 0;
+  left: 0;
+  margin: auto;
+  bottom: 0;
+  right: 0;
+}
+.noimg{
+  width: 350px;
+  height: 201px;
+  background-image: url("../../images/noimage.png");
+}
+.swiper_coat{
+  width: 784px;
+  height: 451px;
+  .swiper_img{
+    width: 737px;
+    height: 451px;
+  }
+}
+.modal_img{
+  width: 753px;
+  height: 500px;
+  transform: rotate(90deg);
+  margin-top: 122px;
+  margin-left: -141px;
+}
+
+.swiper_imgDiv{
+  width: 528px;
+  height: 744px;
+}
+
+
+.swiper_img{
+  width: 721px;
+  height: 471px;
+  transform: rotate(90deg);
+  margin-top: 138px;
+  margin-left: -124px;
+}

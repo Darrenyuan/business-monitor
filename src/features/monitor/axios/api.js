@@ -2,6 +2,7 @@ import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
 let baseUrl = 'http://192.168.0.200:8080/imageserver';
 // let baseUrl = 'http://localhost:8080';
+// let baseUrl = 'http://192.168.0.200:8080/imageserver';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
@@ -10,11 +11,11 @@ let option = {
   crossdomain: true,
   withCredentials: true,
 };
-if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://212.64.74.113/api';
-  imageUrl = 'http://212.64.74.113/resources';
-  option = { ...option, crossdomain: false, baseURL: baseUrl };
-}
+// if (process.env.NODE_ENV === 'production') {
+//   baseUrl = 'http://212.64.74.113/api';
+//   imageUrl = 'http://212.64.74.113/resources';
+//   option = { ...option, crossdomain: false, baseURL: baseUrl };
+// }
 
 export const URL = imageUrl;
 
@@ -55,7 +56,9 @@ export function apiCreateUser(args = {}) {
     title: args.title,
   });
 }
-
+export function apiUserBlock(args = {}) {
+  return instance.put(`${baseUrl}/user/block?username=${args.username}`);
+}
 export function apiResetPassword(args = {}) {
   return instance.put(`/password?password=${args.password}&newPassword=${args.newPassword}`);
 }
@@ -126,18 +129,44 @@ export function apiGetAvailableProjectIssuesSize(args = {}) {
 export function apiFetchProjectList(args = {}) {
   return instance.get(`${baseUrl}/projects?page=${args.page}&pageSize=${args.pageSize}`);
 }
-
+export function apiSearchProjectList(args = {}) {
+  return instance.get(
+    `${baseUrl}/projects/criteria?page=${args.page}&pageSize=${args.pageSize}&projectName=${
+      args.projectName
+    }
+    &startTime=${args.startTime}&endTime=${args.endTime}`,
+  );
+}
 export function apiFetchProject(args = {}) {
   return instance.get(`${baseUrl}/projects/${args.projectId}`);
 }
 
 export function apiFetchIssueList(args = {}) {
   return instance.get(
-    `${baseUrl}/issues?projectId=${args.projectId}&page=${args.page}&pageSize=${
+    `${baseUrl}/issues/criteria?projectId=${args.projectId}&page=${args.page}&pageSize=${
       args.pageSize
-    }&type=${args.type}&status=${args.status}&interaction=${args.interaction}`,
+    }&projectName=${args.projectName}&type=${args.type}&status=${args.status}&interaction=${
+      args.interaction
+    }&issueName=${args.issueName}&startTime=${args.startTime}&endTime=${args.endTime}`,
   );
 }
+export function apiIssueDetail(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}`);
+}
+export function apiFetchReplyList(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}/feedback`);
+}
+export function apiFetchUserList(args = {}) {
+  return instance.get(
+    `${baseUrl}/user/criteria?page=${args.page}&pageSize=${args.pageSize}&projectName=${
+      args.projectName
+    }&username=${args.username}&roleName=${args.roleName}&status=${args.status}`,
+  );
+}
+export function apiFetchRepliesList(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}/replies`);
+}
+
 export function apiBindProject(args = {}) {
   return instance.put(
     `${baseUrl}/user/bindproject?username=${args.username}&projectId=${args.projectId}`,
@@ -146,4 +175,53 @@ export function apiBindProject(args = {}) {
 
 export function apiFetchCommentList(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}/comments`);
+}
+
+export function apiCreateAcciunt(args = {}) {
+  return instance.post(baseUrl + '/user/userroleproject', {
+    username: args.username,
+    nickname: args.nickname,
+    roles: args.roles,
+    phoneNumber: args.phoneNumber,
+    email: args.email,
+    password: args.password,
+    status: args.status,
+    projectIds: args.projectIds,
+  });
+}
+export function apiUpdateAcciunt(args = {}) {
+  return instance.put(baseUrl + '/user/userroleproject', {
+    userId: args.userId,
+    username: args.username,
+    nickname: args.nickname,
+    roles: args.roles,
+    phoneNumber: args.phoneNumber,
+    email: args.email,
+    status: args.status,
+    projectIds: args.projectIds,
+  });
+}
+
+export function apiEditProject(args = {}) {
+  const url = baseUrl + '/project';
+  return instance.put(url, {
+    id: args.id,
+    name: args.name,
+    cost: args.cost,
+    startTime: args.startTime,
+    endTime: args.endTime,
+    location: args.location,
+    overview: args.overview,
+    designUnit: args.designUnit,
+    monitorUnit: args.monitorUnit,
+    constructionUnit: args.constructionUnit,
+  });
+
+  //   return instance.put(`${baseUrl}/project?id=${args.id}&name=${args.name}&cost=${args.cost}
+  //   &startTime=${args.startTime}&endTime=${args.endTime}&location=${args.location}&overview=${
+  //     args.overview
+  //   }
+  // &designUnit=${args.designUnit}&monitorUnit=${args.monitorUnit}&constructionUnit=${
+  //     args.constructionUnit
+  //   }`);
 }

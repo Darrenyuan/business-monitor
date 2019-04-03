@@ -7,12 +7,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import _ from 'lodash';
-import AccountStep1 from './AccountStep1';
-import AccountStep2 from './AccountStep2';
-import AccountStep3 from './AccountStep3';
-import AccountStep4 from './AccountStep4';
-import { HashRouter as Router, Route, Link } from 'react-router-dom';
-import { apiCreateStepUser } from './axios/api';
 
 const Option = Select.Option;
 
@@ -20,10 +14,10 @@ export class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username:'',
-      password:'',
-      nickname:'',
-      roleName:'',
+      username: '',
+      password: '',
+      nickname: '',
+      roleName: '',
     };
   }
 

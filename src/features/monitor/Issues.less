@@ -1,7 +1,76 @@
 @import '../../styles/mixins';
 
+.tabs {
+  text-align: left;
+}
 .monitor-project {
 }
 .ant-table td {
   white-space: nowrap;
+}
+.issues-header {
+  text-align: left;
+  margin-bottom: 30px;
+}
+.issues-header div {
+  margin-bottom: 14px;
+  color: #628390;
+  font-size: 22px;
+}
+.issues-header span {
+  color: #bebebe;
+}
+.detail_row {
+  width: 100%;
+  margin-top: 20px;
+}
+.detail_row_itemLeft {
+  display: inline-block;
+  width: 50%;
+}
+.detail_row_itemRight {
+  display: inline-block;
+  width: 50%;
+}
+.detail_row_item_name {
+  display: inline-block;
+  min-width: 100px;
+  text-align: right;
+}
+.detail_row_item_text {
+  display: inline-block;
+  width: 200px;
+  margin-left: 20px;
+}
+.detail_row_final {
+  margin-top: 40px;
+}
+.detail_row_final label {
+  display: inline-block;
+  vertical-align: top;
+  min-width: 100px;
+  text-align: right;
+}
+.detail_row_final_text {
+  margin-left: 20px;
+  display: inline-block;
+  width: 50%;
+}
+.projects_title_pagination {
+  margin-top: 20px;
+  text-align: right;
+}
+.issues_table {
+  width: 80%;
+  margin-left: 10%;
+}
+:global {
+  .projects_new_submit {
+    border-color: aliceblue;
+    background-color: #628390;
+  }
+  .projects_new_submit :hover {
+    border-color: aliceblue;
+    background-color: #628390;
+  }
 }

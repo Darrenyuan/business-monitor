@@ -72,6 +72,7 @@ export class SidePanel extends Component {
                 </Link>
               </Menu.Item>
             </SubMenu>
+
             <SubMenu
               key="sub2"
               title={
@@ -99,11 +100,36 @@ export class SidePanel extends Component {
                 </Link>
               </Menu.Item>
             </SubMenu>
+
             <Menu.Item key="7">
               <Icon type="file" />
               <span>
                 <Link to="/monitor/togglelanguage">
                   <FormattedMessage id="sidePanel_toggle_language_link" />
+                </Link>
+              </span>
+            </Menu.Item>
+            <Menu.Item key="issuesList">
+              <Icon type="issues-close" />
+              <span>
+                <Link to="/monitor/issuesList">
+                  <FormattedMessage id="sidePanel_issueManagement" />
+                </Link>
+              </span>
+            </Menu.Item>
+            <Menu.Item key="accountList">
+              <Icon type="team" />
+              <span>
+                <Link to="/monitor/accountList">
+                  <FormattedMessage id="account_List" />
+                  </Link>
+              </span>
+            </Menu.Item>
+            <Menu.Item key="9">
+              <Icon type="home" />
+              <span>
+                <Link to="/monitor/home">
+                  <FormattedMessage id="sidePanel_home" />
                 </Link>
               </span>
             </Menu.Item>

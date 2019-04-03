@@ -15,17 +15,19 @@ import {
   Projects,
   ProjectCreation,
   Account,
+  // Home,
   Previlige,
   Page403,
-  AccountStep1,
-  AccountStep2,
-  AccountStep3,
-  AccountStep4,
   ResetPassword,
   BindProject,
   IssueDetail,
 } from './';
 import Issues from './Issues';
+import IssuesList from './issuesList';
+import IssuesDetails from './IssuesDetails';
+import AccountList from './accountList';
+import createAccount from './Createacciunt';
+import Home from './Home';
 export default {
   path: 'monitor',
   name: 'Monitor',
@@ -35,6 +37,7 @@ export default {
     { path: 'welcompage', name: 'Welcome page', component: WelComePage },
     { path: 'login', name: 'Login', component: Login },
     { path: 'togglelanguage', name: 'Toggle language', component: ToggleLanguage },
+    { path: 'home', name: 'home', component: Home },
     {
       path: 'projects/:page',
       roles: [
@@ -116,9 +119,9 @@ export default {
         'ownerEngineer',
       ],
     },
-    // { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
-    // { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
-    // { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },
-    // { path: 'account/create/step/4', name: 'Account step 4', component: AccountStep4 },
+    { path: 'issuesList', name: 'IssuesList', component: IssuesList },
+    { path: 'issuesList/issuesDetail/:issueId', name: 'IssuesDetail', component: IssuesDetails },
+    { path: 'accountList', name: 'accountList', component: AccountList },
+    { path: 'createAccount', name: 'accountList', component: createAccount },
   ],
 };
