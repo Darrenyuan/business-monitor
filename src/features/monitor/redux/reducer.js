@@ -26,6 +26,7 @@ import { reducer as needReLoginReducer } from './needReLogin';
 import { reducer as fetchReplyList } from "./fetchReplyList";
 import { reducer as fetchRepliesList } from "./fetchRepliesList";
 import { reducer as fetchUserListReducer } from './fetchUserList';
+import { reducer as fetchSeachProjectListReducer } from './fetchSeachProjectList';
 
 const reducers = [
   loginReducer,
@@ -47,6 +48,7 @@ const reducers = [
   fetchReplyList,
   fetchRepliesList,
   fetchUserListReducer,
+  fetchSeachProjectListReducer,
 ];
 
 export default function reducer(state = initialState, action) {

@@ -38,6 +38,17 @@ const initialState = {
     fetchProjectPending: false,
     fetchProjectError: null,
   },
+  searchProjectList:{
+    items: [],
+    page: 1,
+    pageSize: 3,
+    total: 0,
+    byId: {},
+    listNeedReload: false,
+    fetchSeachProjectListError: null,
+    fetchSeachProjectListPending: false,
+    fetchSeachProjectListError: null,
+  },
   issueList: {
     items: [],
     page: 1,
@@ -78,6 +89,8 @@ const initialState = {
   reLogin: false,
   fetchUserListPending: false,
   fetchUserListError: null,
+  fetchSeachProjectListPending: false,
+  fetchSeachProjectListError: null,
 };
 
 export default initialState;

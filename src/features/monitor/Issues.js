@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Table, Pagination, Input, Select, Button } from 'antd';
+import { Tabs, Pagination, Input, Select, Button, Table } from 'antd';
 import { FormattedMessage, injectIntl, IntlMessageFormat } from 'react-intl';
 import { URL } from './axios/api';
 import moment from 'moment';
 import { createSelector } from 'reselect';
-import { loadIssueListPageSize } from '../../common/sessionStorage';
+import { loadIssueListPageSize, saveIssueListPageSize } from '../../common/sessionStorage';
 import Lightbox from 'react-images';
 const pageSize = 10;
 const getItems = monitor => monitor.issueList.items;
@@ -42,6 +42,10 @@ export class Issues extends Component {
       imagePath: [],
       lightboxIsOpen: false,
       currentImage: 0,
+      projectName: '',
+      issueName: '',
+      startTime: "",
+      endTime: "",
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -129,10 +133,15 @@ export class Issues extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
-    if (prevPage !== page && !this.props.monitor.issueList.fetchIssueListPending) {
+    const pageSize = parseInt(this.state.pageSize || 5, 10);
+    const prevPageSize = parseInt(prevState.pageSize || 5, 10);
+    if (
+      (prevPage !== page || pageSize !== prevPageSize) &&
+      !this.props.monitor.issueList.fetchIssueListPending
+    ) {
       this.fetchData(page);
     }
   }
@@ -150,6 +159,10 @@ export class Issues extends Component {
       type: this.state.type,
       status: this.state.status,
       interaction: this.state.interaction,
+      projectName:this.state.projectName,
+      issueName: this.state.issueName,
+      startTime:this.state.startTime,
+      endTime: this.state.endTime,
     });
   }
   closeLightbox = () => {
@@ -225,20 +238,20 @@ export class Issues extends Component {
           }
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_imagePath' }),
-        dataIndex: 'imagePath',
-        key: 'imagePath',
-        render: imagePath => {
-          var paths = JSON.parse(imagePath);
-          return <Button onClick={() => this.handleClick(paths)}>查看</Button>;
-        },
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_description' }),
-        dataIndex: 'description',
-        key: 'description',
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_imagePath' }),
+      //   dataIndex: 'imagePath',
+      //   key: 'imagePath',
+      //   render: imagePath => {
+      //     var paths = JSON.parse(imagePath);
+      //     return <Button onClick={() => this.handleClick(paths)}>查看</Button>;
+      //   },
+      // },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_description' }),
+      //   dataIndex: 'description',
+      //   key: 'description',
+      // },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_status' }),
         dataIndex: 'status',
@@ -302,18 +315,18 @@ export class Issues extends Component {
           }
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_createTime' }),
-        dataIndex: 'createTime',
-        key: 'createTime',
-        render: createTime => {
-          var stillUtc = moment.utc(createTime).toDate();
-          var local = moment(stillUtc)
-            .local()
-            .format('YYYY-MM-DD HH:mm:ss');
-          return <span>{local}</span>;
-        },
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_createTime' }),
+      //   dataIndex: 'createTime',
+      //   key: 'createTime',
+      //   render: createTime => {
+      //     var stillUtc = moment.utc(createTime).toDate();
+      //     var local = moment(stillUtc)
+      //       .local()
+      //       .format('YYYY-MM-DD HH:mm:ss');
+      //     return <span>{local}</span>;
+      //   },
+      // },
       // {
       //   title: this.props.intl.formatMessage({ id: 'issue_table_title_lastUpdateTime' }),
       //   dataIndex: 'lastUpdateTime',
@@ -366,39 +379,27 @@ export class Issues extends Component {
     });
     this.fetchData(this.props.match.params.page || '1');
   };
-
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
-    this.props.actions.fetchIssueList({
-      page: current,
-      pageSize: this.state.pageSize,
-      projectId: this.state.projectId,
-      type: this.state.type,
-      status: this.state.status,
-      interaction: this.state.interaction,
-    });
+    saveIssueListPageSize(pageSize);
+    this.fetchData();
+    // this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${current}`);
     this.forceUpdate();
   };
   render() {
     if (this.props.monitor.issueList.fetchIssueListError) {
       return <div>{this.props.monitor.issueList.fetchIssueListError.error}</div>;
     }
-    console.log('thisissues',this);
+
+    const TabPane = Tabs.TabPane;
+    const { TextArea } = Input;
     const { page, total } = this.props.monitor.issueList;
-    const { byId } = this.props.monitor.projectList;
-    let issueList = [];
-    let project;
-    if (byId) {
-      for (const key in byId) {
-        issueList.unshift(byId[key]);
-      }
-    }
-    if(this.state.projectId === 0){
-      project = issueList
-    }else{
-      project = byId[this.state.projectId];
-    }
+    const { byId } = this.props.monitor.searchProjectList;
+    const project = byId[this.state.projectId];
     const typeList = [];
+    const calculate = () => {
+      return project.startTime.split('T')[0] + ' ~ ' + project.endTime.split('T')[0];
+    };
     typeList.push({
       key: 1,
       value: this.props.intl.formatMessage({ id: 'issue_content_type_material' }),
@@ -427,164 +428,114 @@ export class Issues extends Component {
       { key: 1, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_inner' }) },
       { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_outer' }) },
     ];
-    console.log('============>hasInteraction=' + this.state.hasInteraction);
     return (
       <div className="monitor-project">
-        <h1>
-          <FormattedMessage id="issue_content_h1" />
-        </h1>
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_name" />
+        <div className="issues-header">
+          <div>{project.name}</div>
+          <span>
+            <FormattedMessage id="projects_table_title_createTime" />
+            &nbsp;&nbsp;{project.createTime.split('T')[0]}
+          </span>
+        </div>
+        <Tabs defaultActiveKey="1" className="tabs">
+          <TabPane
+            tab={this.props.intl.formatMessage({ id: 'projects_table_title_detail' })}
+            key="1"
+          >
+            <div className="detail_row">
+              <div className="detail_row_itemLeft">
+                <label className="detail_row_item_name">
+                  <FormattedMessage id="projects_table_title_duration" />
                 </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.name} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_location" />
+                <Input disabled className="detail_row_item_text" placeholder={calculate()} />
+              </div>
+              <div className="detail_row_itemRight">
+                <label className="detail_row_item_name">
+                  <FormattedMessage id="projects_table_title_designUnit" />
                 </label>
-              </td>
-              <td>
-                <input name="txtSearch" type="text" value={project.location} disabled />
-              </td>
-              <td>
+                <Input disabled placeholder={project.designUnit} className="detail_row_item_text" />
+              </div>
+            </div>
+            <div className="detail_row">
+              <div className="detail_row_itemLeft">
+                <label className="detail_row_item_name">
+                  <FormattedMessage id="projects_table_title_cost" />
+                </label>
+                <Input disabled placeholder={project.cost} className="detail_row_item_text" />
+              </div>
+              <div className="detail_row_itemRight">
+                <label className="detail_row_item_name">
+                  <FormattedMessage id="projects_table_title_monitorUnit" />
+                </label>
+                <Input
+                  disabled
+                  placeholder={project.monitorUnit}
+                  className="detail_row_item_text"
+                />
+              </div>
+              <div className="detail_row">
+                <div className="detail_row_itemLeft">
+                  <label className="detail_row_item_name">
+                    <FormattedMessage id="projects_table_title_location" />
+                  </label>
+                  <Input disabled placeholder={project.location} className="detail_row_item_text" />
+                </div>
+                <div className="detail_row_itemRight">
+                  <label className="detail_row_item_name">
+                    <FormattedMessage id="projects_table_title_constructionUnit" />
+                  </label>
+                  <Input
+                    disabled
+                    placeholder={project.constructionUnit}
+                    className="detail_row_item_text"
+                  />
+                </div>
+              </div>
+              <div className="detail_row_final">
                 <label>
                   <FormattedMessage id="projects_table_title_overview" />
                 </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.overview} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_designUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.designUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_monitorUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.monitorUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_constructionUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.constructionUnit} disabled />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label>
-                  <FormattedMessage id="issue_search_label_type" />
-                </label>
-              </td>
-              <td>
-                <Select
-                  style={{ width: 120 }}
-                  value={this.state.type === 0 ? '' : this.state.type}
-                  onChange={this.handleTypeChange}
-                >
-                  {typeList.map(typeMap => (
-                    <Option key={typeMap.value} value={typeMap.key}>
-                      {typeMap.value}
-                    </Option>
-                  ))}
-                </Select>
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="issue_search_label_status" />
-                </label>
-              </td>
-              <td>
-                <Select
-                  style={{ width: 120 }}
-                  value={this.state.status === 0 ? '' : this.state.status}
-                  onChange={this.handleStatusChange}
-                >
-                  {statusList.map(statusMap => (
-                    <Option key={statusMap.value} value={statusMap.key}>
-                      {statusMap.value}
-                    </Option>
-                  ))}
-                </Select>
-              </td>
-              {Boolean(this.state.hasInteraction) && (
-                <td>
-                  <label>
-                    <FormattedMessage id="issue_search_label_interaction" />
-                  </label>
-                </td>
-              )}
-              {Boolean(this.state.hasInteraction) && (
-                <td>
-                  <Select
-                    style={{ width: 120 }}
-                    value={this.state.interaction === 0 ? '' : this.state.interaction}
-                    onChange={this.handleInteractionChange}
-                  >
-                    {interactionList.map(interactionMap => (
-                      <Option key={interactionMap.value} value={interactionMap.key}>
-                        {interactionMap.value}
-                      </Option>
-                    ))}
-                  </Select>
-                </td>
-              )}
-
-              <td>
-                <Button type="primary" icon="search" onClick={this.handleSearch}>
-                  <FormattedMessage id="issue_search_label_search" />
-                </Button>
-              </td>
-              <td>
-                <Button type="primary" icon="reload" onClick={this.handleReset}>
-                  <FormattedMessage id="issue_search_label_reset" />
-                </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <br />
-
-        <Table
-          dataSource={this.getDataSource(this.props.monitor)}
-          columns={this.getColumns()}
-          rowKey="id"
-          pagination={false}
-          loading={this.props.monitor.issueList.fetchIssueListPending}
-          scroll={{ x: true }}
-        />
-        <Pagination
-          current={page}
-          onChange={this.handlePageChange}
-          total={total}
-          pageSize={this.state.pageSize}
-          onShowSizeChange={this.handleSizeChange}
-          showSizeChanger={true}
-          pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
-        />
-        <Lightbox
-          images={this.state.imagePath}
-          isOpen={this.state.lightboxIsOpen}
-          onClose={this.closeLightbox}
-          onClickPrev={this.gotoPrevLightboxImage}
-          onClickNext={this.gotoNextLightboxImage}
-          currentImage={this.state.currentImage}
-        />
+                <TextArea
+                  rows={5}
+                  disabled
+                  className="detail_row_final_text"
+                  placeholder={project.overview}
+                />
+              </div>
+            </div>
+          </TabPane>
+          <TabPane
+            tab={this.props.intl.formatMessage({ id: 'projects_table_title_operator_issue' })}
+            key="2"
+          >
+            <Table
+              dataSource={this.getDataSource(this.props.monitor)}
+              columns={this.getColumns()}
+              pagination={false}
+              loading={this.props.monitor.issueList.fetchIssueListPending}
+              className="issues_table"
+            />
+            <div className="projects_title_pagination">
+              <Pagination
+                current={page}
+                onChange={this.handlePageChange}
+                total={total}
+                pageSize={this.state.pageSize}
+                onShowSizeChange={this.handleSizeChange}
+                showSizeChanger={true}
+                pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
+              />
+              <Lightbox
+                images={this.state.imagePath}
+                isOpen={this.state.lightboxIsOpen}
+                onClose={this.closeLightbox}
+                onClickPrev={this.gotoPrevLightboxImage}
+                onClickNext={this.gotoNextLightboxImage}
+                currentImage={this.state.currentImage}
+              />
+            </div>
+          </TabPane>
+        </Tabs>
       </div>
     );
   }

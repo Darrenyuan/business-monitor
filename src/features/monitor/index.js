@@ -1,4 +1,5 @@
 export { default as Login } from './Login';
+// export { default as Home } from './Home';
 export { default as SidePanel } from './SidePanel';
 export { default as WelComePage } from './WelComePage';
 export { default as Layout } from './Layout';

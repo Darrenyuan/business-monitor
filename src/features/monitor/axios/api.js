@@ -2,6 +2,7 @@ import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
 let baseUrl = 'http://192.168.0.200:8080/imageserver';
 // let baseUrl = 'http://localhost:8080';
+// let baseUrl = 'http://192.168.0.200:8080/imageserver';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
@@ -128,7 +129,14 @@ export function apiGetAvailableProjectIssuesSize(args = {}) {
 export function apiFetchProjectList(args = {}) {
   return instance.get(`${baseUrl}/projects?page=${args.page}&pageSize=${args.pageSize}`);
 }
-
+export function apiSearchProjectList(args = {}) {
+  return instance.get(
+    `${baseUrl}/projects/criteria?page=${args.page}&pageSize=${args.pageSize}&projectName=${
+      args.projectName
+    }
+    &startTime=${args.startTime}&endTime=${args.endTime}`,
+  );
+}
 export function apiFetchProject(args = {}) {
   return instance.get(`${baseUrl}/projects/${args.projectId}`);
 }
@@ -155,6 +163,7 @@ export function apiFetchUserList(args = {}) {
 export function apiFetchRepliesList(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}/replies`);
 }
+
 export function apiBindProject(args = {}) {
   return instance.put(
     `${baseUrl}/user/bindproject?username=${args.username}&projectId=${args.projectId}`,
@@ -183,4 +192,28 @@ export function apiUpdateAcciunt(args = {}){
     status: args.status,
     projectIds: args.projectIds,
   });
+}
+
+export function apiEditProject(args = {}) {
+  const url = baseUrl + '/project';
+  return instance.put(url, {
+    id: args.id,
+    name: args.name,
+    cost: args.cost,
+    startTime: args.startTime,
+    endTime: args.endTime,
+    location: args.location,
+    overview: args.overview,
+    designUnit: args.designUnit,
+    monitorUnit: args.monitorUnit,
+    constructionUnit: args.constructionUnit,
+  });
+
+  //   return instance.put(`${baseUrl}/project?id=${args.id}&name=${args.name}&cost=${args.cost}
+  //   &startTime=${args.startTime}&endTime=${args.endTime}&location=${args.location}&overview=${
+  //     args.overview
+  //   }
+  // &designUnit=${args.designUnit}&monitorUnit=${args.monitorUnit}&constructionUnit=${
+  //     args.constructionUnit
+  //   }`);
 }
