@@ -36,6 +36,7 @@ const zhMessages = {
   sidePanel_issueStatus: '问题状态',
   sidePanel_issueInteraction: '交互',
   sidePanel_issueStartingTime: '起始时间',
+  sidePanel_issueEndTime: "结束时间",
   sidePanel_projectBelongs: '所属工程',
   sidePanel_viewDetails: '查看详情',
   sidePanel_operation: '操作',
@@ -103,6 +104,7 @@ const zhMessages = {
   projects_table_title_monitorUnit: '监理单位',
   projects_table_title_constructionUnit: '建造单位',
   projects_table_title_createTime: '创建时间',
+  
   projects_table_title_operator: '操作',
   projects_table_title_operator_value: '详情',
   projects_content_h1: '项目列表信息',

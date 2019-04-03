@@ -40,8 +40,8 @@ export class IssuesList extends Component {
       interaction: 0,
       projectName: '',
       issueName: '',
-      startTime:'',
-      endTime: '',
+      startTime:"",
+      endTime: "",
       keywordMapList: keywordDataListList[0],
       pageSize: loadIssueListPageSize(),
       hasInteraction: this.hasInteraction(),
@@ -356,13 +356,13 @@ export class IssuesList extends Component {
       type: 0,
       status: 0,
       interaction: 0,
+      projectName: '',
+      issueName: '',
+      startTime: "",
+      endTime: "",
     });
     this.fetchData(this.props.match.params.page || '1');
   };
-  handleOnChangeDate(value,v){
-    console.log('valueTime',value._d);
-    console.log('vvvvvvvvv',v);
-  }
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
     this.fetchData();
@@ -431,12 +431,22 @@ export class IssuesList extends Component {
             <tr>
               <td className="table_title">
                 <label>
-                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}/>
+                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
+                     onChange={e => {
+                      this.setState({ issueName: e.target.value });
+                    }}
+                    value={this.state.issueName}
+                  />
                 </label>
               </td>
               <td className="table_title">
                 <label>
-                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' })}/>
+                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' })}
+                    onChange={e => {
+                      this.setState({ projectName: e.target.value });
+                    }}
+                    value={this.state.projectName}
+                  />
                 </label>
               </td>
               <td className="table_title">
@@ -481,9 +491,22 @@ export class IssuesList extends Component {
                 </td>
               )}
               <td className="table_title"> 
-                <DatePicker 
+                <DatePicker
                 placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
-                onChange={this.handleOnChangeDate} />
+                onChange={(date) => {
+                  this.setState({
+                    startTime: moment
+                      .utc(date)
+                      .toDate()
+                      .toISOString(),
+                  });
+                }} />
+              </td>
+              <td className="table_title">                
+                <DatePicker
+                  placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueEndTime' })}
+                  onChange={(date) => { this.setState({ endTime: moment .utc(date).toDate().toISOString(),});}}
+                />
               </td>
               <td className="table_title">
                 <Button type="primary" icon="search" onClick={this.handleSearch}>

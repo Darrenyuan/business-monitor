@@ -33,6 +33,7 @@ const enMessages = {
   establish_email: 'E-mail',
   sidePanel_issueInteraction: 'interaction',
   sidePanel_issueStartingTime: 'starting time',
+  sidePanel_issueEndTime: "end time",
   sidePanel_viewDetails: 'view details',
   sidePanel_operation: 'operation',
   sidePanel_projectBelongs: 'project belongs',
