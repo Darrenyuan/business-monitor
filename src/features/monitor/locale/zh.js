@@ -20,6 +20,8 @@ const zhMessages = {
   edit: '编辑',
   normal: '正常',
   prohibit: '禁用',
+  add: '添加',
+  remove: '移除',
   sidePanel_welcome_link: '首页',
   sidePanel_login_link: '登录/登出',
   sidePanel_toggle_language_link: '语言',

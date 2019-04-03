@@ -47,6 +47,8 @@ export class accounList extends Component {
       imagePath: [],
       lightboxIsOpen: false,
       currentImage: 0,
+      dataSource: [],
+      targetKeys: [],
       visible: false,
       disabled: true,
       isvalue: null,
@@ -57,6 +59,7 @@ export class accounList extends Component {
       roles: '',
       autoCompleteResult: [],
       showPassword: true,
+      showRoles: true,
       userId: 0
     };
 
@@ -103,7 +106,16 @@ export class accounList extends Component {
     ) {
       this.fetchData(parseInt(page, 10));
     }
-    apiGetAvailableProjects().then(res);
+    apiGetAvailableProjects().then(res=>{
+      let dataSource = (res.data.data).map((item,i)=>{
+        item.key = item.id;
+        return item
+      })
+      
+      this.setState({
+        dataSource: dataSource
+      })
+    });
   }
 
   componentDidUpdate(prevProps,prevStatus) {
@@ -200,7 +212,7 @@ export class accounList extends Component {
             <div className="operation">
               {
                 record.status === 2 ?<div className="abandoning"/>:<Popconfirm title="Sure to delete?" onConfirm={this.handleDelete.bind(this,record.username)}>
-                <div className="abandoning" onClick={()=>{console.log(11111);}}>{this.props.intl.formatMessage({ id: 'account_abandoning' })}
+                <div className="abandoning" >{this.props.intl.formatMessage({ id: 'account_abandoning' })}
                 </div> 
               </Popconfirm> 
               }
@@ -241,13 +253,26 @@ export class accounList extends Component {
     console.log('record',record);
     console.log('roleMap.get(record.roles[0].roleName)',roleMap.get(record.roles[0].roleName));    const form = this.props.form;
     let roles = roleMap.get(record.roles[0].roleName);
-    this.setState({
+    if(record.roles[0].roleName === "admin"||record.roles[0].roleName === "leader"){
+      this.setState({
       visible: true,
       roles: roles,
       project: "",
       showPassword: true,
+      showRoles: true,
       userId: record.userId
     });
+    }else{
+      this.setState({
+        visible: true,
+        roles: roles,
+        project: "",
+        showPassword: true,
+        showRoles: false,
+        userId: record.userId
+      })
+    }
+    
     form.setFieldsValue({
       username: record.username,
       full_name: record.nickname,
@@ -269,10 +294,12 @@ export class accounList extends Component {
     this.forceUpdate();
   };
   handleEstablish(){
-    this.setState({
-      visible: true,
-      showPassword: false,
-    });
+    let roleName = this.props.monitor.loginData.roles[0].roleName;
+      this.setState({
+        visible: true,
+        showPassword: false,
+        showRoles: false,
+      });
   }
   handleCancel(){
     this.setState({
@@ -389,21 +416,29 @@ export class accounList extends Component {
   }
   handleChange = (targetKeys, direction, moveKeys) => {
     console.log(targetKeys, direction, moveKeys);
-    this.setState({ targetKeys });
+    this.setState({targetKeys})
   }
 
-  renderItem = (item) => {
-    const customLabel = (
-      <span className="custom-item">
-        {item.title} - {item.description}
+  renderItem(item){
+    const  customLabel = (
+      <span key={item.id}>
+        {item.name}
       </span>
     );
+    return {
+      label: customLabel,
+      value: item.name,
+    };
   }
   render() {
     if (this.props.monitor.userList.fetchUserListError) {
       return <div>{this.props.monitor.userList.fetchUserListError.error}</div>;
     }
     console.log('thisissues',this);
+    const formItemLayout ={
+      labelCol: {sm:{span: 4},xs: { span: 24 }},
+      wrapperCol:{xs: { span: 24},sm: {span: 20}}
+    } 
     const roleMap = roleConstants(this);
     let { roleList,accountStatus } = roleLists(this);
     const { page, total } = this.props.monitor.issueList;
@@ -507,13 +542,13 @@ export class accounList extends Component {
         <Modal
           title={ this.props.intl.formatMessage({ id: 'sidePanel_account_link' })}
           visible={this.state.visible}
+          width= {620}
           onCancel={this.handleCancel.bind(this)}
           footer={null}
         >
         <Form onSubmit={this.handleSubmit.bind(this, roleMap)} >
         <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+          {...formItemLayout}
           label={ this.props.intl.formatMessage({ id: 'account_step4_table_username' })}
         >
           {getFieldDecorator('username', {
@@ -528,8 +563,7 @@ export class accounList extends Component {
           )}
         </Form.Item>
         <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+          {...formItemLayout}
           label={ this.props.intl.formatMessage({ id: 'account_full_name' })}
         >
           {getFieldDecorator('full_name', {
@@ -542,9 +576,9 @@ export class accounList extends Component {
             <Input />
           )}
         </Form.Item>
-        <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+        {
+          this.state.showRoles?<div/>:<Form.Item
+          {...formItemLayout}
           label={ this.props.intl.formatMessage({ id: 'account_role' })}
         >
             <Select
@@ -558,25 +592,30 @@ export class accounList extends Component {
               ))}
             </Select>
         </Form.Item>
-        <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+        }
+        
+        {
+          this.state.showRoles?<div/>:<Form.Item
+          labelCol={{sm:{span: 3},xs: { span: 24 }}}
+          wrapperCol={{xs: { span: 24},sm: {span: 21}}}
           label={ this.props.intl.formatMessage({ id: 'sidePanel_project' })}
         >
             <Transfer
-              dataSource={this.state.mockData}
+              dataSource={this.state.dataSource}
               listStyle={{
-                width: 300,
+                width: 207,
                 height: 300,
               }}
+              operations={[this.props.intl.formatMessage({ id: 'add' }), this.props.intl.formatMessage({ id: 'remove' })]}
               targetKeys={this.state.targetKeys}
               onChange={this.handleChange}
-              render={this.renderItem}
+              render={this.renderItem.bind(this)}
             />
         </Form.Item>
+        }
+        
         <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+          {...formItemLayout}
           label={ this.props.intl.formatMessage({ id: 'phone_number' })}
         >
           {getFieldDecorator('phone_number', {
@@ -592,8 +631,7 @@ export class accounList extends Component {
           )}
         </Form.Item>
         <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+          {...formItemLayout}
           label={ this.props.intl.formatMessage({ id: 'establish_email' })}
         >
           {getFieldDecorator('email', {
@@ -609,27 +647,25 @@ export class accounList extends Component {
         {
           this.state.showPassword?<div/>:(
             <Form.Item
-          labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-          wrapperCol={{xs: { span: 24},sm: {span: 16}}}
-          label={ this.props.intl.formatMessage({ id: 'reset_password_password_label' })}
-        >
-          {getFieldDecorator('password', {
-            rules: [{
-              required: true, message: this.props.intl.formatMessage({ id: 'reset_password_password_message' }),
-            }, {
-              validator: this.validateToNextPassword,
-            }],
-          })(
-            <Input type="password" />
-          )}
-        </Form.Item>
+            {...formItemLayout}
+            label={ this.props.intl.formatMessage({ id: 'reset_password_password_label' })}
+          >
+            {getFieldDecorator('password', {
+              rules: [{
+                required: true, message: this.props.intl.formatMessage({ id: 'reset_password_password_message' }),
+              }, {
+                validator: this.validateToNextPassword,
+              }],
+            })(
+              <Input type="password" />
+            )}
+          </Form.Item>
           )
         }
         {
           this.state.showPassword?<div/>:(
           <Form.Item
-            labelCol= {{sm:{span: 6},xs: { span: 24 }}}
-            wrapperCol={{xs: { span: 24},sm: {span: 16}}}
+            {...formItemLayout}
             label={ this.props.intl.formatMessage({ id: 'reset_password_confirm_password_title' })}
           >
             {getFieldDecorator('confirm', {

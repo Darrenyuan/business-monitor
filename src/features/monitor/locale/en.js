@@ -17,6 +17,8 @@ const enMessages = {
   edit: 'edit',
   normal: 'normal',
   prohibit: 'prohibit',
+  add: 'add',
+  remove: 'remove',
   navigate_to_login: 'go to login',
   greeting: 'Hello Ilona',
   sidePanel_welcome_link: 'home',
