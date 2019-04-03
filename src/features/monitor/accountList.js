@@ -65,6 +65,7 @@ export class accounList extends Component {
       username: "",
       roleName: "",
       status: "",
+      inputValue: "",
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -140,7 +141,7 @@ export class accounList extends Component {
       pageSize: 10,
       projectName: this.state.projectName,
       username: this.state.username,
-      roleName: this.state.power,
+      roleName: this.state.roleName,
       status: this.state.status,
     })
   }
@@ -244,9 +245,9 @@ export class accounList extends Component {
 
     })
   }
-  handleStatusChange = value => {
+  handleStatusChange = (value,e) => {
     let status = 0;
-    if(value === "正常"){
+    if(e.key === "正常"){
       status =1;
     }else{
       status =2;
@@ -256,9 +257,14 @@ export class accounList extends Component {
       status:status
     });
   };
-  handlePowerChange = value => {
+  handlePowerChange =(value,e) =>{
+    let roleMap = roleConstants(this);
+    console.log('value',value,e);
+    let roleName = roleMap.get(e.key);
+    console.log('value',roleName);
     this.setState({
       power: value,
+      roleName: roleName
     });
   };
   handleSearch = () => {
@@ -267,15 +273,26 @@ export class accounList extends Component {
   };
   handleReset=()=>{
     this.setState({
-      type: 0,
-      status: 0,
-      interaction: 0,
+      username: "",
+      roleName: "",
+      status: "",
+      accountStatus: "",
+      power: '',
+      inputValue:"",
     });
     this.fetchData(this.props.match.params.page || '1');
   }
   handleEdit(record,roleMap){
     console.log('record',record);
-    console.log('roleMap.get(record.roles[0].roleName)',roleMap.get(record.roles[0].roleName));    const form = this.props.form;
+    console.log('roleMap.get(record.roles[0].roleName)',roleMap.get(record.roles[0].roleName));    
+    const form = this.props.form;
+    let projectId= record.projectVos.reduce((r,c,i)=>{
+      return [
+        ...r,
+        c.id,
+      ]
+    },[]);
+    console.log('record.projectVos',projectId);
     let roles = roleMap.get(record.roles[0].roleName);
     if(record.roles[0].roleName === "admin"||record.roles[0].roleName === "leader"){
       this.setState({
@@ -284,7 +301,8 @@ export class accounList extends Component {
       project: "",
       showPassword: true,
       showRoles: true,
-      userId: record.userId
+      userId: record.userId,
+      targetKeys:projectId
     });
     }else{
       this.setState({
@@ -293,7 +311,8 @@ export class accounList extends Component {
         project: "",
         showPassword: true,
         showRoles: false,
-        userId: record.userId
+        userId: record.userId,
+        targetKeys:projectId
       })
     }
     
@@ -318,12 +337,12 @@ export class accounList extends Component {
     this.forceUpdate();
   };
   handleEstablish(){
-    let roleName = this.props.monitor.loginData.roles[0].roleName;
-      this.setState({
-        visible: true,
-        showPassword: false,
-        showRoles: false,
-      });
+    this.setState({
+      visible: true,
+      showPassword: false,
+      showRoles: false,
+      targetKeys: [],
+    });
   }
   handleCancel(){
     this.setState({
@@ -341,48 +360,48 @@ export class accounList extends Component {
     console.log("en",e);
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        if(this.state.roles !== ''&& this.state.project !== '' ){
-          // if(this.state.showPassword){
-          //   console.log("5000",this.state.userId);
-          //   apiUpdateAcciunt({
-          //     username: values.username,
-          //     nickname: values.full_name,
-          //     roles: [{roleName:roleMap.get(this.state.roles)}],
-          //     phoneNumber: values.phone_number,
-          //     email: values.email,
-          //     userId: this.state.userId,
-          //     status: 1,
-          //     projectIds: [1],
-          //   }).then(res=>{
-          //     if (res.data.status === 200) {
-          //       this.setState({
-          //         visible: false,
-          //       });
-          //     }
-          //   }).catch(err=>{
-          //     message.error(err);
-          //   })   
-          // }else{
-          //   console.log('Received values of form: ', values);
-          //   apiCreateAcciunt({
-          //     username: values.username,
-          //     nickname: values.full_name,
-          //     roles: [{roleName:roleMap.get(this.state.roles)}],
-          //     phoneNumber: values.phone_number,
-          //     email: values.email,
-          //     password: values.password,
-          //     status: 1,
-          //     projectIds: [1],
-          //   }).then(res=>{
-          //     if (res.data.status === 200) {
-          //       this.setState({
-          //         visible: false,
-          //       });
-          //     }
-          //   }).catch(err=>{
-          //     message.error(err);
-          //   })
-          // } 
+        if(this.state.roles !== '' ){
+          if(this.state.showPassword){
+            console.log("5000",this.state.userId);
+            apiUpdateAcciunt({
+              username: values.username,
+              nickname: values.full_name,
+              roles: [{roleName:roleMap.get(this.state.roles)}],
+              phoneNumber: values.phone_number,
+              email: values.email,
+              userId: this.state.userId,
+              status: 1,
+              projectIds: this.state.targetKeys,
+            }).then(res=>{
+              if (res.data.status === 200) {
+                this.setState({
+                  visible: false,
+                });
+              }
+            }).catch(err=>{
+              message.error(err);
+            })   
+          }else{
+            console.log('Received values of form: ', values);
+            apiCreateAcciunt({
+              username: values.username,
+              nickname: values.full_name,
+              roles: [{roleName:roleMap.get(this.state.roles)}],
+              phoneNumber: values.phone_number,
+              email: values.email,
+              password: values.password,
+              status: 1,
+              projectIds: this.state.targetKeys,
+            }).then(res=>{
+              if (res.data.status === 200) {
+                this.setState({
+                  visible: false,
+                });
+              }
+            }).catch(err=>{
+              message.error(err);
+            })
+          } 
           console.log('wsaccxx=>>>>>>>>');
         }else{
           message.warning('请选择角色和项目！');
@@ -443,7 +462,10 @@ export class accounList extends Component {
     this.setState({targetKeys})
   }
   inputChange(e){
-    this.setState({ username: e.target.value });
+    this.setState({ 
+      username: e.target.value,
+      inputValue:e.target.value
+    });
   }
   renderItem(item){
     const  customLabel = (
@@ -495,7 +517,8 @@ export class accounList extends Component {
             <tr>
               <td className="table_title">
                 <label>
-                  <Input 
+                  <Input
+                    value= {this.state.inputValue} 
                     onChange={this.inputChange.bind(this)}
                     placeholder={ this.props.intl.formatMessage({ id: 'account_Name' })}/>
                 </label>
