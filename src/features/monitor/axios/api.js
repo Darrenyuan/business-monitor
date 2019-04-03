@@ -149,7 +149,8 @@ export function apiFetchReplyList(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}/feedback`);
 }
 export function apiFetchUserList(args = {}) {
-  return instance.get(`${baseUrl}/user/all?page=${args.page}&pageSize=${args.pageSize}`);
+  return instance.get(`${baseUrl}/user/criteria?page=${args.page}&pageSize=${args.pageSize}&projectName=${
+    args.projectName}&username=${args.username}&roleName=${args.roleName}&status=${args.status}`);
 }
 export function apiFetchRepliesList(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}/replies`);

@@ -60,7 +60,11 @@ export class accounList extends Component {
       autoCompleteResult: [],
       showPassword: true,
       showRoles: true,
-      userId: 0
+      userId: 0,
+      projectName: "",
+      username: "",
+      roleName: "",
+      status: "",
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -133,7 +137,11 @@ export class accounList extends Component {
   fetchData(page) {
     this.props.actions.fetchUserList({
       page: 1,
-      pageSize: 10
+      pageSize: 10,
+      projectName: this.state.projectName,
+      username: this.state.username,
+      roleName: this.state.power,
+      status: this.state.status,
     })
   }
   closeLightbox = () => {
@@ -237,8 +245,15 @@ export class accounList extends Component {
     })
   }
   handleStatusChange = value => {
+    let status = 0;
+    if(value === "正常"){
+      status =1;
+    }else{
+      status =2;
+    }
     this.setState({
       accountStatus: value,
+      status:status
     });
   };
   handlePowerChange = value => {
@@ -247,8 +262,17 @@ export class accounList extends Component {
     });
   };
   handleSearch = () => {
-    console.log("创建账号")
+    console.log("创建账号");
+    this.fetchData(this.props.match.params.page || '1');
   };
+  handleReset=()=>{
+    this.setState({
+      type: 0,
+      status: 0,
+      interaction: 0,
+    });
+    this.fetchData(this.props.match.params.page || '1');
+  }
   handleEdit(record,roleMap){
     console.log('record',record);
     console.log('roleMap.get(record.roles[0].roleName)',roleMap.get(record.roles[0].roleName));    const form = this.props.form;
@@ -418,7 +442,9 @@ export class accounList extends Component {
     console.log(targetKeys, direction, moveKeys);
     this.setState({targetKeys})
   }
-
+  inputChange(e){
+    this.setState({ username: e.target.value });
+  }
   renderItem(item){
     const  customLabel = (
       <span key={item.id}>
@@ -469,7 +495,9 @@ export class accounList extends Component {
             <tr>
               <td className="table_title">
                 <label>
-                  <Input placeholder={ this.props.intl.formatMessage({ id: 'account_Name' })}/>
+                  <Input 
+                    onChange={this.inputChange.bind(this)}
+                    placeholder={ this.props.intl.formatMessage({ id: 'account_Name' })}/>
                 </label>
               </td>
               <td className="table_title">
@@ -501,6 +529,11 @@ export class accounList extends Component {
               <td className="table_title">
                 <Button type="primary" icon="search" onClick={this.handleSearch}>
                   <FormattedMessage id="issue_search_label_search" />
+                </Button>
+              </td>
+              <td className="table_title">
+                <Button type="primary" icon="reload" onClick={this.handleReset}>
+                  <FormattedMessage id="issue_search_label_reset" />
                 </Button>
               </td>
               <td className="establish">
