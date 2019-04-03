@@ -135,7 +135,7 @@ export function apiFetchProject(args = {}) {
 
 export function apiFetchIssueList(args = {}) {
   return instance.get(
-    `${baseUrl}/issues?projectId=${args.projectId}&page=${args.page}&pageSize=${
+    `${baseUrl}/issues/criteria?projectId=${args.projectId}&page=${args.page}&pageSize=${
       args.pageSize
     }&projectName=${args.projectName}&type=${args.type}&status=${args.status}&interaction=${args.interaction}&issueName=${
       args.issueName
