@@ -382,16 +382,31 @@ export class Projects extends Component {
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_start_time' })}
             onChange={(date, dateString) => {
               this.setState({
-                startTime: dateString,
+                startTime: moment
+                  .utc(date)
+                  .toDate()
+                  .toISOString(),
               });
+              // console.log(
+              //   moment
+              //     .utc(date)
+              //     .toDate()
+              //     .toISOString(),
+              // );
+              // console.log('ffffffffffffffff');
             }}
           />
           <DatePicker
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_end_time' })}
             onChange={(date, dateString) => {
               this.setState({
-                endTime: dateString,
+                endTime: moment
+                  .utc(date)
+                  .toDate()
+                  .toISOString(),
               });
+              // console.log(moment.utc(date));
+              // console.log('ffffffffffffffff');
             }}
           />
 
