@@ -25,6 +25,10 @@ import {
   BindProject,
 } from './';
 import Issues from './Issues';
+import IssuesList from './issuesList';
+import IssuesDetails from './IssuesDetails';
+import AccountList from './accountList';
+import createAccount from './Createacciunt';
 export default {
   path: 'monitor',
   name: 'Monitor',
@@ -95,6 +99,10 @@ export default {
     { path: '403', name: 'Page 403', component: Page403 },
     { path: 'account/reset', name: 'Reset password', component: ResetPassword },
     { path: 'bindproject', name: 'Bind project', component: BindProject },
+    { path: 'issuesList', name: 'IssuesList', component: IssuesList },
+    { path: 'issuesList/issuesDetail/:issueId', name: 'IssuesDetail', component: IssuesDetails },
+    { path: 'accountList', name: 'accountList', component: AccountList },
+    { path: 'createAccount', name: 'accountList', component: createAccount },
     // { path: 'account/create/step/1', name: 'Account step 1', component: AccountStep1 },
     // { path: 'account/create/step/2', name: 'Account step 2', component: AccountStep2 },
     // { path: 'account/create/step/3', name: 'Account step 3', component: AccountStep3 },

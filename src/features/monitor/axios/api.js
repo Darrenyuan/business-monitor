@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
-// let baseUrl = 'http://192.168.0.200:8080/imageserver';
-let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://192.168.0.200:8080/imageserver';
+// let baseUrl = 'http://localhost:8080';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
@@ -10,11 +10,11 @@ let option = {
   crossdomain: true,
   withCredentials: true,
 };
-if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://212.64.74.113/api';
-  imageUrl = 'http://212.64.74.113/resources';
-  option = { ...option, crossdomain: false, baseURL: baseUrl };
-}
+// if (process.env.NODE_ENV === 'production') {
+//   baseUrl = 'http://212.64.74.113/api';
+//   imageUrl = 'http://212.64.74.113/resources';
+//   option = { ...option, crossdomain: false, baseURL: baseUrl };
+// }
 
 export const URL = imageUrl;
 
@@ -55,7 +55,9 @@ export function apiCreateUser(args = {}) {
     title: args.title,
   });
 }
-
+export function apiUserBlock(args = {}) {
+  return instance.put(`${baseUrl}/user/block?username=${args.username}`)
+}
 export function apiResetPassword(args = {}) {
   return instance.put(`/password?password=${args.password}&newPassword=${args.newPassword}`);
 }
@@ -135,11 +137,49 @@ export function apiFetchIssueList(args = {}) {
   return instance.get(
     `${baseUrl}/issues?projectId=${args.projectId}&page=${args.page}&pageSize=${
       args.pageSize
-    }&type=${args.type}&status=${args.status}&interaction=${args.interaction}`,
+    }&projectName=${args.projectName}&type=${args.type}&status=${args.status}&interaction=${args.interaction}&issueName=${
+      args.issueName
+    }&startTime=${args.startTime}&endTime=${args.endTime}`,
   );
+}
+export function apiIssueDetail(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}`);
+}
+export function apiFetchReplyList(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}/feedback`);
+}
+export function apiFetchUserList(args = {}) {
+  return instance.get(`${baseUrl}/user/all?page=${args.page}&pageSize=${args.pageSize}`);
+}
+export function apiFetchRepliesList(args = {}) {
+  return instance.get(`${baseUrl}/issues/${args.issueId}/replies`);
 }
 export function apiBindProject(args = {}) {
   return instance.put(
     `${baseUrl}/user/bindproject?username=${args.username}&projectId=${args.projectId}`,
   );
+}
+export function apiCreateAcciunt(args = {}){
+  return instance.post(baseUrl + '/user/userroleproject', {
+    username: args.username,
+    nickname: args.nickname,
+    roles: args.roles,
+    phoneNumber: args.phoneNumber,
+    email: args.email,
+    password: args.password,
+    status: args.status,
+    projectIds: args.projectIds,
+  });
+}
+export function apiUpdateAcciunt(args = {}){
+  return instance.put(baseUrl + '/user/userroleproject', {
+    userId: args.userId,
+    username: args.username,
+    nickname: args.nickname,
+    roles: args.roles,
+    phoneNumber: args.phoneNumber,
+    email: args.email,
+    status: args.status,
+    projectIds: args.projectIds,
+  });
 }

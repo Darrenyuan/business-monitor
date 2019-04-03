@@ -76,6 +76,7 @@ export default class Root extends React.Component {
   render() {
     loginData = this.props.store.getState().monitor.loginData;
     const children = renderRouteConfigV3(this.props.routeConfig, '/');
+    console.log('children',children);
     return (
       <Provider store={this.props.store}>
         <ConnectedRouter history={history}>{children}</ConnectedRouter>

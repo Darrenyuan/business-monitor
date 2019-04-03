@@ -50,10 +50,34 @@ const initialState = {
     fetchIssueListPending: false,
     fetchIssueListError: null,
   },
+  replyList: {
+    items: [],
+    byId: {},
+    fetchReplyListPending: false,
+    fetchReplyListError: null,
+  },
+  repliesList: {
+    items: [],
+    byId: {},
+    fetchRepliesListPending: false,
+    fetchRepliesListError: null,
+  },
+  userList: {
+    items: [],
+    byId: {},
+    page: 1,
+    pageSize: 3,
+    total: 0,
+    listNeedReload: false,
+    fetchUserListPending: false,
+    fetchUserListError: null,
+  },
   stepState: {
     nameExist: true,
   },
   reLogin: false,
+  fetchUserListPending: false,
+  fetchUserListError: null,
 };
 
 export default initialState;

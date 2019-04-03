@@ -1,14 +1,16 @@
-import React, { Component, Link } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Table, Pagination, Input, Select, Button } from 'antd';
+import { Table, Pagination, Input, Select, Button,DatePicker,Breadcrumb,Modal } from 'antd';
 import { FormattedMessage, injectIntl, IntlMessageFormat } from 'react-intl';
 import { URL } from './axios/api';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
 import { loadIssueListPageSize } from '../../common/sessionStorage';
+import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 const pageSize = 10;
 const getItems = monitor => monitor.issueList.items;
@@ -26,7 +28,7 @@ const Option = Select.Option;
 const dimensionDataList = [];
 const keywordDataListList = [];
 
-export class Issues extends Component {
+export class IssuesList extends Component {
   constructor(props) {
     super(props);
     this.initData();
@@ -36,6 +38,10 @@ export class Issues extends Component {
       type: 0,
       status: 0,
       interaction: 0,
+      projectName: '',
+      issueName: '',
+      startTime:'',
+      endTime: '',
       keywordMapList: keywordDataListList[0],
       pageSize: loadIssueListPageSize(),
       hasInteraction: this.hasInteraction(),
@@ -129,7 +135,7 @@ export class Issues extends Component {
     }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps,prevStatus) {
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
     if (prevPage !== page && !this.props.monitor.issueList.fetchIssueListPending) {
@@ -150,6 +156,10 @@ export class Issues extends Component {
       type: this.state.type,
       status: this.state.status,
       interaction: this.state.interaction,
+      projectName:this.state.projectName,
+      issueName: this.state.issueName,
+      startTime:this.state.startTime,
+      endTime: this.state.endTime,
     });
   }
   closeLightbox = () => {
@@ -180,14 +190,14 @@ export class Issues extends Component {
   getColumns() {
     return [
       {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_id' }),
-        dataIndex: 'id',
-        key: 'id',
-      },
-      {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+      },
+      {
+        title: this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' }),
+        dataIndex: 'projectName',
+        key: 'projectName',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_type' }),
@@ -197,47 +207,33 @@ export class Issues extends Component {
           switch (type) {
             case 1:
               return (
-                <span>
+                <span key={1}>
                   <FormattedMessage id="issue_content_type_material" />
                 </span>
               );
             case 2:
               return (
-                <span>
+                <span key={2}>
                   <FormattedMessage id="issue_content_type_quality" />
                 </span>
               );
             case 3:
               return (
-                <span>
+                <span key={3}>
                   <FormattedMessage id="issue_content_type_security" />
                 </span>
               );
               break;
             case 4:
               return (
-                <span>
+                <span key={4}>
                   <FormattedMessage id="issue_content_type_other" />
                 </span>
               );
             default:
-              return <span />;
+              return <span key={0}/>;
           }
         },
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_imagePath' }),
-        dataIndex: 'imagePath',
-        key: 'imagePath',
-        render: imagePath => {
-          var paths = JSON.parse(imagePath);
-          return <Button onClick={() => this.handleClick(paths)}>查看</Button>;
-        },
-      },
-      {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_description' }),
-        dataIndex: 'description',
-        key: 'description',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_status' }),
@@ -247,25 +243,25 @@ export class Issues extends Component {
           switch (status) {
             case 1:
               return (
-                <span>
+                <span style={{color:"red"}} key={5}>
                   <FormattedMessage id="issue_content_status_wait_feed_back" />
                 </span>
               );
             case 2:
               return (
-                <span>
+                <span style={{color:"blue"}} key={6}>
                   <FormattedMessage id="issue_content_status_wait_confirm" />
                 </span>
               );
             case 3:
               return (
-                <span>
+                <span style={{color:"green"}} key={7}>
                   <FormattedMessage id="issue_content_status_confirm" />
                 </span>
               );
 
             default:
-              return <span />;
+              return <span key={8}/>;
           }
         },
       },
@@ -275,11 +271,6 @@ export class Issues extends Component {
         key: 'sponsorName',
       },
       {
-        title: this.props.intl.formatMessage({ id: 'issue_table_title_handlerName' }),
-        dataIndex: 'handlerName',
-        key: 'handlerName',
-      },
-      {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_interaction' }),
         dataIndex: 'interaction',
         key: 'interaction',
@@ -287,18 +278,18 @@ export class Issues extends Component {
           switch (interaction) {
             case 1:
               return (
-                <span>
+                <span key={11}>
                   <FormattedMessage id="issue_content_interaction_inner" />
                 </span>
               );
             case 2:
               return (
-                <span>
+                <span key={12}>
                   <FormattedMessage id="issue_content_interaction_outer" />
                 </span>
               );
             default:
-              return <span />;
+              return <span key={13}/>;
           }
         },
       },
@@ -313,19 +304,21 @@ export class Issues extends Component {
             .format('YYYY-MM-DD HH:mm:ss');
           return <span>{local}</span>;
         },
+        
       },
-      // {
-      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_lastUpdateTime' }),
-      //   dataIndex: 'lastUpdateTime',
-      //   key: 'lastUpdateTime',
-      //   render: lastUpdateTime => {
-      //     var stillUtc = moment.utc(lastUpdateTime).toDate();
-      //     var local = moment(stillUtc)
-      //       .local()
-      //       .format('YYYY-MM-DD HH:mm:ss');
-      //     return <span>{local}</span>;
-      //   },
-      // },
+      {
+        title: this.props.intl.formatMessage({ id: 'sidePanel_operation' }),
+        dataIndex: 'id',
+        key: 'id',
+        render:(text, record)=> {
+          const path = `/monitor/issuesList/issuesDetail/${record.id}`;
+          return (
+            <div>
+              <Link to={path}>{ this.props.intl.formatMessage({ id: 'sidePanel_viewDetails' })}</Link>
+            </div>
+            )
+        },
+      },
     ];
   }
   handleDimensionChange = value => {
@@ -366,17 +359,13 @@ export class Issues extends Component {
     });
     this.fetchData(this.props.match.params.page || '1');
   };
-
+  handleOnChangeDate(value,v){
+    console.log('valueTime',value._d);
+    console.log('vvvvvvvvv',v);
+  }
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
-    this.props.actions.fetchIssueList({
-      page: current,
-      pageSize: this.state.pageSize,
-      projectId: this.state.projectId,
-      type: this.state.type,
-      status: this.state.status,
-      interaction: this.state.interaction,
-    });
+    this.fetchData();
     this.forceUpdate();
   };
   render() {
@@ -430,71 +419,30 @@ export class Issues extends Component {
     console.log('============>hasInteraction=' + this.state.hasInteraction);
     return (
       <div className="monitor-project">
-        <h1>
-          <FormattedMessage id="issue_content_h1" />
-        </h1>
+        <div className="title_Breadcrumb">
+          <Breadcrumb>
+          <Breadcrumb.Item>{this.props.intl.formatMessage({ id: 'sidePanel_welcome_link' })}</Breadcrumb.Item>
+          <Breadcrumb.Item>{this.props.intl.formatMessage({ id: 'issue_content_h1' })}</Breadcrumb.Item>
+        </Breadcrumb>
+        </div>
+        
         <table>
           <tbody>
             <tr>
-              <td>
+              <td className="table_title">
                 <label>
-                  <FormattedMessage id="projects_table_title_name" />
+                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}/>
                 </label>
               </td>
-              <td>
-                <input name="projectName" type="text" value={project.name} disabled />
-              </td>
-              <td>
+              <td className="table_title">
                 <label>
-                  <FormattedMessage id="projects_table_title_location" />
+                  <Input placeholder={ this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' })}/>
                 </label>
               </td>
-              <td>
-                <input name="txtSearch" type="text" value={project.location} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_overview" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.overview} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_designUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.designUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_monitorUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.monitorUnit} disabled />
-              </td>
-              <td>
-                <label>
-                  <FormattedMessage id="projects_table_title_constructionUnit" />
-                </label>
-              </td>
-              <td>
-                <input name="projectName" type="text" value={project.constructionUnit} disabled />
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label>
-                  <FormattedMessage id="issue_search_label_type" />
-                </label>
-              </td>
-              <td>
+              <td className="table_title">
                 <Select
                   style={{ width: 120 }}
-                  value={this.state.type === 0 ? '' : this.state.type}
+                  value={this.state.type === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' }) : this.state.type}
                   onChange={this.handleTypeChange}
                 >
                   {typeList.map(typeMap => (
@@ -504,15 +452,10 @@ export class Issues extends Component {
                   ))}
                 </Select>
               </td>
-              <td>
-                <label>
-                  <FormattedMessage id="issue_search_label_status" />
-                </label>
-              </td>
-              <td>
+              <td className="table_title">
                 <Select
                   style={{ width: 120 }}
-                  value={this.state.status === 0 ? '' : this.state.status}
+                  value={this.state.status === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' }) : this.state.status}
                   onChange={this.handleStatusChange}
                 >
                   {statusList.map(statusMap => (
@@ -523,17 +466,10 @@ export class Issues extends Component {
                 </Select>
               </td>
               {Boolean(this.state.hasInteraction) && (
-                <td>
-                  <label>
-                    <FormattedMessage id="issue_search_label_interaction" />
-                  </label>
-                </td>
-              )}
-              {Boolean(this.state.hasInteraction) && (
-                <td>
+                <td className="table_title">
                   <Select
                     style={{ width: 120 }}
-                    value={this.state.interaction === 0 ? '' : this.state.interaction}
+                    value={this.state.interaction === 0 ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' }) : this.state.interaction}
                     onChange={this.handleInteractionChange}
                   >
                     {interactionList.map(interactionMap => (
@@ -544,13 +480,17 @@ export class Issues extends Component {
                   </Select>
                 </td>
               )}
-
-              <td>
+              <td className="table_title"> 
+                <DatePicker 
+                placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
+                onChange={this.handleOnChangeDate} />
+              </td>
+              <td className="table_title">
                 <Button type="primary" icon="search" onClick={this.handleSearch}>
                   <FormattedMessage id="issue_search_label_search" />
                 </Button>
               </td>
-              <td>
+              <td className="table_title">
                 <Button type="primary" icon="reload" onClick={this.handleReset}>
                   <FormattedMessage id="issue_search_label_reset" />
                 </Button>
@@ -607,4 +547,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(injectIntl(Issues));
+)(injectIntl(IssuesList));

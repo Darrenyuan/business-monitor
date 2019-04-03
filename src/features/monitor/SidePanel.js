@@ -107,6 +107,22 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
+            <Menu.Item key="9">
+              <Icon type="issues-close" />
+              <span>
+                <Link to="/monitor/issuesList">
+                  <FormattedMessage id="sidePanel_issueManagement" />
+                </Link>
+              </span>
+            </Menu.Item>
+            <Menu.Item key="10">
+              <Icon type="team" />
+              <span>
+                <Link to="/monitor/accountList">
+                  <FormattedMessage id="account_List" />
+                </Link>
+              </span>
+            </Menu.Item>
           </Menu>
         </Sider>
       </div>
