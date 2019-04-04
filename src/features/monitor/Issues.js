@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabs, Pagination, Input, Table } from 'antd';
+import { Tabs, Pagination, Input, Table, Breadcrumb } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
@@ -248,20 +248,6 @@ export class Issues extends Component {
           }
         },
       },
-      // {
-      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_imagePath' }),
-      //   dataIndex: 'imagePath',
-      //   key: 'imagePath',
-      //   render: imagePath => {
-      //     var paths = JSON.parse(imagePath);
-      //     return <Button onClick={() => this.handleClick(paths)}>查看</Button>;
-      //   },
-      // },
-      // {
-      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_description' }),
-      //   dataIndex: 'description',
-      //   key: 'description',
-      // },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_status' }),
         dataIndex: 'status',
@@ -325,30 +311,6 @@ export class Issues extends Component {
           }
         },
       },
-      // {
-      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_createTime' }),
-      //   dataIndex: 'createTime',
-      //   key: 'createTime',
-      //   render: createTime => {
-      //     var stillUtc = moment.utc(createTime).toDate();
-      //     var local = moment(stillUtc)
-      //       .local()
-      //       .format('YYYY-MM-DD HH:mm:ss');
-      //     return <span>{local}</span>;
-      //   },
-      // },
-      // {
-      //   title: this.props.intl.formatMessage({ id: 'issue_table_title_lastUpdateTime' }),
-      //   dataIndex: 'lastUpdateTime',
-      //   key: 'lastUpdateTime',
-      //   render: lastUpdateTime => {
-      //     var stillUtc = moment.utc(lastUpdateTime).toDate();
-      //     var local = moment(stillUtc)
-      //       .local()
-      //       .format('YYYY-MM-DD HH:mm:ss');
-      //     return <span>{local}</span>;
-      //   },
-      // },
     ];
   }
   handleDimensionChange = value => {
@@ -428,6 +390,18 @@ export class Issues extends Component {
     });
     return (
       <div className="monitor-project">
+        <div className="title_Breadcrumb">
+          <Breadcrumb>
+            <Breadcrumb.Item>
+              <Link to="/monitor/projects/1">
+                {this.props.intl.formatMessage({ id: 'projects_table_title_list' })}
+              </Link>
+            </Breadcrumb.Item>
+            <Breadcrumb.Item>
+              {this.props.intl.formatMessage({ id: 'projects_table_title_detail' })}
+            </Breadcrumb.Item>
+          </Breadcrumb>
+        </div>
         <div className="issues-header">
           <div>{project.name}</div>
           <span>

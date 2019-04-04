@@ -54,7 +54,6 @@ export class Home extends Component {
         <br />
         <br />
         <br />
-        <br />
         <List
           grid={{ gutter: 16, column: 4 }}
           dataSource={data}
@@ -64,23 +63,27 @@ export class Home extends Component {
             </List.Item>
           )}
         />
-        <Button onClick={this.handleLogout} className="button">
-          <FormattedMessage id="logout" />
-        </Button>
+        <br />
         <Button
           onClick={this.props.actions.languageSetZh}
           disabled={this.props.monitor.language === 'zh'}
         >
           中文
         </Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <Button
           onClick={this.props.actions.languageSetEn}
           disabled={this.props.monitor.language === 'en'}
         >
           english
         </Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
         <Button onClick={this.handleResetPassword}>
           <FormattedMessage id="sidePanel_reset_password_link" />
+        </Button>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <Button onClick={this.handleLogout} className="button">
+          <FormattedMessage id="logout" />
         </Button>
       </div>
     );
