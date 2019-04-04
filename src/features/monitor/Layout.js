@@ -37,7 +37,6 @@ export class Layout extends Component {
     const antLanguage = 'zh' !== this.props.monitor.language ? 'en-gb' : 'zh-cn';
     moment.locale(antLanguage);
     const { Header, Footer, Content } = AntLayout;
-
     return (
       <div className="monitor-layout">
         <LocaleProvider locale={antLocale}>
@@ -56,12 +55,8 @@ export class Layout extends Component {
                     </Col>
                     <Col span={4} offset={12} style={{ color: '#fff', 'font-size': '1.5em' }}>
                       <IconButton color="inherit" className="menuButton" onClick={this.handleHome}>
-                        <LanguageIcon />
+                        <HomeIcon color="inherit" fontSize="large" />
                       </IconButton>
-                      <IconButton color="inherit" className="menuButton" onClick={this.handleHome}>
-                        <HomeIcon color="inherit" />
-                      </IconButton>
-                      <span>123123123</span>
                     </Col>
                   </Row>
 

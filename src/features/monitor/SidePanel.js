@@ -80,25 +80,25 @@ export class SidePanel extends Component {
                 <FormattedMessage id="sidePanel_account_link" />
               </Link>
             </Menu.Item> */}
-            <Menu.Item key="6">
+            {/* <Menu.Item key="6">
               <Link to="/monitor/account/reset">
                 <FormattedMessage id="sidePanel_reset_password_link" />
               </Link>
-            </Menu.Item>
+            </Menu.Item> */}
             {/* <Menu.Item key="8">
               <Link to="/monitor/bindproject">
                 <FormattedMessage id="sidePanel_bind_project" />
               </Link>
             </Menu.Item> */}
 
-            <Menu.Item key="7">
+            {/* <Menu.Item key="7">
               <Icon type="file" />
               <span>
                 <Link to="/monitor/togglelanguage">
                   <FormattedMessage id="sidePanel_toggle_language_link" />
                 </Link>
               </span>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="issuesList">
               <Icon type="issues-close" />
               <span>
@@ -115,14 +115,14 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
-            <Menu.Item key="9">
+            {/* <Menu.Item key="9">
               <Icon type="home" />
               <span>
                 <Link to="/monitor/home">
                   <FormattedMessage id="sidePanel_home" />
                 </Link>
               </span>
-            </Menu.Item>
+            </Menu.Item> */}
           </Menu>
         </Sider>
       </div>
