@@ -9,7 +9,7 @@ import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
-import { loadIssueListPageSize ,saveIssueListPageSize} from '../../common/sessionStorage';
+import { loadIssueListPageSize, saveIssueListPageSize } from '../../common/sessionStorage';
 import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 const getItems = monitor => monitor.issueList.items;
@@ -139,7 +139,10 @@ export class IssuesList extends Component {
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
     const pageSize = parseInt(this.state.pageSize || 5, 10);
     const prevPageSize = parseInt(prevState.pageSize || 5, 10);
-    if ((prevPage !== page || pageSize !== prevPageSize) && !this.props.monitor.issueList.fetchIssueListPending) {
+    if (
+      (prevPage !== page || pageSize !== prevPageSize) &&
+      !this.props.monitor.issueList.fetchIssueListPending
+    ) {
       this.fetchData(page);
     }
   }
@@ -354,7 +357,8 @@ export class IssuesList extends Component {
       startTime: '',
       endTime: '',
     });
-    this.fetchData(this.props.match.params.page || '1');
+    window.location.reload();
+    // this.fetchData(this.props.match.params.page || '1');
   };
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
@@ -379,7 +383,7 @@ export class IssuesList extends Component {
       return <div>{this.props.monitor.issueList.fetchIssueListError.error}</div>;
     }
     console.log('thisissues', this);
-    const { page, total ,pageSize} = this.props.monitor.issueList;
+    const { page, total, pageSize } = this.props.monitor.issueList;
     const { byId } = this.props.monitor.issueList;
     let issueList = [];
     let project;
@@ -576,7 +580,7 @@ export class IssuesList extends Component {
             pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
           />
         </div>
-        
+
         <Lightbox
           images={this.state.imagePath}
           isOpen={this.state.lightboxIsOpen}
