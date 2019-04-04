@@ -21,7 +21,9 @@ export class Home extends Component {
       this.props.history.push(`/login`);
     }
   }
-
+  handleResetPassword = () => {
+    this.props.history.push(`/monitor/account/reset`);
+  };
   render() {
     if (!this.props.monitor.loginData) {
       return <div />;
@@ -64,6 +66,21 @@ export class Home extends Component {
         />
         <Button onClick={this.handleLogout} className="button">
           <FormattedMessage id="logout" />
+        </Button>
+        <Button
+          onClick={this.props.actions.languageSetZh}
+          disabled={this.props.monitor.language === 'zh'}
+        >
+          中文
+        </Button>
+        <Button
+          onClick={this.props.actions.languageSetEn}
+          disabled={this.props.monitor.language === 'en'}
+        >
+          english
+        </Button>
+        <Button onClick={this.handleResetPassword}>
+          <FormattedMessage id="sidePanel_reset_password_link" />
         </Button>
       </div>
     );
