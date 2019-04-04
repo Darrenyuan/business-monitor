@@ -14,6 +14,7 @@ import {
   Table,
   Icon,
   message,
+  Breadcrumb,
 } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
@@ -46,11 +47,6 @@ export class Projects extends Component {
       pageSize: loadProjectListPageSize(),
       currentData: null,
     };
-    // const query_params = new URLSearchParams(this.props.location.search);
-    // const pagesize = query_params.get('pagesize');
-    // console.log(this.state.pageSize,pagesize);
-    // console.log('iiiiiiiiiiiiiii')
-
     this.fetchData = this.fetchData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.resetForm = this.resetForm.bind(this);
@@ -288,53 +284,16 @@ export class Projects extends Component {
     const { getFieldDecorator } = this.props.form;
     const { TextArea } = Input;
     const RangePicker = DatePicker.RangePicker;
-    // const createProjectSuccessMessage = this.props.intl.formatMessage({
-    //   id: 'project_creation_success_message',
-    // });
-    // const createProjectSuccessDescription = this.props.intl.formatMessage({
-    //   id: 'project_creation_success_description',
-    // });
-    // const createProjectErrorMessage = this.props.intl.formatMessage({
-    //   id: 'project_creation_error_message',
-    // });
-    // const createProjectErrorDescription = this.props.intl.formatMessage({
-    //   id: 'project_creation_error_description',
-    // });
-
     const formItemLayout = {
       labelCol: {
-        xs: { span: 3 },
-        sm: { span: 6 },
+        xs: { span: 2, offset: 3 },
+        sm: { span: 4, offset: 3 },
       },
       wrapperCol: {
         xs: { span: 24 },
         sm: { span: 12 },
       },
     };
-    // const tailFormItemLayout = {
-    //   wrapperCol: {
-    //     xs: {
-    //       span: 20,
-    //       offset: 4,
-    //     },
-    //     sm: {
-    //       span: 16,
-    //       offset: 2,
-    //     },
-    //   },
-    // };
-    // if (currentData !== null) {
-    //   const stillUtc1 = moment.utc(currentData.startTime).toDate();
-    //   const local1 =
-    //     moment(stillUtc1)
-    //       .local()
-    //       .format('YYYY-MM-DD') || null;
-    //   const stillUtc2 = moment.utc(currentData.endTime).toDate();
-    //   const local2 =
-    //     moment(stillUtc2)
-    //       .local()
-    //       .format('YYYY-MM-DD') || null;
-    // }
     const rangeConfig = {
       rules: [
         {
@@ -351,7 +310,7 @@ export class Projects extends Component {
     if (currentData !== null) {
       const stillUtc1 = moment.utc(currentData.startTime).toDate();
       local1 = moment(stillUtc1).local();
-      const stillUtc2 = moment.utc(currentData.startTime).toDate();
+      const stillUtc2 = moment.utc(currentData.endTime).toDate();
       local2 = moment(stillUtc2).local();
     }
     const { page, total, pageSize } = this.props.monitor.searchProjectList;
@@ -359,7 +318,14 @@ export class Projects extends Component {
       <div className="monitor-projects">
         <div className="projects-new-container">
           <span className="projects-new-left">
-            <FormattedMessage id="projects_table_title_list" />
+            <Breadcrumb className="title_Breadcrumb">
+              <Breadcrumb.Item>
+                {this.props.intl.formatMessage({ id: 'sidePanel_welcome_link' })}
+              </Breadcrumb.Item>
+              <Breadcrumb.Item>
+                {this.props.intl.formatMessage({ id: 'projects_table_title_list' })}
+              </Breadcrumb.Item>
+            </Breadcrumb>
           </span>
           <span className="projects-new-right" onClick={this._handleVisible}>
             <Icon type="plus" className="projects-new-right-img" />
@@ -374,39 +340,33 @@ export class Projects extends Component {
             onChange={this._onchange}
             className="projects-new-name-search"
           />
-
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <DatePicker
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_start_time' })}
-            onChange={(date, dateString) => {
-              this.setState({
-                startTime: moment
-                  .utc(date)
-                  .toDate()
-                  .toISOString(),
-              });
-              // console.log(
-              //   moment
-              //     .utc(date)
-              //     .toDate()
-              //     .toISOString(),
-              // );
-              // console.log('ffffffffffffffff');
+            onChange={date => {
+              date &&
+                this.setState({
+                  startTime: moment
+                    .utc(date)
+                    .toDate()
+                    .toISOString(),
+                });
             }}
           />
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <DatePicker
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_end_time' })}
-            onChange={(date, dateString) => {
-              this.setState({
-                endTime: moment
-                  .utc(date)
-                  .toDate()
-                  .toISOString(),
-              });
-              // console.log(moment.utc(date));
-              // console.log('ffffffffffffffff');
+            onChange={date => {
+              date &&
+                this.setState({
+                  endTime: moment
+                    .utc(date)
+                    .toDate()
+                    .toISOString(),
+                });
             }}
           />
-
+          &nbsp;&nbsp;&nbsp;&nbsp;
           <Button icon="search" onClick={this.searchProjects}>
             <FormattedMessage id="projects_table_title_search" />
           </Button>
@@ -580,7 +540,7 @@ export class Projects extends Component {
                   })(<TextArea rows={3} />)}
                 </Form.Item>
                 <div className="projects_new_buttonGroup">
-                  <Button type="primary" htmlType="submit" className="projects_new_submit">
+                  <Button htmlType="submit" className="projects_new_submit">
                     <FormattedMessage id="project_creation_button_submit" />
                   </Button>
                   &nbsp; &nbsp;
@@ -759,7 +719,7 @@ export class Projects extends Component {
                   })(<TextArea rows={3} />)}
                 </Form.Item>
                 <div className="projects_new_buttonGroup">
-                  <Button type="primary" htmlType="submit" className="projects_new_submit">
+                  <Button htmlType="submit" className="projects_new_submit">
                     <FormattedMessage id="projects_table_title_submit" />
                   </Button>
                 </div>

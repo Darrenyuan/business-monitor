@@ -577,17 +577,17 @@ export class accounList extends Component {
                 </Select>
               </td>
               <td className="table_title">
-                <Button type="primary" icon="search" onClick={this.handleSearch}>
+                <Button icon="search" onClick={this.handleSearch}>
                   <FormattedMessage id="issue_search_label_search" />
                 </Button>
               </td>
               <td className="table_title">
-                <Button type="primary" icon="reload" onClick={this.handleReset}>
+                <Button icon="reload" onClick={this.handleReset}>
                   <FormattedMessage id="issue_search_label_reset" />
                 </Button>
               </td>
               <td className="establish">
-                <Button type="primary" icon="user-add" onClick={this.handleEstablish.bind(this)}>
+                <Button icon="user-add" onClick={this.handleEstablish.bind(this)}>
                   <FormattedMessage id="sidePanel_account_link" />
                 </Button>
               </td>
@@ -791,7 +791,7 @@ export class accounList extends Component {
             )}
 
             <Form.Item wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 13, offset: 11 } }}>
-              <Button type="primary" htmlType="submit">
+              <Button htmlType="submit" type="primary">
                 {this.props.intl.formatMessage({ id: 'reset_password_button' })}
               </Button>
             </Form.Item>

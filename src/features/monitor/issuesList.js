@@ -349,6 +349,8 @@ export class IssuesList extends Component {
     });
   };
   handleSearch = () => {
+    console.log(this.state.startTime);
+    console.log('kkkkkkkkkkkkk');
     this.fetchData(this.props.match.params.page || '1');
   };
   handleReset = () => {
@@ -512,12 +514,13 @@ export class IssuesList extends Component {
                 <DatePicker
                   placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
                   onChange={date => {
-                    this.setState({
-                      startTime: moment
-                        .utc(date)
-                        .toDate()
-                        .toISOString(),
-                    });
+                    date &&
+                      this.setState({
+                        startTime: moment
+                          .utc(date)
+                          .toDate()
+                          .toISOString(),
+                      });
                   }}
                 />
               </td>
@@ -525,22 +528,23 @@ export class IssuesList extends Component {
                 <DatePicker
                   placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueEndTime' })}
                   onChange={date => {
-                    this.setState({
-                      endTime: moment
-                        .utc(date)
-                        .toDate()
-                        .toISOString(),
-                    });
+                    date &&
+                      this.setState({
+                        endTime: moment
+                          .utc(date)
+                          .toDate()
+                          .toISOString(),
+                      });
                   }}
                 />
               </td>
               <td className="table_title">
-                <Button type="primary" icon="search" onClick={this.handleSearch}>
+                <Button icon="search" onClick={this.handleSearch}>
                   <FormattedMessage id="issue_search_label_search" />
                 </Button>
               </td>
               <td className="table_title">
-                <Button type="primary" icon="reload" onClick={this.handleReset}>
+                <Button icon="reload" onClick={this.handleReset}>
                   <FormattedMessage id="issue_search_label_reset" />
                 </Button>
               </td>
