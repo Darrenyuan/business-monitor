@@ -28,6 +28,7 @@ import {
   apiUpdateAcciunt,
   apiUserBlock,
   apiGetAvailableProjects,
+  apiIfUserNameExist
 } from '../monitor/axios/api';
 const getItems = monitor => monitor.userList.items;
 const getById = monitor => monitor.userList.byId;
@@ -59,7 +60,7 @@ export class accounList extends Component {
       dataSource: [],
       targetKeys: [],
       visible: false,
-      disabled: true,
+      disUserName: true,
       isvalue: null,
       accountStatus: '',
       power: '',
@@ -112,7 +113,6 @@ export class accounList extends Component {
   getDataSource = dataSourceSelector;
 
   componentDidMount() {
-    console.log('this.props.match.params.page',this.props.match.params.page);
     const page = this.props.match.params.page || '1';
     if (
       page !== this.props.monitor.userList.page ||
@@ -134,7 +134,6 @@ export class accounList extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    console.log('this.props.match.params.page',this.props.match.params.page);
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
     const pageSize = parseInt(this.state.pageSize || 5, 10);
@@ -149,7 +148,6 @@ export class accounList extends Component {
   };
 
   fetchData(page) {
-    console.log('page',page);
     this.props.actions.fetchUserList({
       page: page,
       pageSize: this.state.pageSize,
@@ -386,54 +384,59 @@ export class accounList extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         if (this.state.roles !== '') {
-          if (this.state.showPassword) {
-            console.log('5000', this.state.userId);
-            apiUpdateAcciunt({
-              username: values.username,
-              nickname: values.full_name,
-              roles: [{ roleName: roleMap.get(this.state.roles) }],
-              phoneNumber: values.phone_number,
-              email: values.email,
-              userId: this.state.userId,
-              status: 1,
-              projectIds: this.state.targetKeys,
-            })
-              .then(res => {
-                if (res.data.status === 200) {
-                  this.setState({
-                    visible: false,
+          if(this.state.disUserName){
+              if (this.state.showPassword) {
+                console.log('5000', this.state.userId);
+                apiUpdateAcciunt({
+                  username: values.username,
+                  nickname: values.full_name,
+                  roles: [{ roleName: roleMap.get(this.state.roles) }],
+                  phoneNumber: values.phone_number,
+                  email: values.email,
+                  userId: this.state.userId,
+                  status: 1,
+                  projectIds: this.state.targetKeys,
+                })
+                  .then(res => {
+                    if (res.data.status === 200) {
+                      this.setState({
+                        visible: false,
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    message.error(err);
                   });
-                }
-              })
-              .catch(err => {
-                message.error(err);
-              });
-          } else {
-            console.log('Received values of form: ', values);
-            apiCreateAcciunt({
-              username: values.username,
-              nickname: values.full_name,
-              roles: [{ roleName: roleMap.get(this.state.roles) }],
-              phoneNumber: values.phone_number,
-              email: values.email,
-              password: values.password,
-              status: 1,
-              projectIds: this.state.targetKeys,
-            })
-              .then(res => {
-                if (res.data.status === 200) {
-                  this.setState({
-                    visible: false,
+              } else {
+                console.log('Received values of form: ', values);
+                apiCreateAcciunt({
+                  username: values.username,
+                  nickname: values.full_name,
+                  roles: [{ roleName: roleMap.get(this.state.roles) }],
+                  phoneNumber: values.phone_number,
+                  email: values.email,
+                  password: values.password,
+                  status: 1,
+                  projectIds: this.state.targetKeys,
+                })
+                  .then(res => {
+                    if (res.data.status === 200) {
+                      this.setState({
+                        visible: false,
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    message.error(err);
                   });
-                }
-              })
-              .catch(err => {
-                message.error(err);
-              });
+              }
+          }else{
+            message.warning(this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }));
           }
+          
           console.log('wsaccxx=>>>>>>>>');
         } else {
-          message.warning('请选择角色和项目！');
+          message.warning(this.props.intl.formatMessage({ id: 'account_please_choose_roles' }));
         }
       }
     });
@@ -451,7 +454,27 @@ export class accounList extends Component {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
-
+  handledataToUsername =(e) =>{
+    let _this = this;
+    const value = e.target.value;
+    apiIfUserNameExist({
+      username: value
+    }).then(res=>{
+      console.log('res.data',res.data);
+      if(res.data.data  === false){
+        _this.setState({
+          disUserName: true
+        })
+        message.success(this.props.intl.formatMessage({ id: 'account_user_names_can_be_used' }))
+      }else{
+        _this.setState({
+          disUserName: false
+        })
+        message.warning(this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }))
+      }
+     
+    }).catch()
+  }
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
@@ -657,7 +680,7 @@ export class accounList extends Component {
                     validator: this.validateToNextUsername,
                   },
                 ],
-              })(<Input />)}
+              })(<Input onBlur={this.handledataToUsername} />)}
             </Form.Item>
             <Form.Item
               {...formItemLayout}
