@@ -30,43 +30,10 @@ export class SidePanel extends Component {
         <Sider
           collapsible
           collapsed={this.state.collapsed}
-          onCollapse={this.onCollapse}
+          onCollapse={this._onCollapse}
           theme="light"
         >
           <Menu defaultSelectedKeys={['1']} mode="inline">
-            {/* <Menu.Item key="1">
-              <Icon type="pie-chart" />
-              <span>
-                <Link to="/monitor/welcompage">
-                  <FormattedMessage id="sidePanel_welcome_link" />
-                </Link>
-              </span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Icon type="desktop" />
-              <span>
-                <Link to="/monitor/login">
-                  <FormattedMessage id="sidePanel_login_link" />
-                </Link>
-              </span>
-            </Menu.Item> */}
-            {/* <SubMenu
-              key="sub1"
-              title={
-                <span>
-                  <Icon type="user" />
-                  <span>
-                    <FormattedMessage id="sidePanel_project" />
-                  </span>
-                </span>
-              }
-            >
-              <Menu.Item key="3">
-                <Link to="/monitor/project/action/create">
-                  <FormattedMessage id="sidePanel_project_create_link" />
-                </Link>
-              </Menu.Item>
-            </SubMenu> */}
             <Menu.Item key="4">
               <Icon type="project" />
               <span>
@@ -75,30 +42,7 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
-            {/* <Menu.Item key="5">
-              <Link to="/monitor/account/create/step">
-                <FormattedMessage id="sidePanel_account_link" />
-              </Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="6">
-              <Link to="/monitor/account/reset">
-                <FormattedMessage id="sidePanel_reset_password_link" />
-              </Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="8">
-              <Link to="/monitor/bindproject">
-                <FormattedMessage id="sidePanel_bind_project" />
-              </Link>
-            </Menu.Item> */}
 
-            {/* <Menu.Item key="7">
-              <Icon type="file" />
-              <span>
-                <Link to="/monitor/togglelanguage">
-                  <FormattedMessage id="sidePanel_toggle_language_link" />
-                </Link>
-              </span>
-            </Menu.Item> */}
             <Menu.Item key="issuesList">
               <Icon type="issues-close" />
               <span>
@@ -115,14 +59,6 @@ export class SidePanel extends Component {
                 </Link>
               </span>
             </Menu.Item>
-            {/* <Menu.Item key="9">
-              <Icon type="home" />
-              <span>
-                <Link to="/monitor/home">
-                  <FormattedMessage id="sidePanel_home" />
-                </Link>
-              </span>
-            </Menu.Item> */}
           </Menu>
         </Sider>
       </div>

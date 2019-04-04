@@ -48,9 +48,11 @@ export class Layout extends Component {
                   <Row style={{ 'background-color': '#0197E3', padding: 0 }}>
                     <Col span={8}>
                       <Header style={{ 'background-color': '#0197E3', 'font-size': '1.5em' }}>
-                        <Typography variant="h6" className="grow">
+                        <h3
+                          style={{ color: 'white', display: 'inline-block', 'margin-top': '15px' }}
+                        >
                           <FormattedMessage id="header_info" />
-                        </Typography>
+                        </h3>
                       </Header>
                     </Col>
                     <Col span={4} offset={12} style={{ color: '#fff', 'font-size': '1.5em' }}>
