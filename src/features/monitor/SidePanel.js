@@ -34,7 +34,7 @@ export class SidePanel extends Component {
           theme="light"
         >
           <Menu defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1">
+            {/* <Menu.Item key="1">
               <Icon type="pie-chart" />
               <span>
                 <Link to="/monitor/welcompage">
@@ -49,8 +49,8 @@ export class SidePanel extends Component {
                   <FormattedMessage id="sidePanel_login_link" />
                 </Link>
               </span>
-            </Menu.Item>
-            <SubMenu
+            </Menu.Item> */}
+            {/* <SubMenu
               key="sub1"
               title={
                 <span>
@@ -66,40 +66,30 @@ export class SidePanel extends Component {
                   <FormattedMessage id="sidePanel_project_create_link" />
                 </Link>
               </Menu.Item>
-              <Menu.Item key="4">
+            </SubMenu> */}
+            <Menu.Item key="4">
+              <Icon type="project" />
+              <span>
                 <Link to="/monitor/projects/1">
                   <FormattedMessage id="sidePanel_projects_link" />
                 </Link>
-              </Menu.Item>
-            </SubMenu>
-
-            <SubMenu
-              key="sub2"
-              title={
-                <span>
-                  <Icon type="team" />
-                  <span>
-                    <FormattedMessage id="sidePanel_previlige" />
-                  </span>
-                </span>
-              }
-            >
-              <Menu.Item key="5">
-                <Link to="/monitor/account/create/step">
-                  <FormattedMessage id="sidePanel_account_link" />
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="6">
-                <Link to="/monitor/account/reset">
-                  <FormattedMessage id="sidePanel_reset_password_link" />
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="8">
-                <Link to="/monitor/bindproject">
-                  <FormattedMessage id="sidePanel_bind_project" />
-                </Link>
-              </Menu.Item>
-            </SubMenu>
+              </span>
+            </Menu.Item>
+            {/* <Menu.Item key="5">
+              <Link to="/monitor/account/create/step">
+                <FormattedMessage id="sidePanel_account_link" />
+              </Link>
+            </Menu.Item> */}
+            <Menu.Item key="6">
+              <Link to="/monitor/account/reset">
+                <FormattedMessage id="sidePanel_reset_password_link" />
+              </Link>
+            </Menu.Item>
+            {/* <Menu.Item key="8">
+              <Link to="/monitor/bindproject">
+                <FormattedMessage id="sidePanel_bind_project" />
+              </Link>
+            </Menu.Item> */}
 
             <Menu.Item key="7">
               <Icon type="file" />

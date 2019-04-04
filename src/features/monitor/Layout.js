@@ -6,21 +6,29 @@ import zhMessages from './locale/zh';
 import { connect } from 'react-redux';
 import * as en from 'react-intl/locale-data/en';
 import * as zh from 'react-intl/locale-data/zh';
-import { Layout as AntLayout } from 'antd';
-import { LocaleProvider } from 'antd';
+import { Layout as AntLayout, Row, Col, LocaleProvider } from 'antd';
 import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import en_GB from 'antd/lib/locale-provider/en_GB';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
 import 'react-sticky-header/styles.css';
+import LanguageIcon from '@material-ui/icons/Language';
+import HomeIcon from '@material-ui/icons/Home';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 
 export class Layout extends Component {
   consturctor(props) {
     this._onChange = this._onChange.bind(this);
     this._onCollapse = this._onCollapse.bind(this);
   }
+
   static propTypes = {};
+
+  handleHome = () => {
+    this.props.history.push(`/monitor/home`);
+  };
 
   render() {
     const messages = [enMessages, zhMessages];
@@ -29,6 +37,7 @@ export class Layout extends Component {
     const antLanguage = 'zh' !== this.props.monitor.language ? 'en-gb' : 'zh-cn';
     moment.locale(antLanguage);
     const { Header, Footer, Content } = AntLayout;
+
     return (
       <div className="monitor-layout">
         <LocaleProvider locale={antLocale}>
@@ -37,11 +46,24 @@ export class Layout extends Component {
               <AntLayout style={{ minHeight: '100vh', background: '#fff' }}>
                 <SidePanel />
                 <AntLayout>
-                  <Header style={{ background: '#0197E3', padding: 0 }}>
-                    <h2>
-                      <FormattedMessage id="header_info" />
-                    </h2>
-                  </Header>
+                  <Row style={{ 'background-color': '#0197E3', padding: 0 }}>
+                    <Col span={8}>
+                      <Header style={{ 'background-color': '#0197E3', 'font-size': '1.5em' }}>
+                        <Typography variant="h6" className="grow">
+                          <FormattedMessage id="header_info" />
+                        </Typography>
+                      </Header>
+                    </Col>
+                    <Col span={4} offset={12} style={{ color: '#fff', 'font-size': '1.5em' }}>
+                      <IconButton color="inherit" className="menuButton" onClick={this.handleHome}>
+                        <LanguageIcon />
+                      </IconButton>
+                      <IconButton color="inherit" className="menuButton" onClick={this.handleHome}>
+                        <HomeIcon color="inherit" />
+                      </IconButton>
+                      <span>123123123</span>
+                    </Col>
+                  </Row>
 
                   <Content style={{ margin: '0 16px' }}>
                     <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>

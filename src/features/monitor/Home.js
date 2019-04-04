@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { injectIntl } from 'react-intl';
-import { List, Card, Avatar } from 'antd';
+import { List, Card, Avatar, Button } from 'antd';
+import { FormattedMessage, injectIntl } from 'react-intl';
 export class Home extends Component {
   constructor(props) {
     super(props);
@@ -12,7 +12,20 @@ export class Home extends Component {
 
   componentDidMount() {}
 
+  handleLogout = () => {
+    this.props.actions.logout();
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (!this.props.monitor.loginData) {
+      this.props.history.push(`/login`);
+    }
+  }
+
   render() {
+    if (!this.props.monitor.loginData) {
+      return <div />;
+    }
     const mineData = this.props.monitor.loginData;
     const data = [
       {
@@ -49,7 +62,9 @@ export class Home extends Component {
             </List.Item>
           )}
         />
-        ,
+        <Button onClick={this.handleLogout} className="button">
+          <FormattedMessage id="logout" />
+        </Button>
       </div>
     );
   }

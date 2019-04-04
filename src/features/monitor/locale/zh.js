@@ -25,7 +25,7 @@ const zhMessages = {
   sidePanel_welcome_link: '首页',
   sidePanel_login_link: '登录/登出',
   sidePanel_toggle_language_link: '语言',
-  sidePanel_projects_link: '查看',
+  sidePanel_projects_link: '项目管理',
   sidePanel_project_create_link: '创建',
   sidePanel_previlige: '帐号',
   sidePanel_account_link: '创建帐号',
