@@ -46,7 +46,7 @@ export class SidePanel extends Component {
             <Menu.Item key="issuesList">
               <Icon type="issues-close" />
               <span>
-                <Link to="/monitor/issuesList">
+                <Link to="/monitor/issuesList/1">
                   <FormattedMessage id="sidePanel_issueManagement" />
                 </Link>
               </span>
@@ -54,7 +54,7 @@ export class SidePanel extends Component {
             <Menu.Item key="accountList">
               <Icon type="team" />
               <span>
-                <Link to="/monitor/accountList">
+                <Link to="/monitor/accountList/1">
                   <FormattedMessage id="account_List" />
                 </Link>
               </span>
