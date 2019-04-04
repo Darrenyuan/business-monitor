@@ -196,8 +196,20 @@ export class Projects extends Component {
       endTime: this.state.endTime,
     });
   }
+
+  resetSearch = () => {
+    this.setState({
+      page: this.state.pageSize,
+      projectName: null,
+      startTime: null,
+      endTime: null,
+    });
+    window.location.reload();
+  };
+
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
+
     saveProjectListPageSize(pageSize);
     this.props.actions.fetchSeachProjectList({
       page: current,
@@ -356,6 +368,7 @@ export class Projects extends Component {
           &nbsp;&nbsp;&nbsp;&nbsp;
           <DatePicker
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_end_time' })}
+            allowClear
             onChange={date => {
               date &&
                 this.setState({
@@ -369,6 +382,10 @@ export class Projects extends Component {
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Button icon="search" onClick={this.searchProjects}>
             <FormattedMessage id="projects_table_title_search" />
+          </Button>
+          &nbsp; &nbsp;
+          <Button onClick={this.resetSearch}>
+            <FormattedMessage id="project_creation_button_reset" />
           </Button>
         </div>
         <Table

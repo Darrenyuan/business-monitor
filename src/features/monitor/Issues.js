@@ -209,7 +209,7 @@ export class Issues extends Component {
         key: 'name',
         render: (text, record) => {
           console.log(text, record);
-          const path = `/monitor/issues/${record.id}`;
+          const path = `/monitor/issuesList/issuesDetail/${record.id}`;
           return <div>{<Link to={path}>{record.name}</Link>}</div>;
         },
       },

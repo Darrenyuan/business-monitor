@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { createSelector } from 'reselect';
-import { loadIssueListPageSize } from '../../common/sessionStorage';
+import { loaduserListPageSize, saveuserListPageSize } from '../../common/sessionStorage';
 import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 import roleConstants from './constants/roleConstants';
@@ -28,6 +28,7 @@ import {
   apiUpdateAcciunt,
   apiUserBlock,
   apiGetAvailableProjects,
+  apiIfUserNameExist,
 } from '../monitor/axios/api';
 const getItems = monitor => monitor.userList.items;
 const getById = monitor => monitor.userList.byId;
@@ -51,7 +52,7 @@ export class accounList extends Component {
       search: '',
       projectId: this.props.match.params.projectId ? this.props.match.params.projectId : 0,
       keywordMapList: keywordDataListList[0],
-      pageSize: loadIssueListPageSize(),
+      pageSize: loaduserListPageSize(),
       hasInteraction: this.hasInteraction(),
       imagePath: [],
       lightboxIsOpen: false,
@@ -59,7 +60,7 @@ export class accounList extends Component {
       dataSource: [],
       targetKeys: [],
       visible: false,
-      disabled: true,
+      disUserName: true,
       isvalue: null,
       accountStatus: '',
       power: '',
@@ -132,22 +133,27 @@ export class accounList extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevStatus) {
+  componentDidUpdate(prevProps, prevState) {
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
-    if (prevPage !== page && !this.props.monitor.userList.fetchIssueListPending) {
+    const pageSize = parseInt(this.state.pageSize || 5, 10);
+    const prevPageSize = parseInt(prevState.pageSize || 5, 10);
+    if (
+      (prevPage !== page || pageSize !== prevPageSize) &&
+      !this.props.monitor.userList.fetchIssueListPending
+    ) {
       this.fetchData(page);
     }
   }
 
   handlePageChange = newPage => {
-    this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${newPage}`);
+    this.props.history.push(`/monitor/accountList/${newPage}`);
   };
 
   fetchData(page) {
     this.props.actions.fetchUserList({
-      page: 1,
-      pageSize: 10,
+      page: page,
+      pageSize: this.state.pageSize,
       projectName: this.state.projectName,
       username: this.state.username,
       roleName: this.state.roleName,
@@ -195,7 +201,12 @@ export class accounList extends Component {
         dataIndex: 'roles',
         key: 'roles',
         render: roles => {
-          return <span key={roles[0].roleName}>{roleMap.get(roles[0].roleName)}</span>;
+          let roleName = '';
+          if (roles && roles[0] && roles[0].roleName) {
+            roleName = roles[0].roleName;
+          }
+
+          return <span key={roleName}>{roleMap.get(roleName)}</span>;
         },
       },
       {
@@ -300,15 +311,19 @@ export class accounList extends Component {
     this.fetchData(this.props.match.params.page || '1');
   };
   handleEdit(record, roleMap) {
-    console.log('record', record);
-    console.log('roleMap.get(record.roles[0].roleName)', roleMap.get(record.roles[0].roleName));
+    //console.log('record', record);
+    // console.log('roleMap.get(record.roles[0].roleName)', roleMap.get(record.roles[0].roleName));
     const form = this.props.form;
     let projectId = record.projectVos.reduce((r, c, i) => {
       return [...r, c.id];
     }, []);
     console.log('record.projectVos', projectId);
-    let roles = roleMap.get(record.roles[0].roleName);
-    if (record.roles[0].roleName === 'admin' || record.roles[0].roleName === 'leader') {
+    let roleName = '';
+    if (record.roles[0] && record.roles[0].roleName) {
+      roleName = record.roles[0].roleName;
+    }
+    let roles = roleMap.get(roleName);
+    if ('admin' === roleName || 'leader' === roleName) {
       this.setState({
         visible: true,
         roles: roles,
@@ -344,9 +359,15 @@ export class accounList extends Component {
   }
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
-    this.props.actions.fetchIssueList({
+    saveuserListPageSize(pageSize);
+    console.log('current', current);
+    this.props.actions.fetchUserList({
       page: current,
-      pageSize: this.state.pageSize,
+      pageSize: pageSize,
+      projectName: this.state.projectName,
+      username: this.state.username,
+      roleName: this.state.roleName,
+      status: this.state.status,
     });
     this.forceUpdate();
   };
@@ -375,54 +396,61 @@ export class accounList extends Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         if (this.state.roles !== '') {
-          if (this.state.showPassword) {
-            console.log('5000', this.state.userId);
-            apiUpdateAcciunt({
-              username: values.username,
-              nickname: values.full_name,
-              roles: [{ roleName: roleMap.get(this.state.roles) }],
-              phoneNumber: values.phone_number,
-              email: values.email,
-              userId: this.state.userId,
-              status: 1,
-              projectIds: this.state.targetKeys,
-            })
-              .then(res => {
-                if (res.data.status === 200) {
-                  this.setState({
-                    visible: false,
-                  });
-                }
+          if (this.state.disUserName) {
+            if (this.state.showPassword) {
+              console.log('5000', this.state.userId);
+              apiUpdateAcciunt({
+                username: values.username,
+                nickname: values.full_name,
+                roles: [{ roleName: roleMap.get(this.state.roles) }],
+                phoneNumber: values.phone_number,
+                email: values.email,
+                userId: this.state.userId,
+                status: 1,
+                projectIds: this.state.targetKeys,
               })
-              .catch(err => {
-                message.error(err);
-              });
+                .then(res => {
+                  if (res.data.status === 200) {
+                    this.setState({
+                      visible: false,
+                    });
+                  }
+                })
+                .catch(err => {
+                  message.error(err);
+                });
+            } else {
+              console.log('Received values of form: ', values);
+              apiCreateAcciunt({
+                username: values.username,
+                nickname: values.full_name,
+                roles: [{ roleName: roleMap.get(this.state.roles) }],
+                phoneNumber: values.phone_number,
+                email: values.email,
+                password: values.password,
+                status: 1,
+                projectIds: this.state.targetKeys,
+              })
+                .then(res => {
+                  if (res.data.status === 200) {
+                    this.setState({
+                      visible: false,
+                    });
+                  }
+                })
+                .catch(err => {
+                  message.error(err);
+                });
+            }
           } else {
-            console.log('Received values of form: ', values);
-            apiCreateAcciunt({
-              username: values.username,
-              nickname: values.full_name,
-              roles: [{ roleName: roleMap.get(this.state.roles) }],
-              phoneNumber: values.phone_number,
-              email: values.email,
-              password: values.password,
-              status: 1,
-              projectIds: this.state.targetKeys,
-            })
-              .then(res => {
-                if (res.data.status === 200) {
-                  this.setState({
-                    visible: false,
-                  });
-                }
-              })
-              .catch(err => {
-                message.error(err);
-              });
+            message.warning(
+              this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }),
+            );
           }
+
           console.log('wsaccxx=>>>>>>>>');
         } else {
-          message.warning('请选择角色和项目！');
+          message.warning(this.props.intl.formatMessage({ id: 'account_please_choose_roles' }));
         }
       }
     });
@@ -440,7 +468,30 @@ export class accounList extends Component {
     const value = e.target.value;
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
-
+  handledataToUsername = e => {
+    let _this = this;
+    const value = e.target.value;
+    apiIfUserNameExist({
+      username: value,
+    })
+      .then(res => {
+        console.log('res.data', res.data);
+        if (res.data.data === false) {
+          _this.setState({
+            disUserName: true,
+          });
+          message.success(this.props.intl.formatMessage({ id: 'account_user_names_can_be_used' }));
+        } else {
+          _this.setState({
+            disUserName: false,
+          });
+          message.warning(
+            this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }),
+          );
+        }
+      })
+      .catch();
+  };
   compareToFirstPassword = (rule, value, callback) => {
     const form = this.props.form;
     if (value && value !== form.getFieldValue('password')) {
@@ -503,8 +554,8 @@ export class accounList extends Component {
     };
     const roleMap = roleConstants(this);
     let { roleList, accountStatus } = roleLists(this);
-    const { page, total } = this.props.monitor.issueList;
-    const { byId } = this.props.monitor.projectList;
+    const { page, total, pageSize } = this.props.monitor.userList;
+    const { byId } = this.props.monitor.userList;
     let issueList = [];
     let project;
     if (byId) {
@@ -604,15 +655,18 @@ export class accounList extends Component {
           loading={this.props.monitor.userList.fetchIssueListPending}
           scroll={{ x: true }}
         />
-        <Pagination
-          current={page}
-          onChange={this.handlePageChange}
-          total={total}
-          pageSize={this.state.pageSize}
-          onShowSizeChange={this.handleSizeChange}
-          showSizeChanger={true}
-          pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
-        />
+        <div className="account_pagination">
+          <Pagination
+            current={page}
+            onChange={this.handlePageChange}
+            total={total}
+            pageSize={pageSize}
+            onShowSizeChange={this.handleSizeChange}
+            showSizeChanger={true}
+            pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
+          />
+        </div>
+
         <Lightbox
           images={this.state.imagePath}
           isOpen={this.state.lightboxIsOpen}
@@ -643,7 +697,7 @@ export class accounList extends Component {
                     validator: this.validateToNextUsername,
                   },
                 ],
-              })(<Input />)}
+              })(<Input onBlur={this.handledataToUsername} />)}
             </Form.Item>
             <Form.Item
               {...formItemLayout}
