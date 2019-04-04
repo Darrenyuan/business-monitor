@@ -8,7 +8,7 @@ let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
   baseURL: baseUrl,
   timeout: 5000,
-  // crossdomain: true,
+  crossdomain: true,
   withCredentials: true,
 };
 if (process.env.NODE_ENV === 'production') {
