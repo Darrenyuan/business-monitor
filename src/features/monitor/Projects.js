@@ -303,8 +303,8 @@ export class Projects extends Component {
 
     const formItemLayout = {
       labelCol: {
-        xs: { span: 3 },
-        sm: { span: 6 },
+        xs: { span: 2, offset: 3 },
+        sm: { span: 4, offset: 3 },
       },
       wrapperCol: {
         xs: { span: 24 },
