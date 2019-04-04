@@ -18,7 +18,7 @@ import {
 } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { createSelector } from 'reselect';
-import { loadIssueListPageSize } from '../../common/sessionStorage';
+import { loaduserListPageSize,saveuserListPageSize } from '../../common/sessionStorage';
 import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 import roleConstants from './constants/roleConstants';
@@ -51,7 +51,7 @@ export class accounList extends Component {
       search: '',
       projectId: this.props.match.params.projectId ? this.props.match.params.projectId : 0,
       keywordMapList: keywordDataListList[0],
-      pageSize: loadIssueListPageSize(),
+      pageSize: loaduserListPageSize(),
       hasInteraction: this.hasInteraction(),
       imagePath: [],
       lightboxIsOpen: false,
@@ -112,6 +112,7 @@ export class accounList extends Component {
   getDataSource = dataSourceSelector;
 
   componentDidMount() {
+    console.log('this.props.match.params.page',this.props.match.params.page);
     const page = this.props.match.params.page || '1';
     if (
       page !== this.props.monitor.userList.page ||
@@ -132,22 +133,26 @@ export class accounList extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevStatus) {
+  componentDidUpdate(prevProps, prevState) {
+    console.log('this.props.match.params.page',this.props.match.params.page);
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
-    if (prevPage !== page && !this.props.monitor.userList.fetchIssueListPending) {
+    const pageSize = parseInt(this.state.pageSize || 5, 10);
+    const prevPageSize = parseInt(prevState.pageSize || 5, 10);
+    if ((prevPage !== page || pageSize !== prevPageSize) && !this.props.monitor.userList.fetchIssueListPending) {
       this.fetchData(page);
     }
   }
 
   handlePageChange = newPage => {
-    this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${newPage}`);
+    this.props.history.push(`/monitor/accountList/${newPage}`);
   };
 
   fetchData(page) {
+    console.log('page',page);
     this.props.actions.fetchUserList({
-      page: 1,
-      pageSize: 10,
+      page: page,
+      pageSize: this.state.pageSize,
       projectName: this.state.projectName,
       username: this.state.username,
       roleName: this.state.roleName,
@@ -344,9 +349,15 @@ export class accounList extends Component {
   }
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
-    this.props.actions.fetchIssueList({
+    saveuserListPageSize(pageSize);
+    console.log('current',current);
+    this.props.actions.fetchUserList({
       page: current,
-      pageSize: this.state.pageSize,
+      pageSize: pageSize,
+      projectName: this.state.projectName,
+      username: this.state.username,
+      roleName: this.state.roleName,
+      status: this.state.status,
     });
     this.forceUpdate();
   };
@@ -503,8 +514,8 @@ export class accounList extends Component {
     };
     const roleMap = roleConstants(this);
     let { roleList, accountStatus } = roleLists(this);
-    const { page, total } = this.props.monitor.issueList;
-    const { byId } = this.props.monitor.projectList;
+    const { page, total ,pageSize} = this.props.monitor.userList;
+    const { byId } = this.props.monitor.userList;
     let issueList = [];
     let project;
     if (byId) {
@@ -604,15 +615,18 @@ export class accounList extends Component {
           loading={this.props.monitor.userList.fetchIssueListPending}
           scroll={{ x: true }}
         />
-        <Pagination
-          current={page}
-          onChange={this.handlePageChange}
-          total={total}
-          pageSize={this.state.pageSize}
-          onShowSizeChange={this.handleSizeChange}
-          showSizeChanger={true}
-          pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
-        />
+        <div className="account_pagination">
+          <Pagination
+            current={page}
+            onChange={this.handlePageChange}
+            total={total}
+            pageSize={pageSize}
+            onShowSizeChange={this.handleSizeChange}
+            showSizeChanger={true}
+            pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
+          />
+        </div>
+        
         <Lightbox
           images={this.state.imagePath}
           isOpen={this.state.lightboxIsOpen}

@@ -250,7 +250,7 @@ export class IssuesDetails extends Component {
           <div className="title_Breadcrumb">
             <Breadcrumb>
               <Breadcrumb.Item>
-                <Link to="/monitor/issuesList">
+                <Link to="/monitor/issuesList/1">
                   {this.props.intl.formatMessage({ id: 'issue_content_h1' })}
                 </Link>
               </Breadcrumb.Item>

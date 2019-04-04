@@ -9,7 +9,7 @@ import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
-import { loadIssueListPageSize ,saveProjectListPageSize} from '../../common/sessionStorage';
+import { loadIssueListPageSize ,saveIssueListPageSize} from '../../common/sessionStorage';
 import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 const getItems = monitor => monitor.issueList.items;
@@ -194,6 +194,10 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        render: (text, record) => {
+          const path = `/monitor/issuesList/issuesDetail/${record.id}`;
+          return <div>{<Link to={path}>{record.name}</Link>}</div>;
+        },
       },
       {
         title: this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' }),
@@ -306,21 +310,6 @@ export class IssuesList extends Component {
           return <span>{local}</span>;
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'sidePanel_operation' }),
-        dataIndex: 'id',
-        key: 'id',
-        render: (text, record) => {
-          const path = `/monitor/issuesList/issuesDetail/${record.id}`;
-          return (
-            <div>
-              <Link to={path}>
-                {this.props.intl.formatMessage({ id: 'sidePanel_viewDetails' })}
-              </Link>
-            </div>
-          );
-        },
-      },
     ];
   }
   handleDimensionChange = value => {
@@ -367,8 +356,19 @@ export class IssuesList extends Component {
   };
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
-    saveProjectListPageSize(pageSize);
-    this.fetchData(current);
+    saveIssueListPageSize(pageSize);
+    this.props.actions.fetchIssueList({
+      page: current,
+      pageSize: pageSize,
+      projectId: this.state.projectId,
+      type: this.state.type,
+      status: this.state.status,
+      interaction: this.state.interaction,
+      projectName: this.state.projectName,
+      issueName: this.state.issueName,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
+    });
 
     this.forceUpdate();
   };
@@ -378,7 +378,7 @@ export class IssuesList extends Component {
     }
     console.log('thisissues', this);
     const { page, total ,pageSize} = this.props.monitor.issueList;
-    const { byId } = this.props.monitor.projectList;
+    const { byId } = this.props.monitor.issueList;
     let issueList = [];
     let project;
     if (byId) {
@@ -561,15 +561,18 @@ export class IssuesList extends Component {
           loading={this.props.monitor.issueList.fetchIssueListPending}
           scroll={{ x: true }}
         />
-        <Pagination
-          current={page}
-          onChange={this.handlePageChange}
-          total={total}
-          pageSize={pageSize}
-          onShowSizeChange={this.handleSizeChange}
-          showSizeChanger={true}
-          pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
-        />
+        <div className="issue_pagination">
+          <Pagination
+            current={page}
+            onChange={this.handlePageChange}
+            total={total}
+            pageSize={pageSize}
+            onShowSizeChange={this.handleSizeChange}
+            showSizeChanger={true}
+            pageSizeOptions={['1', '2', '5', '10', '20', '30', '40']}
+          />
+        </div>
+        
         <Lightbox
           images={this.state.imagePath}
           isOpen={this.state.lightboxIsOpen}

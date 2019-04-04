@@ -58,7 +58,25 @@ export const saveIssueListPageSize = projectListPageSize => {
     // ignore
   }
 };
+export const loaduserListPageSize = () => {
+  try {
+    const serializedProjectListPageSize = sessionStorage.getItem('userList:page:size');
+    if (serializedProjectListPageSize === null) {
+      return 10;
+    }
+    return parseInt(serializedProjectListPageSize, 10);
+  } catch (err) {
+    return 10;
+  }
+};
 
+export const saveuserListPageSize = projectListPageSize => {
+  try {
+    sessionStorage.setItem('userList:page:size', projectListPageSize);
+  } catch (err) {
+    // ignore
+  }
+};
 export const loadReLogin = () => {
   try {
     const serializedReLogin = sessionStorage.getItem('reLogin');

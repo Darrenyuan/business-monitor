@@ -110,7 +110,7 @@ export class SidePanel extends Component {
             <Menu.Item key="accountList">
               <Icon type="team" />
               <span>
-                <Link to="/monitor/accountList">
+                <Link to="/monitor/accountList/1">
                   <FormattedMessage id="account_List" />
                 </Link>
               </span>
