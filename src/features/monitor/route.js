@@ -127,7 +127,12 @@ export default {
     },
     { path: 'issuesList/:page', name: 'IssuesList', component: IssuesList },
     { path: 'issuesList/issuesDetail/:issueId', name: 'IssuesDetail', component: IssuesDetails },
-    { path: 'accountList/:page', name: 'accountList', component: AccountList },
+    {
+      path: 'accountList/:page',
+      name: 'accountList',
+      component: AccountList,
+      roles: ['admin', 'projectManager', 'monitorManager'],
+    },
     { path: 'createAccount', name: 'accountList', component: createAccount },
   ],
 };
