@@ -14,7 +14,7 @@ let option = {
 if (process.env.NODE_ENV === 'production') {
   baseUrl = 'http://212.64.74.113/api';
   imageUrl = 'http://212.64.74.113/resources';
-  option = { ...option, crossdomain: false, baseURL: baseUrl };
+  option = { ...option, crossdomain: true, baseURL: baseUrl };
 }
 
 export const URL = imageUrl;
