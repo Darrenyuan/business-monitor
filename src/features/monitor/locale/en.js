@@ -121,9 +121,10 @@ const enMessages = {
   projects_table_title_submit: 'submit',
   projects_table_title_end_time: 'project end time',
   projects_table_title_search: 'search',
+  projects_table_title_amount: 'Please enter the correct amount',
 
   projects_table_title_list: 'project management list',
-  projects_table_title_new: 'new construction',
+  projects_table_title_new: 'create construction',
 
   projects_table_title_detail: 'see details',
   projects_table_title_operator_issue: 'view question',

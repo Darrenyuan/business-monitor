@@ -122,13 +122,14 @@ const zhMessages = {
   projects_table_title_end_time: '工程结束时间',
 
   projects_table_title_list: '工程管理列表',
-  projects_table_title_new: '新建工程',
+  projects_table_title_new: '创建工程',
   projects_table_title_detail: '查看详情',
   projects_table_title_operator_issue: '查看问题',
   projects_table_title_edit: '编辑',
   projects_table_title_submit: '提交',
   projects_table_title_edit_project: '编辑工程',
   projects_table_title_search: '搜索',
+  projects_table_title_amount: '请输入正确的金额',
 
   projects_content_h1: '项目列表信息',
   Projects_permissions: '项目权限',

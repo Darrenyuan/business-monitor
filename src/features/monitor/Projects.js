@@ -78,8 +78,6 @@ export class Projects extends Component {
         editIsVisible: true,
         currentData: res.data.data,
       });
-      console.log('kkkkkkkkkkkkkkkkkkk');
-      console.log(this.state.currentData);
     });
   };
   _handleHidden = () => {
@@ -106,8 +104,9 @@ export class Projects extends Component {
         .createProject({ ...args, startTime: startTime, endTime: endTime })
         .then(res => {
           if (res.data.status === 200) {
-            this.success(this.props.intl.formatMessage({ id: 'project_creation_success_message' }));
             this._handleHidden();
+            this.searchProjects();
+            this.success(this.props.intl.formatMessage({ id: 'project_creation_success_message' }));
           } else {
             this.error(this.props.intl.formatMessage({ id: 'project_creation_error_message' }));
           }
@@ -124,8 +123,6 @@ export class Projects extends Component {
       let args = _.omit(values, 'time');
       const startTime = timeArray[0];
       const endTime = timeArray[1];
-      console.log('oooooooooooooo');
-      console.log(startTime, endTime);
       apiEditProject({
         ...args,
         startTime: startTime,
@@ -230,9 +227,9 @@ export class Projects extends Component {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        width: '10%',
         render: (text, record) => {
           const path = `/monitor/project/${record.id}/issues/1`;
-
           return (
             <div className="color">
               <Link to={path}>{record.name}</Link>
@@ -394,6 +391,7 @@ export class Projects extends Component {
           rowKey="id"
           pagination={false}
           loading={this.props.monitor.projectList.fetchProjectListPending}
+          scroll={{ x: true }}
         />
         <div className="projects_title_pagination">
           <Pagination
@@ -451,17 +449,21 @@ export class Projects extends Component {
                   {getFieldDecorator('cost', {
                     rules: [
                       {
+                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
                         required: true,
+                        message: this.props.intl.formatMessage({
+                          id: 'projects_table_title_amount',
+                        }),
                       },
                     ],
-                  })(<InputNumber min={1} style={{ float: 'left' }} max={100000000000} />)}
+                  })(<Input />)}
                 </Form.Item>
                 <Form.Item
                   {...formItemLayout}
                   label={this.props.intl.formatMessage({ id: 'project_creation_label_range_time' })}
                 >
                   {getFieldDecorator('time', rangeConfig)(
-                    <RangePicker style={{ float: 'left' }} showTime />,
+                    <RangePicker format={'YYYY-MM-DD'} showTime />,
                   )}
                 </Form.Item>
                 <Form.Item
@@ -570,7 +572,7 @@ export class Projects extends Component {
           </div>
         )}
         {this.state.editIsVisible && (
-          <div className="projects_new_container">
+          <div className="project_new_container">
             <div className="projects_new_mask" onClick={this._handleEditHidden} />
             <div className="projects_new_content">
               <div className="projects_new_header">
@@ -616,10 +618,14 @@ export class Projects extends Component {
                     initialValue: currentData.cost || null,
                     rules: [
                       {
+                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
                         required: true,
+                        message: this.props.intl.formatMessage({
+                          id: 'projects_table_title_amount',
+                        }),
                       },
                     ],
-                  })(<InputNumber min={1} style={{ float: 'left' }} max={100000000000} />)}
+                  })(<Input />)}
                 </Form.Item>
                 <Form.Item
                   {...formItemLayout}
