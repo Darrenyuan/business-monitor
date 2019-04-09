@@ -4,11 +4,17 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from '../monitor/redux/actions';
 import { Form, Icon, Input, Button, Row } from 'antd';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 export class Login extends Component {
   state = {
     username: '',
     password: '',
+    open: false,
   };
   static propTypes = {
     actions: PropTypes.object.isRequired,
@@ -27,7 +33,16 @@ export class Login extends Component {
     this.props.actions.login({ username: this.state.username, password: this.state.password });
   };
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   componentDidUpdate(prevProps, prevState) {
+    if (prevProps.monitor.loginError != this.props.monitor.loginError) {
+      if (this.props.monitor.loginError) {
+        this.setState({ open: true });
+      }
+    }
     if (prevProps.monitor.loginData != this.props.monitor.loginData) {
       if (this.props.monitor.loginData) {
         this.props.history.push(`/monitor/projects/1`);
@@ -43,6 +58,8 @@ export class Login extends Component {
     let loginSubmitButtonText = '';
     let usernameLabel = '';
     let passwordLabel = '';
+    let dialogText = '';
+    let dialogButton = '';
 
     if (this.props.monitor && 'en' == this.props.monitor.language) {
       userNameMessage = 'Please input your username!';
@@ -52,6 +69,8 @@ export class Login extends Component {
       loginSubmitButtonText = 'login';
       usernameLabel = 'username';
       passwordLabel = 'password';
+      dialogText = 'login error， please check your username or password';
+      dialogButton = 'confirm';
     } else {
       userNameMessage = '请输入你的用户名';
       userNamePlaceHolder = '用户名';
@@ -60,6 +79,8 @@ export class Login extends Component {
       loginSubmitButtonText = '登录';
       usernameLabel = '用户名';
       passwordLabel = '密码';
+      dialogText = '登录出错，请检查用户名，密码';
+      dialogButton = '确定';
     }
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
     const userNameError = isFieldTouched('username') && getFieldError('username');
@@ -136,6 +157,20 @@ export class Login extends Component {
             </Form>
           </Row>
         </div>
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
+          <DialogContent>
+            <DialogContentText>{dialogText}</DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              {dialogButton}
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
