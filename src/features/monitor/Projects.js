@@ -45,6 +45,7 @@ export class Projects extends Component {
       editIsVisible: false,
       pageSize: loadProjectListPageSize(),
       currentData: null,
+      submitIsable: false,
     };
     this.fetchData = this.fetchData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -216,11 +217,17 @@ export class Projects extends Component {
   verifiedCreateProjectName = () => {
     apiCheckIfExist({ projectName: this.props.form.getFieldValue('createProjectName') }).then(
       res => {
-        if (res.data.status === 200) {
-          res.data.data &&
-            this.success(
-              this.props.intl.formatMessage({ id: 'project_verfiedProjectName_success_message' }),
-            );
+        if (res.data.data) {
+          this.success(
+            this.props.intl.formatMessage({ id: 'project_verfiedProjectName_success_message' }),
+          );
+          this.setState({
+            submitIsable: true,
+          });
+        } else {
+          this.setState({
+            submitIsable: false,
+          });
         }
       },
     );
@@ -629,7 +636,11 @@ export class Projects extends Component {
                   })(<TextArea rows={3} />)}
                 </Form.Item>
                 <div className="projects_new_buttonGroup">
-                  <Button htmlType="submit" className="projects_new_submit">
+                  <Button
+                    htmlType="submit"
+                    className="projects_new_submit"
+                    disabled={this.state.submitIsable}
+                  >
                     <FormattedMessage id="project_creation_button_submit" />
                   </Button>
                   &nbsp; &nbsp;
