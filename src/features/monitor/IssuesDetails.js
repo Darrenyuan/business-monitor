@@ -190,7 +190,7 @@ export class IssuesDetails extends Component {
           let JsonImagePath = [];
           item.createTime = moment(item.createTime)
             .local()
-            .format('YYYY-MM-DD hh:mm:ss');
+            .format('YYYY-MM-DD HH:mm:ss');
           if (typeof item.imagePath === 'string') {
             JsonImagePath = JSON.parse(item.imagePath);
             JsonImagePath.forEach(path => {
@@ -357,7 +357,7 @@ export class IssuesDetails extends Component {
                         {this.props.intl.formatMessage({
                           id: 'issue_statisticsDetails_creationTime',
                         })}
-                        ：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; JamesBu
+                        :{whoseIusseFeedBack[0].createTime}
                       </div>
                       <div className="people">
                         {this.props.intl.formatMessage({
