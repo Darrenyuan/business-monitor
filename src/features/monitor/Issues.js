@@ -16,7 +16,6 @@ const dataSourceSelector = createSelector(
   getItems,
   getById,
   (items, byId) => {
-    console.log('reselect: get data source');
     if (!items) return [];
     return items.map(id => byId[id]);
   },
@@ -41,7 +40,6 @@ export class Issues extends Component {
       lightboxIsOpen: false,
       currentImage: 0,
       visible: false,
-      projectName: '',
       issueName: '',
       startTime: '',
       endTime: '',
@@ -49,6 +47,7 @@ export class Issues extends Component {
 
     this.fetchData = this.fetchData.bind(this);
   }
+
   hasInteraction = () => {
     const loginData = this.props.monitor.loginData;
     const interactionRoleList = [
@@ -159,7 +158,6 @@ export class Issues extends Component {
 
   handlePageChange = newPage => {
     this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${newPage}`);
-    // this.props.fetchList(newPage);
   };
 
   fetchData(page) {
@@ -170,7 +168,7 @@ export class Issues extends Component {
       type: this.state.type,
       status: this.state.status,
       interaction: this.state.interaction,
-      projectName: this.state.projectName,
+      projectName: this.props.monitor.searchProjectList.byId[this.state.projectId].name,
       issueName: this.state.issueName,
       startTime: this.state.startTime,
       endTime: this.state.endTime,
@@ -208,7 +206,6 @@ export class Issues extends Component {
         dataIndex: 'name',
         key: 'name',
         render: (text, record) => {
-          console.log(text, record);
           const path = `/monitor/issuesList/issuesDetail/${record.id}`;
           return <div>{<Link to={path}>{record.name}</Link>}</div>;
         },
@@ -354,8 +351,18 @@ export class Issues extends Component {
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
     saveIssueListPageSize(pageSize);
-    this.fetchData();
-    // this.props.history.push(`/monitor/project/${this.state.projectId}/issues/${current}`);
+    this.props.actions.fetchIssueList({
+      page: current,
+      pageSize: pageSize,
+      projectId: this.state.projectId,
+      type: this.state.type,
+      status: this.state.status,
+      interaction: this.state.interaction,
+      projectName: this.props.monitor.searchProjectList.byId[this.state.projectId].name,
+      issueName: this.state.issueName,
+      startTime: this.state.startTime,
+      endTime: this.state.endTime,
+    });
     this.forceUpdate();
   };
   render() {

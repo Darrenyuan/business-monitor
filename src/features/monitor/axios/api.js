@@ -219,12 +219,8 @@ export function apiEditProject(args = {}) {
     monitorUnit: args.monitorUnit,
     constructionUnit: args.constructionUnit,
   });
+}
 
-  //   return instance.put(`${baseUrl}/project?id=${args.id}&name=${args.name}&cost=${args.cost}
-  //   &startTime=${args.startTime}&endTime=${args.endTime}&location=${args.location}&overview=${
-  //     args.overview
-  //   }
-  // &designUnit=${args.designUnit}&monitorUnit=${args.monitorUnit}&constructionUnit=${
-  //     args.constructionUnit
-  //   }`);
+export function apiCheckIfExist(args = {}) {
+  return instance.get(`${baseUrl}/project/checkIfExist?projectName=${args.projectName}`);
 }

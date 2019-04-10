@@ -3,13 +3,12 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { apiEditProject, apiEnableProject, apiDisbleProject } from './axios/api';
+import { apiEditProject, apiEnableProject, apiDisbleProject, apiCheckIfExist } from './axios/api';
 import {
   Button,
   DatePicker,
   Form,
   Input,
-  InputNumber,
   Pagination,
   Table,
   Icon,
@@ -118,6 +117,8 @@ export class Projects extends Component {
       let args = _.omit(values, 'time');
       const startTime = timeArray[0];
       const endTime = timeArray[1];
+      console.log('yuyuyuyuyuuuyu');
+      console.log(args);
       this.props.actions
         .createProject({ ...args, startTime: startTime, endTime: endTime })
         .then(res => {
@@ -211,6 +212,19 @@ export class Projects extends Component {
       endTime: this.state.endTime,
     });
   }
+
+  verifiedCreateProjectName = () => {
+    apiCheckIfExist({ projectName: this.props.form.getFieldValue('createProjectName') }).then(
+      res => {
+        if (res.data.status === 200) {
+          res.data.data &&
+            this.success(
+              this.props.intl.formatMessage({ id: 'project_verfiedProjectName_success_message' }),
+            );
+        }
+      },
+    );
+  };
 
   resetSearch = () => {
     this.setState({
@@ -485,7 +499,7 @@ export class Projects extends Component {
                   {...formItemLayout}
                   label={this.props.intl.formatMessage({ id: 'project_creation_label_name' })}
                 >
-                  {getFieldDecorator('name', {
+                  {getFieldDecorator('createProjectName', {
                     rules: [
                       {
                         required: true,
@@ -496,7 +510,7 @@ export class Projects extends Component {
                         }),
                       },
                     ],
-                  })(<Input />)}
+                  })(<Input onBlur={this.verifiedCreateProjectName} />)}
                 </Form.Item>
                 <Form.Item
                   {...formItemLayout}
@@ -505,7 +519,7 @@ export class Projects extends Component {
                   {getFieldDecorator('cost', {
                     rules: [
                       {
-                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
+                        pattern: new RegExp(/^[1-9]{1}[0-9]{0,19}$/, 'g'),
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
@@ -674,7 +688,7 @@ export class Projects extends Component {
                     initialValue: currentData.cost || null,
                     rules: [
                       {
-                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
+                        pattern: new RegExp(/^[1-9]{1}[0-9]{0,19}$/, 'g'),
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
