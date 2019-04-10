@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { apiEditProject } from './axios/api';
+import { apiEditProject, apiEnableProject, apiDisbleProject } from './axios/api';
 import {
   Button,
   DatePicker,
@@ -80,6 +80,24 @@ export class Projects extends Component {
       });
     });
   };
+  _handleDisableProject = id => {
+    apiDisbleProject({ projectId: id }).then(res => {
+      if (res.data.status === 200) {
+        const page = this.props.match.params.page || '1';
+        this.fetchData(page);
+      }
+    });
+  };
+
+  _handleEnableProject = id => {
+    apiEnableProject({ projectId: id }).then(res => {
+      if (res.data.status === 200) {
+        const page = this.props.match.params.page || '1';
+        this.fetchData(page);
+      }
+    });
+  };
+
   _handleHidden = () => {
     this.setState({
       visible: false,
@@ -222,7 +240,7 @@ export class Projects extends Component {
   };
 
   getColumns() {
-    return [
+    const columns = [
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_name' }),
         dataIndex: 'name',
@@ -273,19 +291,45 @@ export class Projects extends Component {
         dataIndex: 'constructionUnit',
         key: 'constructionUnit',
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'projects_table_title_operator' }),
-        dataIndex: 'operatort',
-        key: 'operator',
-        render: (text, record) => {
-          return (
-            <div className="color" onClick={this._handleEditVisible.bind(this, record.id)}>
-              <FormattedMessage id="projects_table_title_edit" />
-            </div>
-          );
-        },
-      },
     ];
+    const loginData = this.props.monitor.loginData;
+    if (loginData && loginData.roles) {
+      loginData.roles.map(item => {
+        if ('admin' === item.roleName) {
+          columns.push({
+            title: this.props.intl.formatMessage({ id: 'projects_table_title_operator' }),
+            dataIndex: 'operatort',
+            key: 'operator',
+            render: (text, record) => {
+              return (
+                <div>
+                  {record.complete == 1 ? (
+                    <div
+                      className="color"
+                      onClick={this._handleDisableProject.bind(this, record.id)}
+                    >
+                      <FormattedMessage id="projects_table_title_disable" />
+                    </div>
+                  ) : (
+                    <div
+                      className="color"
+                      onClick={this._handleEnableProject.bind(this, record.id)}
+                    >
+                      <FormattedMessage id="projects_table_title_enable" />
+                    </div>
+                  )}
+
+                  <div className="color" onClick={this._handleEditVisible.bind(this, record.id)}>
+                    <FormattedMessage id="projects_table_title_edit" />
+                  </div>
+                </div>
+              );
+            },
+          });
+        }
+      });
+    }
+    return columns;
   }
 
   render() {
@@ -323,6 +367,15 @@ export class Projects extends Component {
       local2 = moment(stillUtc2).local();
     }
     const { page, total, pageSize } = this.props.monitor.searchProjectList;
+    const loginData = this.props.monitor.loginData;
+    let showCreateLabel = false;
+    if (loginData && loginData.roles) {
+      loginData.roles.map(item => {
+        if ('admin' === item.roleName) {
+          showCreateLabel = true;
+        }
+      });
+    }
     return (
       <div className="monitor-projects">
         <div className="projects-new-container">
@@ -336,12 +389,15 @@ export class Projects extends Component {
               </Breadcrumb.Item>
             </Breadcrumb>
           </span>
-          <span className="projects-new-right" onClick={this._handleVisible}>
-            <Icon type="plus" className="projects-new-right-img" />
-            <span className="projects-new-right-text">
-              <FormattedMessage id="projects_table_title_new" />
+
+          {Boolean(showCreateLabel) && (
+            <span className="projects-new-right" onClick={this._handleVisible}>
+              <Icon type="plus" className="projects-new-right-img" />
+              <span className="projects-new-right-text">
+                <FormattedMessage id="projects_table_title_new" />
+              </span>
             </span>
-          </span>
+          )}
         </div>
         <div className="projects-search-container">
           <Input

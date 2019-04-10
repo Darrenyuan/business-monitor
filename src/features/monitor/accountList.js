@@ -29,6 +29,7 @@ import {
   apiUserBlock,
   apiGetAvailableProjects,
   apiIfUserNameExist,
+  apiGetAvailableTitle,
 } from '../monitor/axios/api';
 const getItems = monitor => monitor.userList.items;
 const getById = monitor => monitor.userList.byId;
@@ -130,6 +131,9 @@ export class accounList extends Component {
       this.setState({
         dataSource: dataSource,
       });
+    });
+    apiGetAvailableTitle().then(res => {
+      this.setState({ titles: res.data.data });
     });
   }
 
@@ -730,9 +734,9 @@ export class accounList extends Component {
                   }
                   onChange={this.handleRolesChange}
                 >
-                  {roleList.map(typeMap => (
-                    <Option key={typeMap.value} value={typeMap.key}>
-                      {typeMap.value}
+                  {this.state.titles.map(item => (
+                    <Option key={item} value={item}>
+                      {roleMap.get(item)}
                     </Option>
                   ))}
                 </Select>

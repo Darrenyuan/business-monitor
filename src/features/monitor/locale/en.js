@@ -119,6 +119,8 @@ const enMessages = {
   projects_table_title_operator_value: 'detail',
   projects_table_title_start_time: 'project start date',
   projects_table_title_submit: 'submit',
+  projects_table_title_enable: 'enable',
+  projects_table_title_disable: 'disable',
   projects_table_title_end_time: 'project end date',
   projects_table_title_search: 'search',
   projects_table_title_amount: 'Please enter the correct amount',

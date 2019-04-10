@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
-let baseUrl = 'http://192.168.0.200:8080/imageserver';
-// let baseUrl = 'http://localhost:8080';
+// let baseUrl = 'http://192.168.0.200:8080/imageserver';
+let baseUrl = 'http://localhost:8080';
 // let baseUrl = 'http://192.168.0.200:8080/imageserver';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
@@ -134,6 +134,14 @@ export function apiSearchProjectList(args = {}) {
 }
 export function apiFetchProject(args = {}) {
   return instance.get(`${baseUrl}/projects/${args.projectId}`);
+}
+
+export function apiEnableProject(args = {}) {
+  return instance.put(`/project/enable?projectId=${args.projectId}`);
+}
+
+export function apiDisbleProject(args = {}) {
+  return instance.put(`/project/disable?projectId=${args.projectId}`);
 }
 
 export function apiFetchIssueList(args = {}) {
