@@ -214,12 +214,9 @@ export class Projects extends Component {
 
   resetSearch = () => {
     this.setState({
-      page: this.state.pageSize,
-      projectName: null,
-      startTime: null,
-      endTime: null,
+      name: '',
     });
-    window.location.reload();
+    this.fetchData(this.props.match.params.page || '1');
   };
 
   handleSizeChange = (current, pageSize) => {
@@ -290,6 +287,22 @@ export class Projects extends Component {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_constructionUnit' }),
         dataIndex: 'constructionUnit',
         key: 'constructionUnit',
+      },
+      {
+        title: this.props.intl.formatMessage({ id: 'projects_table_title_status' }),
+        dataIndex: '',
+        key: 'status',
+        render: record => {
+          return record.complete == 1 ? (
+            <span>
+              <FormattedMessage id="projects_table_title_status_construction" />
+            </span>
+          ) : (
+            <span>
+              <FormattedMessage id="projects_table_title_status_completion" />
+            </span>
+          );
+        },
       },
     ];
     const loginData = this.props.monitor.loginData;
@@ -403,34 +416,8 @@ export class Projects extends Component {
           <Input
             placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_name' })}
             onChange={this._onchange}
+            value={this.state.name}
             className="projects-new-name-search"
-          />
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <DatePicker
-            placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_start_time' })}
-            onChange={date => {
-              date &&
-                this.setState({
-                  startTime: moment
-                    .utc(date)
-                    .toDate()
-                    .toISOString(),
-                });
-            }}
-          />
-          &nbsp;&nbsp;&nbsp;&nbsp;
-          <DatePicker
-            placeholder={this.props.intl.formatMessage({ id: 'projects_table_title_end_time' })}
-            allowClear
-            onChange={date => {
-              date &&
-                this.setState({
-                  endTime: moment
-                    .utc(date)
-                    .toDate()
-                    .toISOString(),
-                });
-            }}
           />
           &nbsp;&nbsp;&nbsp;&nbsp;
           <Button icon="search" onClick={this.searchProjects}>
@@ -490,7 +477,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -505,14 +492,15 @@ export class Projects extends Component {
                   {getFieldDecorator('cost', {
                     rules: [
                       {
-                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
+                        // pattern: new RegExp(/^[1-9]\d*$/, 'g'),
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
                         }),
                       },
                     ],
-                  })(<Input />)}
+                  })(<InputNumber />)}
+                  <FormattedMessage id="projects_table_title_amount_unit" />
                 </Form.Item>
                 <Form.Item
                   {...formItemLayout}
@@ -531,7 +519,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -550,7 +538,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -569,7 +557,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -588,7 +576,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -606,7 +594,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 2000,
+                        max: 200,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_textareamessage',
                         }),
@@ -658,7 +646,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -674,14 +662,14 @@ export class Projects extends Component {
                     initialValue: currentData.cost || null,
                     rules: [
                       {
-                        pattern: new RegExp(/^[1-9]\d*$/, 'g'),
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
                         }),
                       },
                     ],
-                  })(<Input />)}
+                  })(<InputNumber />)}
+                  <FormattedMessage id="projects_table_title_amount_unit" />
                 </Form.Item>
                 <Form.Item
                   {...formItemLayout}
@@ -710,7 +698,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -730,7 +718,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -750,7 +738,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -770,7 +758,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 200,
+                        max: 50,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_message',
                         }),
@@ -789,7 +777,7 @@ export class Projects extends Component {
                       {
                         required: true,
                         min: 1,
-                        max: 2000,
+                        max: 200,
                         message: this.props.intl.formatMessage({
                           id: 'project_creation_label_validation_textareamessage',
                         }),

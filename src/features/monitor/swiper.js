@@ -1,15 +1,15 @@
-import React,{Component} from 'react'
-import Swiper from 'swiper/dist/js/swiper.js'
-import 'swiper/dist/css/swiper.min.css'
+import React, { Component } from 'react';
+import Swiper from 'swiper/dist/js/swiper.js';
+import 'swiper/dist/css/swiper.min.css';
 
-class New extends Component{
-  constructor(props){
+class New extends Component {
+  constructor(props) {
     super(props);
-    console.log('props',props);
-    this.state={
-        path: this.props.path,
-        i: this.props.i,
-    }
+    console.log('props', props);
+    this.state = {
+      path: this.props.path,
+      i: this.props.i,
+    };
   }
   componentDidMount() {
     new Swiper('.swiper-container', {
@@ -17,31 +17,32 @@ class New extends Component{
         delay: 3000,
         stopOnLastSlide: false,
         disableOnInteraction: false,
-      }
-    })
+      },
+    });
   }
-  componentDidUpdate(prevProps,prevState){
-
-    if(prevProps.path !== this.props.path){
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.path !== this.props.path) {
       this.setState({
-        path:this.props.path
-      })
+        path: this.props.path,
+      });
     }
-  } 
-  render(){
-    return(
-      <div className='new' style={{width: "500px",height: "753px"}}>
-          <div className="swiper-container">
-              <div className="swiper-wrapper">
-                  {this.state.path.map((item,index)=>{
-                     return <div key={index} className="swiper-slide swiper_imgDiv">
-                      <img className="swiper_img" alt="example" src={item.url} />
-                    </div>
-                  })}
-              </div>
+  }
+  render() {
+    return (
+      <div className="new" style={{ width: '500px', height: '753px' }}>
+        <div className="swiper-container">
+          <div className="swiper-wrapper">
+            {this.state.path.map((item, index) => {
+              return (
+                <div key={index} className="swiper-slide swiper_imgDiv">
+                  <img className="swiper_img" alt="example" src={item.url} />
+                </div>
+              );
+            })}
           </div>
-      </div>           
-    )
+        </div>
+      </div>
+    );
   }
 }
 

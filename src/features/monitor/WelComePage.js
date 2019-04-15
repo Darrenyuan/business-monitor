@@ -9,6 +9,7 @@ export default class WelComePage extends Component {
   render() {
     return (
       <div className="monitor-wel-come-page">
+        <img src={require('../../images/logo_200x206.jpg')} />
         <h1>
           <FormattedMessage id="welcome_info" />
         </h1>

@@ -77,6 +77,7 @@ export class accounList extends Component {
       roleName: '',
       status: '',
       inputValue: '',
+      nickname: '',
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -162,6 +163,7 @@ export class accounList extends Component {
       username: this.state.username,
       roleName: this.state.roleName,
       status: this.state.status,
+      nickname: this.state.nickname,
     });
   }
   closeLightbox = () => {
@@ -479,7 +481,6 @@ export class accounList extends Component {
       username: value,
     })
       .then(res => {
-        console.log('res.data', res.data);
         if (res.data.data === false) {
           _this.setState({
             disUserName: true,
@@ -551,7 +552,6 @@ export class accounList extends Component {
     if (this.props.monitor.userList.fetchUserListError) {
       return <div>{this.props.monitor.userList.fetchUserListError.error}</div>;
     }
-    console.log('thisissues', this);
     const formItemLayout = {
       labelCol: { sm: { span: 4 }, xs: { span: 24 } },
       wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
@@ -594,6 +594,28 @@ export class accounList extends Component {
                     value={this.state.inputValue}
                     onChange={this.inputChange.bind(this)}
                     placeholder={this.props.intl.formatMessage({ id: 'account_Name' })}
+                  />
+                </label>
+              </td>
+              <td className="table_title">
+                <label>
+                  <Input
+                    value={this.state.inputValue}
+                    onChange={e => {
+                      this.setState({ projectName: e.target.value });
+                    }}
+                    placeholder={this.props.intl.formatMessage({ id: 'account_ProjectName' })}
+                  />
+                </label>
+              </td>
+              <td className="table_title">
+                <label>
+                  <Input
+                    value={this.state.inputValue}
+                    onChange={e => {
+                      this.setState({ nickname: e.target.value });
+                    }}
+                    placeholder={this.props.intl.formatMessage({ id: 'account_FullName' })}
                   />
                 </label>
               </td>

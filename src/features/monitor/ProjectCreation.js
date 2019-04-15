@@ -255,14 +255,12 @@ export class ProjectCreation extends Component {
   }
 }
 
-/_ istanbul ignore next _/;
 function mapStateToProps(state) {
   return {
     monitor: state.monitor,
   };
 }
 
-/_ istanbul ignore next _/;
 function mapDispatchToProps(dispatch) {
   return {
     actions: bindActionCreators({ ...actions }, dispatch),
