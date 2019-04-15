@@ -1,15 +1,9 @@
 import React, { Component } from 'react';
 
 export default class Previlige extends Component {
-  static propTypes = {
-
-  };
+  static propTypes = {};
 
   render() {
-    return (
-      <div className="monitor-previlige">
-        Component content: monitor/Previlige
-      </div>
-    );
+    return <div className="monitor-previlige">Component content: monitor/Previlige</div>;
   }
 }

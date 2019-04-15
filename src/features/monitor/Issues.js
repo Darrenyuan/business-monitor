@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabs, Pagination, Input, Table, Breadcrumb } from 'antd';
+import { Tabs, Pagination, Input, Table, Breadcrumb, InputNumber } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
@@ -440,7 +440,16 @@ export class Issues extends Component {
                 <label className="detail_row_item_name">
                   <FormattedMessage id="projects_table_title_cost" />
                 </label>
-                <Input disabled placeholder={project.cost} className="detail_row_item_text" />
+                <InputNumber
+                  disabled
+                  placeholder={
+                    project.cost +
+                    this.props.intl.formatMessage({
+                      id: 'projects_table_title_amount_unit',
+                    })
+                  }
+                  className="detail_row_item_text"
+                />
               </div>
               <div className="detail_row_itemRight">
                 <label className="detail_row_item_name">

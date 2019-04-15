@@ -343,8 +343,6 @@ export class IssuesList extends Component {
     });
   };
   handleSearch = () => {
-    console.log(this.state.startTime);
-    console.log('kkkkkkkkkkkkk');
     this.fetchData(this.props.match.params.page || '1');
   };
   handleReset = () => {
@@ -354,11 +352,8 @@ export class IssuesList extends Component {
       interaction: 0,
       projectName: '',
       issueName: '',
-      startTime: '',
-      endTime: '',
     });
-    window.location.reload();
-    // this.fetchData(this.props.match.params.page || '1');
+    this.fetchData(this.props.match.params.page || '1');
   };
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
@@ -518,34 +513,6 @@ export class IssuesList extends Component {
                   </Select>
                 </td>
               )}
-              <td className="table_title">
-                <DatePicker
-                  placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueStartingTime' })}
-                  onChange={date => {
-                    date &&
-                      this.setState({
-                        startTime: moment
-                          .utc(date)
-                          .toDate()
-                          .toISOString(),
-                      });
-                  }}
-                />
-              </td>
-              <td className="table_title">
-                <DatePicker
-                  placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueEndTime' })}
-                  onChange={date => {
-                    date &&
-                      this.setState({
-                        endTime: moment
-                          .utc(date)
-                          .toDate()
-                          .toISOString(),
-                      });
-                  }}
-                />
-              </td>
               <td className="table_title">
                 <Button icon="search" onClick={this.handleSearch}>
                   <FormattedMessage id="issue_search_label_search" />

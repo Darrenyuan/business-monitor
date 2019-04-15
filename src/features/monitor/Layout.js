@@ -13,6 +13,7 @@ import moment from 'moment';
 import 'moment/locale/zh-cn';
 import 'moment/locale/en-gb';
 import 'react-sticky-header/styles.css';
+import * as actions from './redux/actions';
 import LanguageIcon from '@material-ui/icons/Language';
 import HomeIcon from '@material-ui/icons/Home';
 import Typography from '@material-ui/core/Typography';
@@ -28,6 +29,14 @@ export class Layout extends Component {
 
   handleHome = () => {
     this.props.history.push(`/monitor/home`);
+  };
+
+  handleResetPassword = () => {
+    this.props.history.push(`/monitor/account/reset`);
+  };
+
+  handleLogin = () => {
+    this.props.history.push(`/monitor/login`);
   };
 
   render() {
@@ -46,20 +55,23 @@ export class Layout extends Component {
                 <SidePanel />
                 <AntLayout>
                   <Row style={{ 'background-color': '#0197E3', padding: 0 }}>
-                    <Col span={8}>
-                      <Header style={{ 'background-color': '#0197E3', 'font-size': '1.5em' }}>
-                        <h3
-                          style={{ color: 'white', display: 'inline-block', 'margin-top': '15px' }}
-                        >
-                          <FormattedMessage id="header_info" />
-                        </h3>
-                      </Header>
-                    </Col>
-                    <Col span={4} offset={12} style={{ color: '#fff', 'font-size': '1.5em' }}>
-                      <IconButton color="inherit" className="menuButton" onClick={this.handleHome}>
-                        <HomeIcon color="inherit" fontSize="large" />
-                      </IconButton>
-                    </Col>
+                    <div style={{ color: '#fff', 'font-size': '20px', height: '60px' }}>
+                      <div className="header_right_container">
+                        <span onClick={this.handleHome} className="header_right_item">
+                          <FormattedMessage id="home_page" />
+                        </span>
+                        <span className="header_right_item" onClick={this.handleLogin}>
+                          {this.props.monitor.loginData === null ? (
+                            <FormattedMessage id="login_submit_value" />
+                          ) : (
+                            <FormattedMessage id="logout" />
+                          )}
+                        </span>
+                        <span className="header_right_item" onClick={this.handleResetPassword}>
+                          <FormattedMessage id="sidePanel_reset_password_link" />
+                        </span>
+                      </div>
+                    </div>
                   </Row>
 
                   <Content style={{ margin: '0 16px' }}>
@@ -68,7 +80,7 @@ export class Layout extends Component {
                     </div>
                   </Content>
                   <Footer style={{ textAlign: 'center' }}>
-                    Copyright © 2008 - 2019 中建三局第一建设工程有限责任公司
+                    Copyright © 2019 中建三局第一建设工程有限责任公司
                   </Footer>
                 </AntLayout>
               </AntLayout>

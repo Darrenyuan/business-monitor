@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { saveReLogin } from '../../../common/sessionStorage';
 // let baseUrl = 'http://192.168.0.200:8080/imageserver';
-let baseUrl = 'http://localhost:8080';
-// let baseUrl = 'http://192.168.0.200:8080/imageserver';
+// let baseUrl = 'http://localhost:8080';
+let baseUrl = 'http://192.168.0.200:8080/imageserver';
 
 let imageUrl = 'http://192.168.0.200:9000/resources';
 let option = {
@@ -163,7 +163,9 @@ export function apiFetchUserList(args = {}) {
   return instance.get(
     `${baseUrl}/user/criteria?page=${args.page}&pageSize=${args.pageSize}&projectName=${
       args.projectName
-    }&username=${args.username}&roleName=${args.roleName}&status=${args.status}`,
+    }&username=${args.username}&roleName=${args.roleName}&status=${args.status}&nickname=${
+      args.nickname
+    }`,
   );
 }
 export function apiFetchRepliesList(args = {}) {
