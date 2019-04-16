@@ -204,6 +204,7 @@ const zhMessages = {
   reset_password_header: '重置密码',
   reset_password_modal_success: '重置成功',
   reset_password_modal_fail: '重置失败',
+  account_list_project_all: '所有项目',
 
   mine_nickname: '昵称',
   mine_username: '用户名',

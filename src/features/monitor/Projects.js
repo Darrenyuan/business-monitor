@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { apiEditProject, apiEnableProject, apiDisbleProject, apiCheckIfExist } from './axios/api';
+import {
+  apiEditProject,
+  apiEnableProject,
+  apiDisbleProject,
+  apiCheckIfExist,
+  apiFetchProject,
+} from './axios/api';
 import {
   Button,
   DatePicker,
@@ -14,11 +20,11 @@ import {
   Icon,
   message,
   Breadcrumb,
+  InputNumber,
 } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
-import { apiFetchProject } from './axios/api';
 import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { loadProjectListPageSize, saveProjectListPageSize } from '../../common/sessionStorage';
@@ -264,6 +270,7 @@ export class Projects extends Component {
         dataIndex: 'name',
         key: 'name',
         width: '10%',
+        align: 'center',
         render: (text, record) => {
           const path = `/monitor/project/${record.id}/issues/1`;
           return (
@@ -277,6 +284,7 @@ export class Projects extends Component {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_duration' }),
         dataIndex: '',
         key: 'duration',
+        align: 'center',
         render: record => {
           const stillUtc = moment.utc(record.startTime).toDate();
           const local = moment(stillUtc)
@@ -298,28 +306,32 @@ export class Projects extends Component {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_designUnit' }),
         dataIndex: 'designUnit',
         key: 'designUnit',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_monitorUnit' }),
         dataIndex: 'monitorUnit',
         key: 'monitorUnit',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_constructionUnit' }),
         dataIndex: 'constructionUnit',
         key: 'constructionUnit',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'projects_table_title_status' }),
         dataIndex: '',
         key: 'status',
+        align: 'center',
         render: record => {
           return record.complete == 1 ? (
-            <span>
+            <span style={{ color: 'green' }}>
               <FormattedMessage id="projects_table_title_status_construction" />
             </span>
           ) : (
-            <span>
+            <span style={{ color: 'red' }}>
               <FormattedMessage id="projects_table_title_status_completion" />
             </span>
           );
@@ -337,22 +349,6 @@ export class Projects extends Component {
             render: (text, record) => {
               return (
                 <div>
-                  {record.complete == 1 ? (
-                    <div
-                      className="color"
-                      onClick={this._handleDisableProject.bind(this, record.id)}
-                    >
-                      <FormattedMessage id="projects_table_title_disable" />
-                    </div>
-                  ) : (
-                    <div
-                      className="color"
-                      onClick={this._handleEnableProject.bind(this, record.id)}
-                    >
-                      <FormattedMessage id="projects_table_title_enable" />
-                    </div>
-                  )}
-
                   <div className="color" onClick={this._handleEditVisible.bind(this, record.id)}>
                     <FormattedMessage id="projects_table_title_edit" />
                   </div>
@@ -513,11 +509,7 @@ export class Projects extends Component {
                   {getFieldDecorator('cost', {
                     rules: [
                       {
-<<<<<<< HEAD
                         pattern: new RegExp(/^[1-9]{1}[0-9]{0,19}$/, 'g'),
-=======
-                        // pattern: new RegExp(/^[1-9]\d*$/, 'g'),
->>>>>>> feature_update
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
@@ -691,10 +683,7 @@ export class Projects extends Component {
                     initialValue: currentData.cost || null,
                     rules: [
                       {
-<<<<<<< HEAD
                         pattern: new RegExp(/^[1-9]{1}[0-9]{0,19}$/, 'g'),
-=======
->>>>>>> feature_update
                         required: true,
                         message: this.props.intl.formatMessage({
                           id: 'projects_table_title_amount',
@@ -819,6 +808,22 @@ export class Projects extends Component {
                   })(<TextArea rows={3} />)}
                 </Form.Item>
                 <div className="projects_new_buttonGroup">
+                  {currentData && currentData.complete === 1 ? (
+                    <Button
+                      className="projects_new_submit"
+                      onClick={this._handleDisableProject.bind(this, currentData.id)}
+                    >
+                      <FormattedMessage id="projects_table_title_disable" />
+                    </Button>
+                  ) : (
+                    <Button
+                      className="projects_new_submit"
+                      onClick={this._handleEnableProject.bind(this, currentData.id)}
+                    >
+                      <FormattedMessage id="projects_table_title_enable" />
+                    </Button>
+                  )}
+
                   <Button htmlType="submit" className="projects_new_submit">
                     <FormattedMessage id="projects_table_title_submit" />
                   </Button>

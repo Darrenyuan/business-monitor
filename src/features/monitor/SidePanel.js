@@ -26,7 +26,6 @@ export class SidePanel extends Component {
     const SubMenu = Menu.SubMenu;
     return (
       <div className="monitor-side-panel">
-        <div className="logo" />
         <Sider
           collapsible
           collapsed={this.state.collapsed}

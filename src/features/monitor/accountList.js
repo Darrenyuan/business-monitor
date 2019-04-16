@@ -188,6 +188,28 @@ export class accounList extends Component {
         key: 'username',
       },
       {
+        title: this.props.intl.formatMessage({ id: 'account_ProjectName' }),
+        dataIndex: 'id',
+        key: 'id',
+        render: (text, record) => {
+          if (record.hasAllProjectPrivilege) {
+            return (
+              <span>
+                <FormattedMessage id="account_list_project_all" />
+              </span>
+            );
+          } else if (record.projectVos && record.projectVos.length > 0) {
+            let items = [];
+            record.projectVos.map(item => {
+              items.push(item.name);
+            });
+            return <span>{items.join()}</span>;
+          }
+
+          return '';
+        },
+      },
+      {
         title: this.props.intl.formatMessage({ id: 'establish_email' }),
         dataIndex: 'email',
         key: 'email',
@@ -600,7 +622,7 @@ export class accounList extends Component {
               <td className="table_title">
                 <label>
                   <Input
-                    value={this.state.inputValue}
+                    value={this.state.projectName}
                     onChange={e => {
                       this.setState({ projectName: e.target.value });
                     }}
@@ -611,7 +633,7 @@ export class accounList extends Component {
               <td className="table_title">
                 <label>
                   <Input
-                    value={this.state.inputValue}
+                    value={this.state.nickname}
                     onChange={e => {
                       this.setState({ nickname: e.target.value });
                     }}

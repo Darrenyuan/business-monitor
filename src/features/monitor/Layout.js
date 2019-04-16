@@ -45,44 +45,48 @@ export class Layout extends Component {
     const antLocale = 'zh' !== this.props.monitor.language ? en_GB : zh_CN;
     const antLanguage = 'zh' !== this.props.monitor.language ? 'en-gb' : 'zh-cn';
     moment.locale(antLanguage);
-    const { Header, Footer, Content } = AntLayout;
+    const { Header, Sider, Footer, Content } = AntLayout;
+
     return (
       <div className="monitor-layout">
         <LocaleProvider locale={antLocale}>
           <IntlProvider locale={this.props.monitor.language} messages={message}>
             <div>
               <AntLayout style={{ minHeight: '100vh', background: '#fff' }}>
-                <SidePanel />
-                <AntLayout>
-                  <Row style={{ 'background-color': '#0197E3', padding: 0 }}>
-                    <div style={{ color: '#fff', 'font-size': '20px', height: '60px' }}>
-                      <div className="header_right_container">
-                        <span onClick={this.handleHome} className="header_right_item">
-                          <FormattedMessage id="home_page" />
-                        </span>
-                        <span className="header_right_item" onClick={this.handleLogin}>
-                          {this.props.monitor.loginData === null ? (
-                            <FormattedMessage id="login_submit_value" />
-                          ) : (
-                            <FormattedMessage id="logout" />
-                          )}
-                        </span>
-                        <span className="header_right_item" onClick={this.handleResetPassword}>
-                          <FormattedMessage id="sidePanel_reset_password_link" />
-                        </span>
-                      </div>
+                <Header style={{ 'background-color': '#0197E3', padding: 0 }}>
+                  <div style={{ color: '#fff', 'font-size': '20px', height: '60px' }}>
+                    <h2>
+                      <FormattedMessage id="welcome_info" />
+                    </h2>
+                    <div className="header_right_container">
+                      {/* <FormattedMessage id="welcome_info" style={{ fload: 'left' }} /> */}
+                      <span onClick={this.handleHome} className="header_right_item">
+                        <FormattedMessage id="home_page" />
+                      </span>
+                      <span className="header_right_item" onClick={this.handleLogin}>
+                        {this.props.monitor.loginData === null ? (
+                          <FormattedMessage id="login_submit_value" />
+                        ) : (
+                          <FormattedMessage id="logout" />
+                        )}
+                      </span>
+                      <span className="header_right_item" onClick={this.handleResetPassword}>
+                        <FormattedMessage id="sidePanel_reset_password_link" />
+                      </span>
                     </div>
-                  </Row>
-
-                  <Content style={{ margin: '0 16px' }}>
+                  </div>
+                </Header>
+                <AntLayout>
+                  <SidePanel />
+                  <Content style={{ margin: '0 16px', align: 'center' }}>
                     <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
                       <div className="monitor-page-container">{this.props.children}</div>
                     </div>
                   </Content>
-                  <Footer style={{ textAlign: 'center' }}>
-                    Copyright © 2019 中建三局第一建设工程有限责任公司
-                  </Footer>
                 </AntLayout>
+                <Footer style={{ textAlign: 'center' }}>
+                  Copyright © 2019 中建三局第一建设工程有限责任公司
+                </Footer>
               </AntLayout>
             </div>
           </IntlProvider>

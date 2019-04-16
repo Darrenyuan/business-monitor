@@ -202,7 +202,7 @@ const enMessages = {
   reset_password_header: 'RESET PASSWORD',
   reset_password_modal_success: 'RESET SUCCESS	',
   reset_password_modal_fail: 'RESET FAIL',
-
+  account_list_project_all: 'all projects',
   mine_nickname: 'nickname',
   mine_username: 'username',
   mine_userId: 'userId',
