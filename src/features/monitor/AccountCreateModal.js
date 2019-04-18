@@ -64,7 +64,6 @@ export class AccountCreateModal extends Component {
     e.preventDefault();
     let _this = this;
     this.props.form.validateFieldsAndScroll((err, values) => {
-      console.log('Received values of form: ', values);
       apiCreateAcciunt({
         username: values.username,
         nickname: values.full_name,
@@ -102,7 +101,6 @@ export class AccountCreateModal extends Component {
     });
   };
   handleChange = (targetKeys, direction, moveKeys) => {
-    console.log(targetKeys, direction, moveKeys);
     this.setState({ targetKeys });
   };
 
@@ -198,7 +196,7 @@ export class AccountCreateModal extends Component {
             </Form.Item>
             <Form.Item
               {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'account_full_name' })}
+              label={this.props.intl.formatMessage({ id: 'account_FullName' })}
             >
               {getFieldDecorator('full_name', {
                 rules: [
