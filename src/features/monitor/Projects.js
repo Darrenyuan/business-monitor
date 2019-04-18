@@ -326,7 +326,7 @@ export class Projects extends Component {
         key: 'status',
         align: 'center',
         render: record => {
-          return record.complete == 1 ? (
+          return record.complete !== 2 ? (
             <span style={{ color: 'green' }}>
               <FormattedMessage id="projects_table_title_status_construction" />
             </span>

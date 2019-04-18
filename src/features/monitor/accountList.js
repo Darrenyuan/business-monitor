@@ -27,10 +27,14 @@ import {
   apiCreateAcciunt,
   apiUpdateAcciunt,
   apiUserBlock,
+  apiUserUnBlock,
+  apiUserDelete,
   apiGetAvailableProjects,
   apiIfUserNameExist,
   apiGetAvailableTitle,
 } from '../monitor/axios/api';
+import AccountCreateModal from './AccountCreateModal';
+import AccountEditModal from './AccountEditModal';
 const getItems = monitor => monitor.userList.items;
 const getById = monitor => monitor.userList.byId;
 
@@ -61,6 +65,8 @@ export class accounList extends Component {
       dataSource: [],
       targetKeys: [],
       visible: false,
+      createAccountModalVisible: false,
+      editAccountModalVisible: false,
       disUserName: true,
       isvalue: null,
       accountStatus: '',
@@ -78,9 +84,14 @@ export class accounList extends Component {
       status: '',
       inputValue: '',
       nickname: '',
+      editData: {},
     };
 
     this.fetchData = this.fetchData.bind(this);
+    this.handleCreateModal = this.handleCreateModal.bind(this);
+    this.handleCreateModalCancel = this.handleCreateModalCancel.bind(this);
+    this.handleEditModalCancel = this.handleEditModalCancel.bind(this);
+    this.forceReload = this.forceReload.bind(this);
   }
   hasInteraction = () => {
     const loginData = this.props.monitor.loginData;
@@ -144,10 +155,11 @@ export class accounList extends Component {
     const pageSize = parseInt(this.state.pageSize || 5, 10);
     const prevPageSize = parseInt(prevState.pageSize || 5, 10);
     if (
-      (prevPage !== page || pageSize !== prevPageSize) &&
-      !this.props.monitor.userList.fetchIssueListPending
+      (prevPage !== page || pageSize !== prevPageSize || this.state.needReload) &&
+      !this.props.monitor.userList.fetchUserList
     ) {
       this.fetchData(page);
+      this.setState({ needReload: false });
     }
   }
 
@@ -186,11 +198,13 @@ export class accounList extends Component {
         title: this.props.intl.formatMessage({ id: 'account_Name' }),
         dataIndex: 'username',
         key: 'username',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'account_ProjectName' }),
         dataIndex: 'id',
         key: 'id',
+        align: 'center',
         render: (text, record) => {
           if (record.hasAllProjectPrivilege) {
             return (
@@ -213,21 +227,25 @@ export class accounList extends Component {
         title: this.props.intl.formatMessage({ id: 'establish_email' }),
         dataIndex: 'email',
         key: 'email',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'phone_number' }),
         dataIndex: 'phoneNumber',
         key: 'phoneNumber',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'account_full_name' }),
         dataIndex: 'nickname',
         key: 'nickname',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'account_current_role' }),
         dataIndex: 'roles',
         key: 'roles',
+        align: 'center',
         render: roles => {
           let roleName = '';
           if (roles && roles[0] && roles[0].roleName) {
@@ -241,6 +259,7 @@ export class accounList extends Component {
         title: this.props.intl.formatMessage({ id: 'account_status' }),
         dataIndex: 'status',
         key: 'status',
+        align: 'center',
         render: status => {
           if (status === 1) {
             return (
@@ -262,26 +281,40 @@ export class accounList extends Component {
         title: this.props.intl.formatMessage({ id: 'sidePanel_operation' }),
         dataIndex: 'id',
         key: 'id',
+        align: 'center',
         render: (text, record) => {
           return (
             <div className="operation">
-              {record.status === 2 ? (
-                <div className="abandoning" />
+              {record.status === 1 ? (
+                <Popconfirm
+                  title={this.props.intl.formatMessage({ id: 'account_disable_message' })}
+                  onConfirm={this.handleDisable.bind(this, record.username)}
+                >
+                  <div className="itemSpan">
+                    {this.props.intl.formatMessage({ id: 'account_disable' })}
+                  </div>
+                </Popconfirm>
               ) : (
                 <Popconfirm
-                  title="Sure to delete?"
-                  onConfirm={this.handleDelete.bind(this, record.username)}
+                  title={this.props.intl.formatMessage({ id: 'account_enable_message' })}
+                  onConfirm={this.handleEnable.bind(this, record.username)}
                 >
-                  <div className="abandoning">
-                    {this.props.intl.formatMessage({ id: 'account_abandoning' })}
+                  <div className="itemSpan">
+                    {this.props.intl.formatMessage({ id: 'account_enable' })}
                   </div>
                 </Popconfirm>
               )}
 
-              <div
-                className="abandoning edit"
-                onClick={this.handleEdit.bind(this, record, roleMap)}
+              <Popconfirm
+                title={this.props.intl.formatMessage({ id: 'account_delete_message' })}
+                onConfirm={this.handleDelete.bind(this, record.username)}
+                className="leftSpan"
               >
+                <div className="itemSpan">
+                  {this.props.intl.formatMessage({ id: 'account_delete' })}
+                </div>
+              </Popconfirm>
+              <div className="itemSpan" onClick={this.handleEdit.bind(this, record, roleMap)}>
                 {this.props.intl.formatMessage({ id: 'edit' })}
               </div>
             </div>
@@ -290,17 +323,39 @@ export class accounList extends Component {
       },
     ];
   }
-  handleDelete(username) {
+  handleDisable(username) {
     let _this = this;
-    console.log('ssssssssss');
     apiUserBlock({
       username: username,
     })
       .then(res => {
-        _this.fetchData();
+        this.forceReload();
       })
       .catch(arr => {});
   }
+
+  handleEnable(username) {
+    let _this = this;
+    apiUserUnBlock({
+      username: username,
+    })
+      .then(res => {
+        this.forceReload();
+      })
+      .catch(arr => {});
+  }
+
+  handleDelete(username) {
+    let _this = this;
+    apiUserDelete({
+      username: username,
+    })
+      .then(res => {
+        _this.forceReload();
+      })
+      .catch(arr => {});
+  }
+
   handleStatusChange = (value, e) => {
     let status = 0;
     if (e.key === '正常') {
@@ -324,7 +379,6 @@ export class accounList extends Component {
     });
   };
   handleSearch = () => {
-    console.log('创建账号');
     this.fetchData(this.props.match.params.page || '1');
   };
   handleReset = () => {
@@ -335,50 +389,13 @@ export class accounList extends Component {
       accountStatus: '',
       power: '',
       inputValue: '',
+      nickname: '',
+      projectName: '',
+      needReload: true,
     });
-    this.fetchData(this.props.match.params.page || '1');
   };
   handleEdit(record, roleMap) {
-    //console.log('record', record);
-    // console.log('roleMap.get(record.roles[0].roleName)', roleMap.get(record.roles[0].roleName));
-    const form = this.props.form;
-    let projectId = record.projectVos.reduce((r, c, i) => {
-      return [...r, c.id];
-    }, []);
-    console.log('record.projectVos', projectId);
-    let roleName = '';
-    if (record.roles[0] && record.roles[0].roleName) {
-      roleName = record.roles[0].roleName;
-    }
-    let roles = roleMap.get(roleName);
-    if ('admin' === roleName || 'leader' === roleName) {
-      this.setState({
-        visible: true,
-        roles: roles,
-        project: '',
-        showPassword: true,
-        showRoles: true,
-        userId: record.userId,
-        targetKeys: projectId,
-      });
-    } else {
-      this.setState({
-        visible: true,
-        roles: roles,
-        project: '',
-        showPassword: true,
-        showRoles: false,
-        userId: record.userId,
-        targetKeys: projectId,
-      });
-    }
-
-    form.setFieldsValue({
-      username: record.username,
-      full_name: record.nickname,
-      phone_number: record.phoneNumber,
-      email: record.email,
-    });
+    this.setState({ editData: record, editAccountModalVisible: true });
   }
   handleTypeProject(i, value) {
     this.setState({
@@ -401,10 +418,7 @@ export class accounList extends Component {
   };
   handleEstablish() {
     this.setState({
-      visible: true,
-      showPassword: false,
-      showRoles: false,
-      targetKeys: [],
+      SowCrreatevisible: true,
     });
   }
   handleCancel() {
@@ -418,71 +432,7 @@ export class accounList extends Component {
       roles: value.key,
     });
   };
-  handleSubmit = (roleMap, e) => {
-    e.preventDefault();
-    console.log('en', e);
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        if (this.state.roles !== '') {
-          if (this.state.disUserName) {
-            if (this.state.showPassword) {
-              console.log('5000', this.state.userId);
-              apiUpdateAcciunt({
-                username: values.username,
-                nickname: values.full_name,
-                roles: [{ roleName: roleMap.get(this.state.roles) }],
-                phoneNumber: values.phone_number,
-                email: values.email,
-                userId: this.state.userId,
-                status: 1,
-                projectIds: this.state.targetKeys,
-              })
-                .then(res => {
-                  if (res.data.status === 200) {
-                    this.setState({
-                      visible: false,
-                    });
-                  }
-                })
-                .catch(err => {
-                  message.error(err);
-                });
-            } else {
-              console.log('Received values of form: ', values);
-              apiCreateAcciunt({
-                username: values.username,
-                nickname: values.full_name,
-                roles: [{ roleName: roleMap.get(this.state.roles) }],
-                phoneNumber: values.phone_number,
-                email: values.email,
-                password: values.password,
-                status: 1,
-                projectIds: this.state.targetKeys,
-              })
-                .then(res => {
-                  if (res.data.status === 200) {
-                    this.setState({
-                      visible: false,
-                    });
-                  }
-                })
-                .catch(err => {
-                  message.error(err);
-                });
-            }
-          } else {
-            message.warning(
-              this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }),
-            );
-          }
 
-          console.log('wsaccxx=>>>>>>>>');
-        } else {
-          message.warning(this.props.intl.formatMessage({ id: 'account_please_choose_roles' }));
-        }
-      }
-    });
-  };
   initData() {
     this.setState({
       accountStatus: '',
@@ -492,67 +442,6 @@ export class accounList extends Component {
       roles: '',
     });
   }
-  handleConfirmBlur = e => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  };
-  handledataToUsername = e => {
-    let _this = this;
-    const value = e.target.value;
-    apiIfUserNameExist({
-      username: value,
-    })
-      .then(res => {
-        if (res.data.data === false) {
-          _this.setState({
-            disUserName: true,
-          });
-          message.success(this.props.intl.formatMessage({ id: 'account_user_names_can_be_used' }));
-        } else {
-          _this.setState({
-            disUserName: false,
-          });
-          message.warning(
-            this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }),
-          );
-        }
-      })
-      .catch();
-  };
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback(this.props.intl.formatMessage({ id: 'reset_passowrd_confirm_password_callbak' }));
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  };
-  validateToNextPhone = e => {
-    const value = e.target.value;
-    // let mPattern = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
-    // let isvalue = mPattern.test(value);
-    // this.setState({
-    //   isvalue
-    // })
-    console.log('rule,value,callback', value);
-  };
-  validateToNextPhoneNumber = (rule, value, callback) => {
-    let mPattern = /^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$/;
-    let isvalue = mPattern.test(value);
-    if (isvalue) {
-      callback();
-    } else {
-      callback('请输入有效的手机号!');
-    }
-  };
   handleChange = (targetKeys, direction, moveKeys) => {
     console.log(targetKeys, direction, moveKeys);
     this.setState({ targetKeys });
@@ -570,14 +459,26 @@ export class accounList extends Component {
       value: item.name,
     };
   }
+
+  handleCreateModal() {
+    // this.refs.myCreateModal.handleShow();
+    this.setState({ createAccountModalVisible: true });
+  }
+
+  forceReload() {
+    this.setState({ needReload: true });
+  }
+  handleCreateModalCancel() {
+    this.setState({ createAccountModalVisible: false });
+  }
+  handleEditModalCancel() {
+    this.setState({ editAccountModalVisible: false });
+  }
+
   render() {
     if (this.props.monitor.userList.fetchUserListError) {
       return <div>{this.props.monitor.userList.fetchUserListError.error}</div>;
     }
-    const formItemLayout = {
-      labelCol: { sm: { span: 4 }, xs: { span: 24 } },
-      wrapperCol: { xs: { span: 24 }, sm: { span: 20 } },
-    };
     const roleMap = roleConstants(this);
     let { roleList, accountStatus } = roleLists(this);
     const { page, total, pageSize } = this.props.monitor.userList;
@@ -594,7 +495,6 @@ export class accounList extends Component {
     } else {
       project = byId[this.state.projectId];
     }
-    const { getFieldDecorator } = this.props.form;
     return (
       <div className="monitor-project">
         <div className="title_Breadcrumb">
@@ -616,6 +516,7 @@ export class accounList extends Component {
                     value={this.state.inputValue}
                     onChange={this.inputChange.bind(this)}
                     placeholder={this.props.intl.formatMessage({ id: 'account_Name' })}
+                    key="1"
                   />
                 </label>
               </td>
@@ -627,6 +528,7 @@ export class accounList extends Component {
                       this.setState({ projectName: e.target.value });
                     }}
                     placeholder={this.props.intl.formatMessage({ id: 'account_ProjectName' })}
+                    key="2"
                   />
                 </label>
               </td>
@@ -638,6 +540,7 @@ export class accounList extends Component {
                       this.setState({ nickname: e.target.value });
                     }}
                     placeholder={this.props.intl.formatMessage({ id: 'account_FullName' })}
+                    key="3"
                   />
                 </label>
               </td>
@@ -650,6 +553,7 @@ export class accounList extends Component {
                       : this.state.power
                   }
                   onChange={this.handlePowerChange}
+                  key="4"
                 >
                   {roleList.map(typeMap => (
                     <Option key={typeMap.value} value={typeMap.key}>
@@ -667,6 +571,7 @@ export class accounList extends Component {
                       : this.state.accountStatus
                   }
                   onChange={this.handleStatusChange}
+                  key="5"
                 >
                   {accountStatus.map(accountStatus => (
                     <Option key={accountStatus.value} value={accountStatus.key}>
@@ -686,7 +591,7 @@ export class accounList extends Component {
                 </Button>
               </td>
               <td className="establish">
-                <Button icon="user-add" onClick={this.handleEstablish.bind(this)}>
+                <Button icon="user-add" onClick={this.handleCreateModal}>
                   <FormattedMessage id="sidePanel_account_link" />
                 </Button>
               </td>
@@ -723,182 +628,21 @@ export class accounList extends Component {
           onClickNext={this.gotoNextLightboxImage}
           currentImage={this.state.currentImage}
         />
-        <Modal
-          title={this.props.intl.formatMessage({ id: 'sidePanel_account_link' })}
-          visible={this.state.visible}
-          width={620}
-          onCancel={this.handleCancel.bind(this)}
-          footer={null}
-        >
-          <Form onSubmit={this.handleSubmit.bind(this, roleMap)}>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'account_step4_table_username' })}
-            >
-              {getFieldDecorator('username', {
-                rules: [
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({ id: 'account_step4_username' }),
-                  },
-                  {
-                    validator: this.validateToNextUsername,
-                  },
-                ],
-              })(<Input onBlur={this.handledataToUsername} />)}
-            </Form.Item>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'account_full_name' })}
-            >
-              {getFieldDecorator('full_name', {
-                rules: [
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({ id: 'account_step4_full_name' }),
-                  },
-                  {
-                    validator: this.validateToNextFullname,
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
-            {this.state.showRoles ? (
-              <div />
-            ) : (
-              <Form.Item
-                {...formItemLayout}
-                label={this.props.intl.formatMessage({ id: 'account_role' })}
-              >
-                <Select
-                  value={
-                    this.state.roles === ''
-                      ? this.props.intl.formatMessage({ id: 'account_role' })
-                      : this.state.roles
-                  }
-                  onChange={this.handleRolesChange}
-                >
-                  {this.state.titles.map(item => (
-                    <Option key={item} value={item}>
-                      {roleMap.get(item)}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            )}
-
-            {this.state.showRoles ? (
-              <div />
-            ) : (
-              <Form.Item
-                labelCol={{ sm: { span: 3 }, xs: { span: 24 } }}
-                wrapperCol={{ xs: { span: 24 }, sm: { span: 21 } }}
-                label={this.props.intl.formatMessage({ id: 'sidePanel_project' })}
-              >
-                <Transfer
-                  dataSource={this.state.dataSource}
-                  listStyle={{
-                    width: 207,
-                    height: 300,
-                  }}
-                  operations={[
-                    this.props.intl.formatMessage({ id: 'add' }),
-                    this.props.intl.formatMessage({ id: 'remove' }),
-                  ]}
-                  targetKeys={this.state.targetKeys}
-                  onChange={this.handleChange}
-                  render={this.renderItem.bind(this)}
-                />
-              </Form.Item>
-            )}
-
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'phone_number' })}
-            >
-              {getFieldDecorator('phone_number', {
-                rules: [
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({ id: 'account_step4_phonenumber' }),
-                  },
-                  {
-                    validator: this.validateToNextPhoneNumber,
-                  },
-                ],
-              })(<Input onBlur={this.validateToNextPhone} />)}
-            </Form.Item>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'establish_email' })}
-            >
-              {getFieldDecorator('email', {
-                rules: [
-                  {
-                    type: 'email',
-                    message: this.props.intl.formatMessage({ id: 'account_step4_valid_e_mail' }),
-                  },
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({ id: 'account_step4_e_mail' }),
-                  },
-                ],
-              })(<Input />)}
-            </Form.Item>
-            {this.state.showPassword ? (
-              <div />
-            ) : (
-              <Form.Item
-                {...formItemLayout}
-                label={this.props.intl.formatMessage({ id: 'reset_password_password_label' })}
-              >
-                {getFieldDecorator('password', {
-                  rules: [
-                    {
-                      required: true,
-                      message: this.props.intl.formatMessage({
-                        id: 'reset_password_password_message',
-                      }),
-                    },
-                    {
-                      validator: this.validateToNextPassword,
-                    },
-                  ],
-                })(<Input type="password" />)}
-              </Form.Item>
-            )}
-            {this.state.showPassword ? (
-              <div />
-            ) : (
-              <Form.Item
-                {...formItemLayout}
-                label={this.props.intl.formatMessage({
-                  id: 'reset_password_confirm_password_title',
-                })}
-              >
-                {getFieldDecorator('confirm', {
-                  rules: [
-                    {
-                      required: true,
-                      message: this.props.intl.formatMessage({
-                        id: 'reset_password_confirm_password_message',
-                      }),
-                    },
-                    {
-                      validator: this.compareToFirstPassword,
-                    },
-                  ],
-                })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-              </Form.Item>
-            )}
-
-            <Form.Item wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 13, offset: 11 } }}>
-              <Button htmlType="submit" type="primary">
-                {this.props.intl.formatMessage({ id: 'reset_password_button' })}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Modal>
+        <AccountCreateModal
+          ref="myCreateModal"
+          visible={this.state.createAccountModalVisible}
+          onCancel={this.handleCreateModalCancel}
+          reload={this.forceReload}
+        />
+        {Boolean(this.state.editAccountModalVisible) && (
+          <AccountEditModal
+            ref="myEditModal"
+            onCancel={this.handleEditModalCancel}
+            visible={this.state.editAccountModalVisible}
+            data={this.state.editData}
+            reload={this.forceReload}
+          />
+        )}
       </div>
     );
   }

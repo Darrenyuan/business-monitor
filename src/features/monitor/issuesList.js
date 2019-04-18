@@ -197,6 +197,7 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        align: 'center',
         render: (text, record) => {
           const path = `/monitor/issuesList/issuesDetail/${record.id}`;
           return <div>{<Link to={path}>{record.name}</Link>}</div>;
@@ -206,11 +207,13 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'sidePanel_projectBelongs' }),
         dataIndex: 'projectName',
         key: 'projectName',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_type' }),
         dataIndex: 'type',
         key: 'type',
+        align: 'center',
         render: type => {
           switch (type) {
             case 1:
@@ -247,6 +250,7 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_status' }),
         dataIndex: 'status',
         key: 'status',
+        align: 'center',
         render: status => {
           switch (status) {
             case 1:
@@ -277,11 +281,13 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_sponsorName' }),
         dataIndex: 'sponsorName',
         key: 'sponsorName',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_interaction' }),
         dataIndex: 'interaction',
         key: 'interaction',
+        align: 'center',
         render: interaction => {
           switch (interaction) {
             case 1:
@@ -305,6 +311,7 @@ export class IssuesList extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_createTime' }),
         dataIndex: 'createTime',
         key: 'createTime',
+        align: 'center',
         render: createTime => {
           var stillUtc = moment.utc(createTime).toDate();
           var local = moment(stillUtc)

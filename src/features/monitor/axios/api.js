@@ -54,6 +54,13 @@ export function apiCreateUser(args = {}) {
 export function apiUserBlock(args = {}) {
   return instance.put(`${baseUrl}/user/block?username=${args.username}`);
 }
+export function apiUserUnBlock(args = {}) {
+  return instance.put(`${baseUrl}/user/unblock?username=${args.username}`);
+}
+
+export function apiUserDelete(args = {}) {
+  return instance.put(`${baseUrl}/user/delete?username=${args.username}`);
+}
 export function apiResetPassword(args = {}) {
   return instance.put(`/password?password=${args.password}&newPassword=${args.newPassword}`);
 }

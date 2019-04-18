@@ -12,3 +12,4 @@ export { default as Previlige } from './Previlige';
 export { default as Page403 } from './Page403';
 export { default as ResetPassword } from './ResetPassword';
 export { default as IssueDetail } from './IssueDetail';
+export { default as AccountEditModal } from './AccountEditModal';

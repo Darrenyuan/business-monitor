@@ -12,9 +12,10 @@ import {
   apiIfUserNameExist,
   apiGetAvailableProjects,
   apiGetAvailableTitle,
+  apiUpdateAcciunt,
 } from '../monitor/axios/api';
 
-export class AccountCreateModal extends Component {
+export class AccountEditModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,7 +24,10 @@ export class AccountCreateModal extends Component {
       dataSource: [],
       titles: [],
       targetKeys: [],
+      showRoles: false,
+      userId: 0,
     };
+    console.log(this.props);
   }
 
   static propTypes = {
@@ -35,56 +39,32 @@ export class AccountCreateModal extends Component {
     this.props.onCancel();
   };
 
-  handledataToUsername = e => {
-    let _this = this;
-    const value = e.target.value;
-    apiIfUserNameExist({
-      username: value,
-    })
-      .then(res => {
-        console.log('res.data', res.data);
-        if (res.data.data === false) {
-          _this.setState({
-            disabled: false,
-          });
-          message.success(this.props.intl.formatMessage({ id: 'account_user_names_can_be_used' }));
-        } else {
-          _this.setState({
-            disabled: true,
-          });
-          message.warning(
-            this.props.intl.formatMessage({ id: 'account_user_name_already_exists' }),
-          );
-        }
-      })
-      .catch();
-  };
-  handleCreateSubmit = (roleMap, e) => {
+  handleUpdateSubmit = (roleMap, e) => {
     e.preventDefault();
     let _this = this;
     this.props.form.validateFieldsAndScroll((err, values) => {
       console.log('Received values of form: ', values);
-      apiCreateAcciunt({
+      apiUpdateAcciunt({
         username: values.username,
         nickname: values.full_name,
         roles: [{ roleName: this.state.role }],
         phoneNumber: values.phone_number,
         email: values.email,
-        password: values.password,
+        userId: this.state.userId,
         status: 1,
-        projectIds: _this.state.targetKeys,
+        projectIds: this.state.targetKeys,
       }).then(res => {
         if (res.data.status === 200) {
           _this.props.onCancel();
           _this.props.reload();
-          this.props.form.setFieldsValue({
+          _this.props.form.setFieldsValue({
             username: '',
             full_name: '',
             role: '',
             phone_number: '',
             email: '',
           });
-          this.setState({
+          _this.setState({
             disabled: true,
             role: '',
             dataSource: [],
@@ -118,8 +98,32 @@ export class AccountCreateModal extends Component {
     this.setState({ confirmDirty: this.state.confirmDirty || !!value });
   };
   componentDidMount() {
+    let role = '';
+    if (this.props.data.roles && this.props.data.roles.length > 0) {
+      role = this.props.data.roles[0].roleName;
+    }
+    let targetKeys = [];
+    if (this.props.data.projectVos && this.props.data.projectVos.length > 0) {
+      this.props.data.projectVos.map(item => {
+        targetKeys.push(item.id);
+      });
+    }
+    this.setState({ userId: this.props.data.userId });
+    this.setState({ targetKeys: targetKeys, role: role });
+    this.props.form.setFieldsValue({
+      username: Boolean(!this.props.data.username) ? '' : this.props.data.username,
+      full_name: Boolean(!this.props.data.nickname) ? '' : this.props.data.nickname,
+      phone_number: Boolean(!this.props.data.phoneNumber) ? '' : this.props.data.phoneNumber,
+      email: Boolean(!this.props.data.email) ? '' : this.props.data.email,
+    });
     apiGetAvailableTitle().then(res => {
-      this.setState({ titles: res.data.data });
+      let titles = res.data.data;
+      this.setState({ titles: titles });
+      if (titles.includes(role)) {
+        this.setState({ showRoles: true });
+      } else {
+        this.setState({ showRoles: false });
+      }
       apiGetAvailableProjects().then(res => {
         let dataSource = [];
         res.data.data.map((item, i) => {
@@ -146,23 +150,6 @@ export class AccountCreateModal extends Component {
     }
   };
 
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback(this.props.intl.formatMessage({ id: 'reset_passowrd_confirm_password_callbak' }));
-    } else {
-      callback();
-    }
-  };
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  };
-
   render() {
     const formItemLayout = {
       labelCol: { sm: { span: 4 }, xs: { span: 24 } },
@@ -176,7 +163,7 @@ export class AccountCreateModal extends Component {
       <div className="monitor-account-create-modal">
         <Modal
           id="1112312"
-          title={this.props.intl.formatMessage({ id: 'sidePanel_account_link' })}
+          title={this.props.intl.formatMessage({ id: 'sidePanel_account_edit' })}
           visible={this.props.visible}
           width={620}
           onCancel={this.props.onCancel}
@@ -194,7 +181,7 @@ export class AccountCreateModal extends Component {
                     message: this.props.intl.formatMessage({ id: 'account_step4_username' }),
                   },
                 ],
-              })(<Input onBlur={this.handledataToUsername} />)}
+              })(<Input disabled={true} />)}
             </Form.Item>
             <Form.Item
               {...formItemLayout}
@@ -209,25 +196,28 @@ export class AccountCreateModal extends Component {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'account_role' })}
-            >
-              <Select
-                value={
-                  this.state.role === ''
-                    ? this.props.intl.formatMessage({ id: 'account_role' })
-                    : this.state.role
-                }
-                onChange={this.handleRoleChange}
+            {Boolean(this.state.showRoles) && (
+              <Form.Item
+                {...formItemLayout}
+                label={this.props.intl.formatMessage({ id: 'account_role' })}
               >
-                {this.state.titles.map(item => (
-                  <Option key={item} value={item}>
-                    {roleMap.get(item)}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+                <Select
+                  value={
+                    this.state.role === ''
+                      ? this.props.intl.formatMessage({ id: 'account_role' })
+                      : this.state.role
+                  }
+                  onChange={this.handleRoleChange}
+                >
+                  {this.state.titles.map(item => (
+                    <Option key={item} value={item}>
+                      {roleMap.get(item)}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            )}
+
             {!Boolean(this.state.role === 'admin' || this.state.role === 'leader') && (
               <Form.Item
                 labelCol={{ sm: { span: 3 }, xs: { span: 24 } }}
@@ -250,7 +240,6 @@ export class AccountCreateModal extends Component {
                 />
               </Form.Item>
             )}
-
             <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'phone_number' })}
@@ -284,51 +273,8 @@ export class AccountCreateModal extends Component {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({ id: 'reset_password_password_label' })}
-            >
-              {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({
-                      id: 'reset_password_password_message',
-                    }),
-                  },
-                  {
-                    validator: this.validateToNextPassword,
-                  },
-                ],
-              })(<Input type="password" />)}
-            </Form.Item>
-            <Form.Item
-              {...formItemLayout}
-              label={this.props.intl.formatMessage({
-                id: 'reset_password_confirm_password_title',
-              })}
-            >
-              {getFieldDecorator('confirm', {
-                rules: [
-                  {
-                    required: true,
-                    message: this.props.intl.formatMessage({
-                      id: 'reset_password_confirm_password_message',
-                    }),
-                  },
-                  {
-                    validator: this.compareToFirstPassword,
-                  },
-                ],
-              })(<Input type="password" onBlur={this.handleConfirmBlur} />)}
-            </Form.Item>
-
             <Form.Item wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 13, offset: 11 } }}>
-              <Button
-                type="primary"
-                onClick={this.handleCreateSubmit.bind(this, roleMap)}
-                disabled={this.state.disabled}
-              >
+              <Button type="primary" onClick={this.handleUpdateSubmit.bind(this, roleMap)}>
                 {this.props.intl.formatMessage({ id: 'reset_password_button' })}
               </Button>
             </Form.Item>
@@ -356,4 +302,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Form.create()(injectIntl(AccountCreateModal)));
+)(Form.create()(injectIntl(AccountEditModal)));

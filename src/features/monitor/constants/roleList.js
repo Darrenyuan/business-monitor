@@ -1,8 +1,14 @@
-
-
-
-export default function(_this){
+export default function(_this) {
   const roleList = [];
+  roleList.push({
+    key: 0,
+    value: _this.props.intl.formatMessage({ id: 'title_admin' }),
+  });
+  roleList.push({
+    key: 1,
+    value: _this.props.intl.formatMessage({ id: 'title_leader' }),
+  });
+
   roleList.push({
     key: 2,
     value: _this.props.intl.formatMessage({ id: 'title_projectManager' }),
@@ -60,5 +66,5 @@ export default function(_this){
   return {
     roleList,
     accountStatus,
-  }
+  };
 }
