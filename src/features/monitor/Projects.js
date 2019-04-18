@@ -52,6 +52,7 @@ export class Projects extends Component {
       pageSize: loadProjectListPageSize(),
       currentData: null,
       submitIsable: false,
+      needReload: false,
     };
     this.fetchData = this.fetchData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -193,10 +194,11 @@ export class Projects extends Component {
     const pageSize = parseInt(this.state.pageSize || 5, 10);
     const prevPageSize = parseInt(prevState.pageSize || 5, 10);
     if (
-      (prevPage !== page || pageSize !== prevPageSize) &&
+      (prevPage !== page || pageSize !== prevPageSize || this.state.needReload) &&
       !this.props.monitor.searchProjectList.fetchProjectListPending
     ) {
       this.fetchData(page);
+      this.setState({ needReload: false });
     }
   }
 
@@ -245,8 +247,8 @@ export class Projects extends Component {
   resetSearch = () => {
     this.setState({
       name: '',
+      needReload: true,
     });
-    this.fetchData(this.props.match.params.page || '1');
   };
 
   handleSizeChange = (current, pageSize) => {
@@ -261,6 +263,7 @@ export class Projects extends Component {
       endTime: this.state.endTime,
     });
     this.forceUpdate();
+    this.props.history.push(`/monitor/projects/1`);
   };
   _onchange = e => {
     this.setState({ name: e.target.value });
@@ -376,8 +379,18 @@ export class Projects extends Component {
         sm: { span: 4, offset: 3 },
       },
       wrapperCol: {
-        xs: { span: 24 },
+        xs: { span: 6 },
         sm: { span: 12 },
+      },
+    };
+    const costItemLayout = {
+      labelCol: {
+        xs: { span: 2, offset: 3 },
+        sm: { span: 4, offset: 3 },
+      },
+      wrapperCol: {
+        xs: { span: 6 },
+        sm: { span: 5.5 },
       },
     };
     const rangeConfig = {
@@ -506,7 +519,7 @@ export class Projects extends Component {
                   })(<Input onBlur={this.verifiedCreateProjectName} />)}
                 </Form.Item>
                 <Form.Item
-                  {...formItemLayout}
+                  {...costItemLayout}
                   label={this.props.intl.formatMessage({ id: 'project_creation_label_cost' })}
                 >
                   {getFieldDecorator('cost', {
@@ -520,6 +533,7 @@ export class Projects extends Component {
                       },
                     ],
                   })(<InputNumber />)}
+                  &nbsp;&nbsp;&nbsp;
                   <FormattedMessage id="projects_table_title_amount_unit" />
                 </Form.Item>
                 <Form.Item
@@ -679,7 +693,7 @@ export class Projects extends Component {
                   })(<Input disabled />)}
                 </Form.Item>
                 <Form.Item
-                  {...formItemLayout}
+                  {...costItemLayout}
                   label={this.props.intl.formatMessage({ id: 'project_creation_label_cost' })}
                 >
                   {getFieldDecorator('cost', {
@@ -694,6 +708,7 @@ export class Projects extends Component {
                       },
                     ],
                   })(<InputNumber />)}
+                  &nbsp;&nbsp;&nbsp;
                   <FormattedMessage id="projects_table_title_amount_unit" />
                 </Form.Item>
                 <Form.Item

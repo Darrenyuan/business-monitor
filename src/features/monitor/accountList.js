@@ -42,7 +42,6 @@ const dataSourceSelector = createSelector(
   getItems,
   getById,
   (items, byId) => {
-    console.log('reselect: get data source');
     if (!items) return [];
     return items.map(id => byId[id]);
   },
@@ -85,6 +84,7 @@ export class accounList extends Component {
       inputValue: '',
       nickname: '',
       editData: {},
+      needReload: false,
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -236,7 +236,7 @@ export class accounList extends Component {
         align: 'center',
       },
       {
-        title: this.props.intl.formatMessage({ id: 'account_full_name' }),
+        title: this.props.intl.formatMessage({ id: 'account_FullName' }),
         dataIndex: 'nickname',
         key: 'nickname',
         align: 'center',
@@ -405,7 +405,6 @@ export class accounList extends Component {
   handleSizeChange = (current, pageSize) => {
     this.setState({ ...this.state, pageSize: pageSize, page: current });
     saveuserListPageSize(pageSize);
-    console.log('current', current);
     this.props.actions.fetchUserList({
       page: current,
       pageSize: pageSize,
@@ -415,6 +414,7 @@ export class accounList extends Component {
       status: this.state.status,
     });
     this.forceUpdate();
+    this.props.history.push(`/monitor/accountList/1`);
   };
   handleEstablish() {
     this.setState({
@@ -443,7 +443,6 @@ export class accounList extends Component {
     });
   }
   handleChange = (targetKeys, direction, moveKeys) => {
-    console.log(targetKeys, direction, moveKeys);
     this.setState({ targetKeys });
   };
   inputChange(e) {
@@ -461,7 +460,6 @@ export class accounList extends Component {
   }
 
   handleCreateModal() {
-    // this.refs.myCreateModal.handleShow();
     this.setState({ createAccountModalVisible: true });
   }
 
