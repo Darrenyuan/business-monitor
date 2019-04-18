@@ -23,6 +23,7 @@ export class AccountCreateModal extends Component {
       dataSource: [],
       titles: [],
       targetKeys: [],
+      confirm: '',
     };
   }
 
@@ -83,11 +84,11 @@ export class AccountCreateModal extends Component {
             role: '',
             phone_number: '',
             email: '',
+            confirm: '',
           });
           this.setState({
             disabled: true,
             role: '',
-            dataSource: [],
             targetKeys: [],
           });
         }
