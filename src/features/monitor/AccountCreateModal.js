@@ -130,7 +130,7 @@ export class AccountCreateModal extends Component {
         });
 
         this.setState({
-          dataSource: { ...dataSource },
+          dataSource: dataSource,
         });
       });
     });
