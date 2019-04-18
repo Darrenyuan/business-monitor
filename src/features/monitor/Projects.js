@@ -115,6 +115,7 @@ export class Projects extends Component {
     });
   };
   handleSubmit(evt) {
+    alert(1);
     if (evt) evt.preventDefault();
     this.props.form.validateFieldsAndScroll((errors, values) => {
       if (errors) {
@@ -124,10 +125,15 @@ export class Projects extends Component {
       let args = _.omit(values, 'time');
       const startTime = timeArray[0];
       const endTime = timeArray[1];
-      console.log('yuyuyuyuyuuuyu');
       console.log(args);
+      console.log('yuyuyuyuyuyuy');
       this.props.actions
-        .createProject({ ...args, startTime: startTime, endTime: endTime })
+        .createProject({
+          ...args,
+          startTime: startTime,
+          endTime: endTime,
+          name: args.createProjectName,
+        })
         .then(res => {
           if (res.data.status === 200) {
             this._handleHidden();
