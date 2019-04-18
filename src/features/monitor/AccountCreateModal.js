@@ -88,7 +88,6 @@ export class AccountCreateModal extends Component {
             disabled: true,
             role: '',
             dataSource: [],
-            titles: [],
             targetKeys: [],
           });
         }
