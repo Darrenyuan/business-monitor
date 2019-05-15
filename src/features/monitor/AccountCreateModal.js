@@ -265,7 +265,7 @@ export class AccountCreateModal extends Component {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'establish_email' })}
             >
@@ -279,8 +279,8 @@ export class AccountCreateModal extends Component {
                     validator: this.validateToNextEmail,
                   },
                 ],
-              })(<span>abc@sec.com</span>)}
-            </Form.Item>
+              })(<span></span>)}
+            </Form.Item> */}
             <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'reset_password_password_label' })}
