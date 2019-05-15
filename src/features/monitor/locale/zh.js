@@ -46,6 +46,7 @@ const zhMessages = {
   sidePanel_project: '项目',
   establish_email: '邮箱',
   sidePanel_reset_password_link: '修改密码',
+  siderPanel_account_message: '账户信息',
   sidePanel_bind_project: '绑定',
   welcome_info: '中建三局一公司项目质量安全管理系统',
   header_info: '中建三局一公司项目质量安全管理系统',

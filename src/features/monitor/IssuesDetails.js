@@ -247,6 +247,7 @@ export class IssuesDetails extends Component {
     } else {
       return (
         <div>
+
           <div className="title_Breadcrumb">
             <Breadcrumb>
               <Breadcrumb.Item>
@@ -259,11 +260,14 @@ export class IssuesDetails extends Component {
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>
+
           <div>
+
             <div className="title_Title">
               <h2 className="title">{issueItem.name}</h2>
               {this.handleIssueStatus(issueItem.status)}
             </div>
+
             <div className="title_Bottom">
               <div className="people">
                 {this.props.intl.formatMessage({ id: 'issue_statisticsDetails_founder' })}：{' '}
@@ -278,7 +282,9 @@ export class IssuesDetails extends Component {
                 {issueItem.handlerName}
               </div>
             </div>
+
           </div>
+          
           <div className="content_Tabs">
             <Tabs defaultActiveKey="1">
               <TabPane
@@ -326,6 +332,7 @@ export class IssuesDetails extends Component {
                                       }}
                                     >
                                       <img className="img_item" alt="example" src={item.url} />
+                                      
                                     </div>
                                   </div>
                                 );

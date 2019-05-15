@@ -69,7 +69,7 @@ export class AccountCreateModal extends Component {
         nickname: values.full_name,
         roles: [{ roleName: this.state.role }],
         phoneNumber: values.phone_number,
-        email: values.email,
+        email: 'abc@sce.com',
         password: values.password,
         status: 1,
         projectIds: _this.state.targetKeys,
@@ -269,18 +269,17 @@ export class AccountCreateModal extends Component {
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'establish_email' })}
             >
-              {getFieldDecorator('email', {
+              {getFieldDecorator('establish_email', {
                 rules: [
-                  {
-                    type: 'email',
-                    message: this.props.intl.formatMessage({ id: 'account_step4_valid_e_mail' }),
-                  },
                   {
                     required: true,
                     message: this.props.intl.formatMessage({ id: 'account_step4_e_mail' }),
                   },
+                  {
+                    validator: this.validateToNextEmail,
+                  },
                 ],
-              })(<Input />)}
+              })(<span>abc@sec.com</span>)}
             </Form.Item>
             <Form.Item
               {...formItemLayout}
