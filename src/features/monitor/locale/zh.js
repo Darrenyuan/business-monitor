@@ -139,7 +139,7 @@ const zhMessages = {
   projects_table_title_operator_issue: '查看问题',
   projects_table_title_edit: '编辑',
   projects_table_title_enable: '启用',
-  projects_table_title_disable: '停用',
+  projects_table_title_disable: '竣工',
   projects_table_title_submit: '提交',
   projects_table_title_edit_project: '编辑工程',
   projects_table_title_search: '搜索',
