@@ -5,7 +5,6 @@ import 'swiper/dist/css/swiper.min.css';
 class New extends Component {
   constructor(props) {
     super(props);
-    console.log('props', props);
     this.state = {
       path: this.props.path,
       i: this.props.i,
@@ -29,19 +28,19 @@ class New extends Component {
   }
   render() {
     return (
-      <div className="new" style={{ width: '500px', height: '753px' }}>
-        <div className="swiper-container">
-          <div className="swiper-wrapper">
-            {this.state.path.map((item, index) => {
-              return (
-                <div key={index} className="swiper-slide swiper_imgDiv">
-                  <img className="swiper_img" alt="example" src={item.url} />
-                </div>
-              );
-            })}
-          </div>
+      // <div className="" style={{ backgroundColor: 'red' }}>
+      <div className="new swiper-container">
+        <div className="swiper-wrapper">
+          {this.state.path.map((item, index) => {
+            return (
+              <div key={index} className="swiper-slide swiper_imgDiv">
+                <img style={{ width: '472px' }} alt="example" src={item.url} />
+              </div>
+            );
+          })}
         </div>
       </div>
+      // </div>
     );
   }
 }

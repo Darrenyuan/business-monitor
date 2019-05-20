@@ -1,7 +1,6 @@
 @import '../../styles/mixins';
 @import '~antd/dist/antd.css';
 
-
 .title_Breadcrumb {
   .ant-breadcrumb {
     font-size: 18px;
@@ -10,10 +9,11 @@
   }
 }
 .title_Title {
-  div,h2{
+  div,
+  h2 {
     float: left;
   }
-  h2{
+  h2 {
     color: #666;
   }
   .title {
@@ -30,96 +30,99 @@
     border-radius: 46%;
     text-align: center;
   }
-  .status1{
+  .status1 {
     background-color: #008891;
   }
-  .status2{
+  .status2 {
     background-color: #24d197;
   }
 }
-.title_Title::after{
-  content: "";
+.title_Title::after {
+  content: '';
   display: block;
   clear: both;
 }
-.title_Bottom{
+.title_Bottom {
   margin-top: 10px;
-  div{
+  div {
     float: left;
   }
-  
+
   .people,
-  .time{
+  .time {
     margin-right: 55px;
   }
 }
-.title_Bottom::after{
-  content: "";
+.title_Bottom::after {
+  content: '';
   display: block;
   clear: both;
 }
-.content_Tabs{
+.content_Tabs {
   margin-top: 20px;
-  text-align: left
+  text-align: left;
 }
 .content_input {
   color: #000;
 }
-.ant-form-item-label{
-  text-align: left
+.ant-form-item-label {
+  text-align: left;
 }
-.issue_img{
-  height: 260px;
+.issue_img {
+  min-height: 260px;
   border: 1px solid #ccc;
+  padding-left: 20px;
+  padding-bottom: 30px;
   .imgs {
     float: left;
-    margin-left: 20px;
+    //   margin-left: 20px;
     //transform: rotate(90deg);
     //margin-top: 60px;
-    //margin-right: -7%;
-    .img_item{
-      width: 120px;
-      //height: 120px;
+    // margin-right: -7%;
+    margin-right: 20px;
+    .img_item {
+      width: 180px;
     }
   }
-  .imgs + .imgs {
-    margin-left: 60px;
-  }
-  .imgs:hover{
-    cursor:pointer;
+  // .imgs + .imgs {
+  //   margin-left: 20px;
+  // }
+  .imgs:hover {
+    cursor: pointer;
   }
 }
-.issue_img::after{
-  content: "";
+.issue_img::after {
+  content: '';
   display: block;
   clear: both;
 }
-.issue_description{
+.issue_description {
   height: 200px;
   margin-top: 10px;
   border: 1px solid #ccc;
-  span{
+  span {
     text-indent: 1em;
     display: block;
     line-height: 28px;
   }
 }
-.minHeight{
+.minHeight {
   height: 665px;
-  overflow-y:auto;
+  overflow-y: auto;
   overflow-x: hidden;
 }
-.content_feedback{
+.content_feedback {
   margin-top: 10px;
   height: 40px;
   line-height: 40px;
-  div{
+  div {
     float: left;
   }
-  .time,.people{
+  .time,
+  .people {
     margin-right: 150px;
   }
-  .status{
+  .status {
     width: 70px;
     color: #fff;
     margin-left: 50px;
@@ -127,23 +130,24 @@
     text-align: center;
     border-radius: 46%;
   }
-  .status2{
+  .status2 {
     background-color: #24d197;
   }
-  .notpass{
+  .notpass {
     background-color: #b00404;
   }
 }
-.content_feedback::after{
-  content: "";
+.content_feedback::after {
+  content: '';
   display: block;
   clear: both;
 }
-.dataImg,.noimg{
+.dataImg,
+.noimg {
   position: absolute;
   width: 226px;
   height: 205px;
-  background-image: url("../../images/timgs.png");
+  background-image: url('../../images/timgs.png');
   background-repeat: no-repeat;
   top: 0;
   left: 0;
@@ -151,20 +155,20 @@
   bottom: 0;
   right: 0;
 }
-.noimg{
+.noimg {
   width: 350px;
   height: 201px;
-  background-image: url("../../images/noimage.png");
+  background-image: url('../../images/noimage.png');
 }
-.swiper_coat{
+.swiper_coat {
   width: 784px;
   height: 451px;
-  .swiper_img{
+  .swiper_img {
     width: 737px;
     height: 451px;
   }
 }
-.modal_img{
+.modal_img {
   width: 753px;
   height: 500px;
   transform: rotate(90deg);
@@ -172,13 +176,12 @@
   margin-left: -141px;
 }
 
-.swiper_imgDiv{
+.swiper_imgDiv {
   width: 528px;
   height: 744px;
 }
 
-
-.swiper_img{
+.swiper_img {
   width: 721px;
   height: 471px;
   transform: rotate(90deg);

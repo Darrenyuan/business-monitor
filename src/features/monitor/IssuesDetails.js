@@ -145,7 +145,6 @@ export class IssuesDetails extends Component {
     );
   }
   render() {
-    console.log('thisIssueDetails', this);
     const issueItem = this.state.issueDetail;
     const feedBackList = this.props.monitor.replyList.byId;
     const repliesList = this.props.monitor.repliesList.byId;
@@ -167,7 +166,7 @@ export class IssuesDetails extends Component {
         .local()
         .format('YYYY-MM-DD HH:mm:ss');
     }
-    console.log('status', status);
+
     const paths = [];
     if (issueItem.imagePath) {
       issueImagePath = JSON.parse(issueItem.imagePath);
@@ -179,11 +178,11 @@ export class IssuesDetails extends Component {
       for (const key in feedBackList) {
         issueFeedBackList.unshift(feedBackList[key]);
       }
-      console.log('issueFeedBackList', issueFeedBackList);
+
       whoseIusseFeedBack = issueFeedBackList.filter(item => {
         return item.issueId === issueId;
       });
-      console.log('whoseIusseFeedBack', whoseIusseFeedBack);
+
       if (whoseIusseFeedBack.length !== 0) {
         whoseIusseFeedBack = whoseIusseFeedBack.map((item, i) => {
           let imagePath = [];
@@ -210,16 +209,12 @@ export class IssuesDetails extends Component {
         return item.issueId === issueId;
       });
     }
-    console.log('issueRepliesList', issueRepliesList);
-    console.log('whoseIusseReplies', whoseIusseReplies);
-    console.log('whoseIusseFeedBack', whoseIusseFeedBack);
     let length;
     if (whoseIusseFeedBack.length === 0 && whoseIusseReplies.length === 0) {
       length = null;
     } else {
       length = whoseIusseFeedBack.length - whoseIusseReplies.length;
     }
-    console.log('length', length);
     if ((status === 2 && length === 1) || status === 3) {
       let copy = JSON.parse(JSON.stringify(whoseIusseFeedBack));
       historyIusseFeedBack = copy.splice(1);
@@ -227,17 +222,6 @@ export class IssuesDetails extends Component {
       historyIusseFeedBack = whoseIusseFeedBack;
     }
 
-    console.log('whoseIusseFeedBack=>>>>>', whoseIusseFeedBack);
-    console.log('historyimagePathReply', historyIusseFeedBack);
-
-    console.log('paths', paths);
-    //(whoseIusseFeedBack.length === 1 && whoseIusseReplies.length === 0) ||
-    //(status === 2 && length === 1) ||
-    //(status === 3 && whoseIusseFeedBack.length > 0)
-    //(whoseIusseFeedBack.length === 1 && whoseIusseReplies.length === 1) ||
-    //(status === 1 && length === 0) ||
-    //(status === 2 && length === 1) ||
-    //status === 3
     if (
       this.props.monitor.issueList.fetchIssueListPending !== false ||
       this.props.monitor.repliesList.fetchRepliesListPending !== false ||
@@ -247,7 +231,6 @@ export class IssuesDetails extends Component {
     } else {
       return (
         <div>
-
           <div className="title_Breadcrumb">
             <Breadcrumb>
               <Breadcrumb.Item>
@@ -262,7 +245,6 @@ export class IssuesDetails extends Component {
           </div>
 
           <div>
-
             <div className="title_Title">
               <h2 className="title">{issueItem.name}</h2>
               {this.handleIssueStatus(issueItem.status)}
@@ -282,9 +264,8 @@ export class IssuesDetails extends Component {
                 {issueItem.handlerName}
               </div>
             </div>
-
           </div>
-          
+
           <div className="content_Tabs">
             <Tabs defaultActiveKey="1">
               <TabPane
@@ -332,7 +313,6 @@ export class IssuesDetails extends Component {
                                       }}
                                     >
                                       <img className="img_item" alt="example" src={item.url} />
-                                      
                                     </div>
                                   </div>
                                 );
@@ -405,7 +385,7 @@ export class IssuesDetails extends Component {
                                         });
                                       }}
                                     >
-                                      <img alt="example" width="240" height="120" src={item.url} />
+                                      <img alt="example" src={item.url} className="img_item" />
                                     </div>
                                   );
                                 })}
@@ -489,9 +469,10 @@ export class IssuesDetails extends Component {
                                                 }}
                                               >
                                                 <img
+                                                  className="img_item"
                                                   alt="example"
-                                                  width="240"
-                                                  height="120"
+                                                  // width="240"
+                                                  // height="120"
                                                   src={item.url}
                                                 />
                                               </div>
@@ -532,8 +513,8 @@ export class IssuesDetails extends Component {
             visible={this.state.visible}
             footer={null}
             onCancel={this.handleCancel.bind(this)}
-            style={{ width: '784px', transformOrigin: '-35.5px 314px' }}
-            bodyStyle={{ width: '540px', height: '784px' }}
+            // style={{ width: '784px', transformOrigin: '-35.5px 314px' }}
+            // bodyStyle={{ width: '540px', height: '784px', backgroundColor: 'blue' }}
             className="modal"
           >
             <New path={this.state.paths} />
