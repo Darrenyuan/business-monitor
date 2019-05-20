@@ -33,6 +33,7 @@ export class AccountCreateModal extends Component {
   };
 
   handleCancel = () => {
+    //this.props.form.resetFields();
     this.props.onCancel();
   };
 
@@ -173,11 +174,12 @@ export class AccountCreateModal extends Component {
     return (
       <div className="monitor-account-create-modal">
         <Modal
+          destroyOnClose
           id="1112312"
           title={this.props.intl.formatMessage({ id: 'sidePanel_account_link' })}
           visible={this.props.visible}
           width={620}
-          onCancel={this.props.onCancel}
+          onCancel={this.handleCancel}
           footer={null}
         >
           <Form>
@@ -211,7 +213,14 @@ export class AccountCreateModal extends Component {
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'account_role' })}
             >
-              <Select
+              {getFieldDecorator('role', {
+                rules: [
+                  {
+                    required: true,
+                    message: this.props.intl.formatMessage({ id: 'account_step4_role' }),
+                  }
+                ]
+              })(<Select
                 value={
                   this.state.role === ''
                     ? this.props.intl.formatMessage({ id: 'account_role' })
@@ -224,7 +233,7 @@ export class AccountCreateModal extends Component {
                     {roleMap.get(item)}
                   </Option>
                 ))}
-              </Select>
+              </Select>)}
             </Form.Item>
             {!Boolean(this.state.role === 'admin' || this.state.role === 'leader') && (
               <Form.Item
