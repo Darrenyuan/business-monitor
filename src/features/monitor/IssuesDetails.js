@@ -10,7 +10,6 @@ import moment from 'moment';
 import { apiIssueDetail } from '../monitor/axios/api';
 import 'react-sticky-header/styles.css';
 import 'swiper/dist/css/swiper.min.css';
-import New from './swiper';
 const { TabPane } = Tabs;
 
 export class IssuesDetails extends Component {
@@ -22,7 +21,7 @@ export class IssuesDetails extends Component {
       issueDetail: '',
       visible: false,
       issueId: this.props.match.params.issueId,
-      paths: [],
+      paths: null,
     };
   }
 
@@ -127,21 +126,6 @@ export class IssuesDetails extends Component {
           <div className="noimg" />
         </div>
       </div>
-    );
-  }
-
-  handleModal() {
-    return (
-      <Modal
-        visible={this.state.visible}
-        footer={null}
-        onCancel={this.handleCancel.bind(this)}
-        style={{ width: '784px', transformOrigin: '-35.5px 314px' }}
-        bodyStyle={{ width: '540px', height: '784px' }}
-        className="modal"
-      >
-        <New path={this.state.paths} />
-      </Modal>
     );
   }
   render() {
@@ -309,7 +293,10 @@ export class IssuesDetails extends Component {
                                       key={i}
                                       className="imgs"
                                       onClick={() => {
-                                        this.setState({ visible: true, paths: paths });
+                                        this.setState({
+                                          visible: true,
+                                          paths: item.url,
+                                        });
                                       }}
                                     >
                                       <img className="img_item" alt="example" src={item.url} />
@@ -377,11 +364,12 @@ export class IssuesDetails extends Component {
                               : whoseIusseFeedBack[0].imagePath.map((item, index) => {
                                   return (
                                     <div
+                                      key={index}
                                       className="imgs"
                                       onClick={() => {
                                         this.setState({
                                           visible: true,
-                                          paths: whoseIusseFeedBack[0].imagePath,
+                                          paths: item.url,
                                         });
                                       }}
                                     >
@@ -460,19 +448,20 @@ export class IssuesDetails extends Component {
                                         : items.imagePath.map((item, index) => {
                                             return (
                                               <div
+                                                key={index}
                                                 className="imgs"
                                                 onClick={() => {
+                                                  console.log(item);
+                                                  console.log('yuyuyuyuy');
                                                   this.setState({
                                                     visible: true,
-                                                    paths: items.imagePath,
+                                                    paths: item.url,
                                                   });
                                                 }}
                                               >
                                                 <img
                                                   className="img_item"
                                                   alt="example"
-                                                  // width="240"
-                                                  // height="120"
                                                   src={item.url}
                                                 />
                                               </div>
@@ -513,11 +502,9 @@ export class IssuesDetails extends Component {
             visible={this.state.visible}
             footer={null}
             onCancel={this.handleCancel.bind(this)}
-            // style={{ width: '784px', transformOrigin: '-35.5px 314px' }}
-            // bodyStyle={{ width: '540px', height: '784px', backgroundColor: 'blue' }}
             className="modal"
           >
-            <New path={this.state.paths} />
+            <img style={{ width: '472px' }} alt="example" src={this.state.paths} />
           </Modal>
         </div>
       );

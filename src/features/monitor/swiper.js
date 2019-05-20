@@ -28,8 +28,7 @@ class New extends Component {
   }
   render() {
     return (
-      // <div className="" style={{ backgroundColor: 'red' }}>
-      <div className="new swiper-container">
+      <div className="swiper-container">
         <div className="swiper-wrapper">
           {this.state.path.map((item, index) => {
             return (
@@ -40,7 +39,6 @@ class New extends Component {
           })}
         </div>
       </div>
-      // </div>
     );
   }
 }
