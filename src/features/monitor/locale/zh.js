@@ -196,6 +196,7 @@ const zhMessages = {
   account_step4_table_title: '职位',
   account_step4_table_project: '绑定项目',
   account_step4_full_name: '请输入昵称',
+  account_step4_role:'请选择角色',
   account_step4_username: '请输入用户名',
   account_step4_phonenumber: '请输入手机号!',
   account_step4_e_mail: '请输入邮箱！',
