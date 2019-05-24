@@ -12,8 +12,8 @@ let option = {
   withCredentials: true,
 };
 if (process.env.NODE_ENV === 'production') {
-  baseUrl = 'http://212.64.74.113/api';
-  imageUrl = 'http://212.64.74.113/resources';
+  baseUrl = 'http://122.112.213.189/image-server';
+  imageUrl = 'http://122.112.213.189/resources';
   option = { ...option, crossdomain: true, baseURL: baseUrl };
 }
 
