@@ -14,6 +14,7 @@ import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 const getItems = monitor => monitor.issueList.items;
 const getById = monitor => monitor.issueList.byId;
+
 const dataSourceSelector = createSelector(
   getItems,
   getById,
@@ -48,7 +49,6 @@ export class IssuesList extends Component {
       lightboxIsOpen: false,
       currentImage: 0,
     };
-
     this.fetchData = this.fetchData.bind(this);
   }
   hasInteraction = () => {
