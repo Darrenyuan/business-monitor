@@ -377,6 +377,8 @@ export class Projects extends Component {
       labelCol: {
         xs: { span: 2, offset: 3 },
         sm: { span: 4, offset: 3 },
+        // md: { span: 2, offset: 3 },
+        // lg: { span: 4, offset: 3 },
       },
       wrapperCol: {
         xs: { span: 6 },

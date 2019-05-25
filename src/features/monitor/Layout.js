@@ -31,6 +31,10 @@ export class Layout extends Component {
     this.props.history.push(`/monitor/home`);
   };
 
+  handleCurrent = () => {
+    this.props.history.push(`/monitor`);
+  };
+
   handleResetPassword = () => {
     this.props.history.push(`/monitor/account/reset`);
   };
@@ -53,14 +57,18 @@ export class Layout extends Component {
           <IntlProvider locale={this.props.monitor.language} messages={message}>
             <div>
               <AntLayout style={{ minHeight: '100vh', background: '#fff' }}>
-                <Header style={{ 'background-color': '#0197E3', padding: 0 }}>
+                <Header style={{ 'background-color': '#007ECC', padding: 0 }}>
                   <div style={{ color: '#fff', 'font-size': '20px', height: '60px' }}>
                     <h2>
+                      <img
+                        src={require('../../images/logo_64x64.jpg')}
+                        style={{ marginTop: '0px', height: 60, width: 60 }}
+                      />
                       <FormattedMessage id="welcome_info" />
                     </h2>
                     <div className="header_right_container">
                       {/* <FormattedMessage id="welcome_info" style={{ fload: 'left' }} /> */}
-                      <span onClick={this.handleHome} className="header_right_item">
+                      <span onClick={this.handleCurrent} className="header_right_item">
                         <FormattedMessage id="home_page" />
                       </span>
                       <span className="header_right_item" onClick={this.handleLogin}>
@@ -70,8 +78,8 @@ export class Layout extends Component {
                           <FormattedMessage id="logout" />
                         )}
                       </span>
-                      <span className="header_right_item" onClick={this.handleResetPassword}>
-                        <FormattedMessage id="sidePanel_reset_password_link" />
+                      <span className="header_right_item" onClick={this.handleHome}>
+                        <FormattedMessage id="siderPanel_account_message" />
                       </span>
                     </div>
                   </div>

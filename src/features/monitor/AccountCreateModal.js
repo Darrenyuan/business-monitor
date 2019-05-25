@@ -33,6 +33,7 @@ export class AccountCreateModal extends Component {
   };
 
   handleCancel = () => {
+    //this.props.form.resetFields();
     this.props.onCancel();
   };
 
@@ -69,7 +70,7 @@ export class AccountCreateModal extends Component {
         nickname: values.full_name,
         roles: [{ roleName: this.state.role }],
         phoneNumber: values.phone_number,
-        email: values.email,
+        email: 'abc@sce.com',
         password: values.password,
         status: 1,
         projectIds: _this.state.targetKeys,
@@ -173,11 +174,12 @@ export class AccountCreateModal extends Component {
     return (
       <div className="monitor-account-create-modal">
         <Modal
+          destroyOnClose
           id="1112312"
           title={this.props.intl.formatMessage({ id: 'sidePanel_account_link' })}
           visible={this.props.visible}
           width={620}
-          onCancel={this.props.onCancel}
+          onCancel={this.handleCancel}
           footer={null}
         >
           <Form>
@@ -211,7 +213,14 @@ export class AccountCreateModal extends Component {
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'account_role' })}
             >
-              <Select
+              {getFieldDecorator('role', {
+                rules: [
+                  {
+                    required: true,
+                    message: this.props.intl.formatMessage({ id: 'account_step4_role' }),
+                  }
+                ]
+              })(<Select
                 value={
                   this.state.role === ''
                     ? this.props.intl.formatMessage({ id: 'account_role' })
@@ -224,7 +233,7 @@ export class AccountCreateModal extends Component {
                     {roleMap.get(item)}
                   </Option>
                 ))}
-              </Select>
+              </Select>)}
             </Form.Item>
             {!Boolean(this.state.role === 'admin' || this.state.role === 'leader') && (
               <Form.Item
@@ -265,23 +274,22 @@ export class AccountCreateModal extends Component {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'establish_email' })}
             >
-              {getFieldDecorator('email', {
+              {getFieldDecorator('establish_email', {
                 rules: [
-                  {
-                    type: 'email',
-                    message: this.props.intl.formatMessage({ id: 'account_step4_valid_e_mail' }),
-                  },
                   {
                     required: true,
                     message: this.props.intl.formatMessage({ id: 'account_step4_e_mail' }),
                   },
+                  {
+                    validator: this.validateToNextEmail,
+                  },
                 ],
-              })(<Input />)}
-            </Form.Item>
+              })(<span></span>)}
+            </Form.Item> */}
             <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'reset_password_password_label' })}

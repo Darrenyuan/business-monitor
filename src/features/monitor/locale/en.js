@@ -45,6 +45,7 @@ const enMessages = {
   sidePanel_previlige_link: 'assign',
   sidePanel_project: 'project',
   sidePanel_reset_password_link: 'change password',
+  siderPanel_account_message: 'account information',
   sidePanel_bind_project: 'bind',
   welcome_info: 'HSE Management System',
   header_info: ' HSE Management System',

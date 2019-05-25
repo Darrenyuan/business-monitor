@@ -14,13 +14,14 @@ import 'react-sticky-header/styles.css';
 import Lightbox from 'react-images';
 const getItems = monitor => monitor.issueList.items;
 const getById = monitor => monitor.issueList.byId;
+
 const dataSourceSelector = createSelector(
   getItems,
   getById,
   (items, byId) => {
     console.log('reselect: get data source');
     if (!items) return [];
-    return items.map(id => byId[id]);
+    return items.map(id => byId[id]).reverse();
   },
 );
 const Option = Select.Option;
@@ -48,7 +49,6 @@ export class IssuesList extends Component {
       lightboxIsOpen: false,
       currentImage: 0,
     };
-
     this.fetchData = this.fetchData.bind(this);
   }
   hasInteraction = () => {
