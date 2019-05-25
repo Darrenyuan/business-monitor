@@ -4,6 +4,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 import { Tabs, Pagination, Input, Table, Breadcrumb, InputNumber } from 'antd';
+import moment from 'moment';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
 import { Link } from 'react-router-dom';
@@ -17,7 +18,7 @@ const dataSourceSelector = createSelector(
   getById,
   (items, byId) => {
     if (!items) return [];
-    return items.map(id => byId[id]);
+    return items.map(id => byId[id]).reverse();
   },
 );
 const dimensionDataList = [];
@@ -120,7 +121,9 @@ export class Issues extends Component {
 
   getDataSource = dataSourceSelector;
 
+
   componentDidMount() {
+    console.log(this.getDataSource(this.props.monitor));
     const page = this.props.match.params.page || '1';
     if (
       page !== this.props.monitor.issueList.page ||
@@ -205,6 +208,7 @@ export class Issues extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
         key: 'name',
+        align: 'center',
         render: (text, record) => {
           const path = `/monitor/issuesList/issuesDetail/${record.id}`;
           return <div>{<Link to={path}>{record.name}</Link>}</div>;
@@ -214,6 +218,7 @@ export class Issues extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_type' }),
         dataIndex: 'type',
         key: 'type',
+        align: 'center',
         render: type => {
           switch (type) {
             case 1:
@@ -249,6 +254,7 @@ export class Issues extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_status' }),
         dataIndex: 'status',
         key: 'status',
+        align: 'center',
         render: status => {
           switch (status) {
             case 1:
@@ -279,16 +285,19 @@ export class Issues extends Component {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_sponsorName' }),
         dataIndex: 'sponsorName',
         key: 'sponsorName',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_handlerName' }),
         dataIndex: 'handlerName',
         key: 'handlerName',
+        align: 'center',
       },
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_interaction' }),
         dataIndex: 'interaction',
         key: 'interaction',
+        align: 'center',
         render: interaction => {
           switch (interaction) {
             case 1:
@@ -307,6 +316,14 @@ export class Issues extends Component {
               return <span />;
           }
         },
+      },
+      {
+        title: this.props.intl.formatMessage({ id: 'issue_table_title_createTime' }),
+        dataIndex: 'createTime',
+        key: 'createTime',
+        align: 'center',
+        //sorter:true,
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
     ];
   }
@@ -395,6 +412,10 @@ export class Issues extends Component {
       key: 4,
       value: this.props.intl.formatMessage({ id: 'issue_content_type_other' }),
     });
+
+    
+    console.log('88888888',this.getDataSource(this.props.monitor));
+
     return (
       <div className="monitor-project">
         <div className="title_Breadcrumb">
@@ -502,6 +523,7 @@ export class Issues extends Component {
               pagination={false}
               loading={this.props.monitor.issueList.fetchIssueListPending}
               className="issues_table"
+              
             />
             <div className="projects_title_pagination">
               <Pagination

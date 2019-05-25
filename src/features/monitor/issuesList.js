@@ -21,7 +21,7 @@ const dataSourceSelector = createSelector(
   (items, byId) => {
     console.log('reselect: get data source');
     if (!items) return [];
-    return items.map(id => byId[id]);
+    return items.map(id => byId[id]).reverse();
   },
 );
 const Option = Select.Option;

@@ -185,6 +185,10 @@ export function apiBindProject(args = {}) {
   );
 }
 
+export function apiFetchUserInformation(args = {}) {
+  return instance.get(`${baseUrl}/user/detail/${args.userId}`);
+}
+
 export function apiFetchCommentList(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}/comments`);
 }

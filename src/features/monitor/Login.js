@@ -31,10 +31,10 @@ export class Login extends Component {
     actions: PropTypes.object.isRequired,
   };
 
-  componentDidMount() {
-    // To disabled submit button at the beginning.
-    this.props.form.validateFields();
-  }
+  // componentDidMount() {
+  //   // To disabled submit button at the beginning.
+  //   this.props.form.validateFields();
+  // }
 
   static state = {
     username: '',
@@ -48,7 +48,10 @@ export class Login extends Component {
         console.log('Received values of form: ', values);
       }
     });
-    this.props.actions.login({ username: this.state.username, password: this.state.password });
+    if(this.state !== null){
+      this.props.actions.login({ username: this.state.username, password: this.state.password });
+    }
+    
   };
   handleClickLogout = () => {
     this.props.actions.logout();
