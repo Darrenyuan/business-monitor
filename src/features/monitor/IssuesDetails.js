@@ -9,6 +9,8 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import 'react-sticky-header/styles.css';
 import 'swiper/dist/css/swiper.min.css';
+import Utils from './util/ChineseNumber';
+
 const { TabPane } = Tabs;
 
 export class IssuesDetails extends Component {
@@ -140,14 +142,16 @@ export class IssuesDetails extends Component {
       if (index >= 0) {
         index++;
       }
-      prefix = this.props.intl.formatMessage({ id: 'issue_repliesList_content_prefix_reply' });
-      
+      prefix = this.props.intl.formatMessage({ id: 'issue_repliesList_content_prefix_reply' });     
     }
-    if ('zh' == moment.locale()) {
-      indexWord = index.toLocaleString('zh-Hans-CN-u-nu-hanidec');
+    console.log('locale---------', moment.locale());
+    if('zh' === this.props.monitor.language) {
+      let number = new Number(index);
+      indexWord = Utils.numberToChinese(number);
+    } else {
+      indexWord = index;
     }
-    console.log('indexword=', indexWord);
-    let result = `${prefix} (${index})`;
+    let result = `${prefix} (${indexWord})`;
     return result;
   };
 
