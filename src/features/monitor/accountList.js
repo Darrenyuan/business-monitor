@@ -223,12 +223,12 @@ export class accounList extends Component {
           return '';
         },
       },
-      {
-        title: this.props.intl.formatMessage({ id: 'establish_email' }),
-        dataIndex: 'email',
-        key: 'email',
-        align: 'center',
-      },
+      // {
+      //   title: this.props.intl.formatMessage({ id: 'establish_email' }),
+      //   dataIndex: 'email',
+      //   key: 'email',
+      //   align: 'center',
+      // },
       {
         title: this.props.intl.formatMessage({ id: 'phone_number' }),
         dataIndex: 'phoneNumber',
