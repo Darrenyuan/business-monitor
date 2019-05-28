@@ -260,19 +260,19 @@ export class Issues extends Component {
           switch (status) {
             case 1:
               return (
-                <span>
+                <span style={{ color: 'red' }}>
                   <FormattedMessage id="issue_content_status_wait_feed_back" />
                 </span>
               );
             case 2:
               return (
-                <span>
+                <span style={{ color: 'blue' }}>
                   <FormattedMessage id="issue_content_status_wait_confirm" />
                 </span>
               );
             case 3:
               return (
-                <span>
+                <span style={{ color: 'green' }}>
                   <FormattedMessage id="issue_content_status_confirm" />
                 </span>
               );
