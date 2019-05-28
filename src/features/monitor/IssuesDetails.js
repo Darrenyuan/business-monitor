@@ -309,6 +309,7 @@ export class IssuesDetails extends Component {
         ? ''
         : sponsorDetail.roles[0].roleName;
     return (
+      
       <div className="title_Bottom">
         <div className="people">
           {this.props.intl.formatMessage({ id: 'issue_statisticsDetails_founder' })}：{' '}
@@ -324,7 +325,15 @@ export class IssuesDetails extends Component {
           {issueDetail.handlerName}
           ({this.props.intl.formatMessage({id: 'character_professionalForeman'})})
         </div>
+        <div style={{marginLeft:'50px'}}>
+            {this.props.intl.formatMessage({ id: 'issue_table_title_status' })}：{' '}
+        </div>
+          <div>
+          {this.handleIssueStatus(issueDetail.status)}
+          </div>
       </div>
+      
+      
     )
   }
 
@@ -333,12 +342,13 @@ export class IssuesDetails extends Component {
       visible: false,
     });
   }
-  handleIssueStatus(status) {
+  handleIssueStatus=(status)=> {
     if (status === 1) {
       return (
         <div className="status">
           {this.props.intl.formatMessage({ id: 'issue_content_status_wait_feed_back' })}
         </div>
+        
       );
     } else if (status === 2) {
       return (
@@ -510,9 +520,11 @@ export class IssuesDetails extends Component {
               </Breadcrumb.Item>
             </Breadcrumb>
           </div>
-
+          {/* <div>
+            {this.handleIssueStatus(issueItem.status)}
+          </div> */}
           <div>
-          {this.renderTitleBottom()}
+          {this.renderTitleBottom()}          
           </div>
           
           <div className="content_Tabs">
