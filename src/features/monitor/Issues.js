@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabs, Pagination, Input, Table, Breadcrumb, InputNumber } from 'antd';
+import { Tabs, Pagination, Input, Table, Breadcrumb, InputNumber ,Select, Button} from 'antd';
 import moment from 'moment';
 import { FormattedMessage, injectIntl } from 'react-intl';
 import { URL } from './axios/api';
@@ -23,6 +23,7 @@ const dataSourceSelector = createSelector(
 );
 const dimensionDataList = [];
 const keywordDataListList = [];
+const Option = Select.Option;
 
 export class Issues extends Component {
   constructor(props) {
@@ -416,6 +417,18 @@ export class Issues extends Component {
     
     console.log('88888888',this.getDataSource(this.props.monitor));
 
+    const statusList = [
+      {
+        key: 1,
+        value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_feed_back' }),
+      },
+      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_status_wait_confirm' }) },
+      { key: 3, value: this.props.intl.formatMessage({ id: 'issue_content_status_confirm' }) },
+    ];
+    const interactionList = [
+      { key: 1, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_inner' }) },
+      { key: 2, value: this.props.intl.formatMessage({ id: 'issue_content_interaction_outer' }) },
+    ];
     return (
       <div className="monitor-project">
         <div className="title_Breadcrumb">
@@ -517,6 +530,88 @@ export class Issues extends Component {
             tab={this.props.intl.formatMessage({ id: 'projects_table_title_operator_issue' })}
             key="2"
           >
+                <table>
+                <tbody>
+                  <tr>
+                    <td className="table_title">
+                      <label>
+                        <Input
+                          placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
+                          onChange={e => {
+                            this.setState({ issueName: e.target.value });
+                          }}
+                          value={this.state.issueName}
+                        />
+                      </label>
+                    </td>
+                    <td className="table_title">
+                      <Select
+                        style={{ width: 120 }}
+                        value={
+                          this.state.type === 0
+                            ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' })
+                            : this.state.type
+                        }
+                        onChange={this.handleTypeChange}
+                      >
+                        {typeList.map(typeMap => (
+                          <Option key={typeMap.value} value={typeMap.key}>
+                            {typeMap.value}
+                          </Option>
+                        ))}
+                      </Select>
+                    </td>
+                    <td className="table_title">
+                      <Select
+                        style={{ width: 120 }}
+                        value={
+                          this.state.status === 0
+                            ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' })
+                            : this.state.status
+                        }
+                        onChange={this.handleStatusChange}
+                      >
+                        {statusList.map(statusMap => (
+                          <Option key={statusMap.value} value={statusMap.key}>
+                            {statusMap.value}
+                          </Option>
+                        ))}
+                      </Select>
+                    </td>
+                    {Boolean(this.state.hasInteraction) && (
+                      <td className="table_title">
+                        <Select
+                          style={{ width: 120 }}
+                          value={
+                            this.state.interaction === 0
+                              ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' })
+                              : this.state.interaction
+                          }
+                          onChange={this.handleInteractionChange}
+                        >
+                          {interactionList.map(interactionMap => (
+                            <Option key={interactionMap.value} value={interactionMap.key}>
+                              {interactionMap.value}
+                            </Option>
+                          ))}
+                        </Select>
+                      </td>
+                    )}
+                    <td className="table_title">
+                      <Button icon="search" onClick={this.handleSearch}>
+                        <FormattedMessage id="issue_search_label_search" />
+                      </Button>
+                    </td>
+                    <td className="table_title">
+                      <Button icon="reload" onClick={this.handleReset}>
+                        <FormattedMessage id="issue_search_label_reset" />
+                      </Button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <br />
+
             <Table
               dataSource={this.getDataSource(this.props.monitor)}
               columns={this.getColumns()}
