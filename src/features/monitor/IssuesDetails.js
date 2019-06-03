@@ -194,7 +194,7 @@ export class IssuesDetails extends Component {
       <div className="content_feedback">
         <div>
           <span className="people">{title}:{subTitle}</span>  
-          <span style={{position:'absolute',left:'300px'}}>{timeline1}</span>
+          <span style={{position:'absolute',left:'600px'}}>{timeline1}</span>
         </div>
       </div>
     );
