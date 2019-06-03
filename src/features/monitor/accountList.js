@@ -32,6 +32,7 @@ import {
   apiGetAvailableProjects,
   apiIfUserNameExist,
   apiGetAvailableTitle,
+  apiRestorePassword,
 } from '../monitor/axios/api';
 import AccountCreateModal from './AccountCreateModal';
 import AccountEditModal from './AccountEditModal';
@@ -317,6 +318,15 @@ export class accounList extends Component {
               <div className="itemSpan" onClick={this.handleEdit.bind(this, record, roleMap)}>
                 {this.props.intl.formatMessage({ id: 'edit' })}
               </div>
+              <Popconfirm
+                title={this.props.intl.formatMessage({ id: 'account_reset_message' })}
+                onConfirm={this.handleResetPwd.bind(this, record.userId)}
+                className="leftSpan"
+              >
+                <div className="itemSpan">
+                  {this.props.intl.formatMessage({ id: 'account_reset' })}
+                </div>
+              </Popconfirm>
             </div>
           );
         },
@@ -349,6 +359,17 @@ export class accounList extends Component {
     let _this = this;
     apiUserDelete({
       username: username,
+    })
+      .then(res => {
+        _this.forceReload();
+      })
+      .catch(arr => {});
+  }
+
+  handleResetPwd(userId) {
+    let _this = this;
+    apiRestorePassword({
+      userId: userId,
     })
       .then(res => {
         _this.forceReload();

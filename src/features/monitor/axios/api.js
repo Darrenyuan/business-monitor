@@ -65,6 +65,10 @@ export function apiResetPassword(args = {}) {
   return instance.put(`/password?password=${args.password}&newPassword=${args.newPassword}`);
 }
 
+export function apiRestorePassword(args = {}) {
+  return instance.put(`/password/restore?userId=${args.userId}`);
+}
+
 export function apiCreateStepUser(args = {}) {
   return instance.post(baseUrl + '/user/step', {
     username: args.username,
