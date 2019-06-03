@@ -256,7 +256,7 @@ export class AccountEditModal extends Component {
                 ],
               })(<Input />)}
             </Form.Item>
-            <Form.Item
+            {/* <Form.Item
               {...formItemLayout}
               label={this.props.intl.formatMessage({ id: 'establish_email' })}
             >
@@ -272,7 +272,7 @@ export class AccountEditModal extends Component {
                   },
                 ],
               })(<Input />)}
-            </Form.Item>
+            </Form.Item> */}
             <Form.Item wrapperCol={{ xs: { span: 24, offset: 0 }, sm: { span: 13, offset: 11 } }}>
               <Button type="primary" onClick={this.handleUpdateSubmit.bind(this, roleMap)}>
                 {this.props.intl.formatMessage({ id: 'reset_password_button' })}

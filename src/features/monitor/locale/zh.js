@@ -89,6 +89,8 @@ const zhMessages = {
   account_enable: '启用',
   account_delete_message: '你要删除这个帐号么',
   account_delete: '删除',
+  account_reset_message:'你要重置这个帐号的密码么',
+  account_reset:'重置密码',
   account_current_role: '当前角色',
   project_creation_label_name: '工程名称',
   project_creation_label_cost: '工程造价',
@@ -194,6 +196,7 @@ const zhMessages = {
   issue_repliesList_header_confirm:'确认整改',
   issue_repliesList_content_confirm:'审核通过',
   account_step1_usernmae_exsit: '用户名已经存在',
+  
   account_step3_no_need_bind: '领导或者管理员默认于所有项目绑定',
   account_step1_username_message: '重名',
   account_step1_username_button_check: '是否重名',

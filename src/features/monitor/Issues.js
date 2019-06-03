@@ -363,6 +363,8 @@ export class Issues extends Component {
       type: 0,
       status: 0,
       interaction: 0,
+      projectName: '',
+      issueName: '',
     });
     this.fetchData(this.props.match.params.page || '1');
   };
