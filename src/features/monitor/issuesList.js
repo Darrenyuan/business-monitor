@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Table, Pagination, Input, Select, Button, DatePicker, Breadcrumb } from 'antd';
+import { Table, Pagination, Input, Select, Button, DatePicker, Breadcrumb, Popconfirm } from 'antd';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { URL } from './axios/api';
+import { URL, apiIssueDelete } from './axios/api';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { createSelector } from 'reselect';
@@ -133,7 +133,20 @@ export class IssuesList extends Component {
       this.fetchData(parseInt(page, 10));
     }
   }
-
+  handleDelete = id => {
+    console.log('delete issue:id', id);
+    apiIssueDelete({ issueId: id }).then(res => {
+      const page = this.props.match.params.page || '1';
+      if (
+        page !== this.props.monitor.issueList.page ||
+        !this.getDataSource(this.props.monitor.issueList, this.props.monitor.issueList.byId)
+          .length ||
+        this.props.monitor.issueList.listNeedReload
+      ) {
+        this.fetchData(parseInt(page, 10));
+      }
+    });
+  };
   componentDidUpdate(prevProps, prevState) {
     const page = parseInt(this.props.match.params.page || 1, 10);
     const prevPage = parseInt(prevProps.match.params.page || 1, 10);
@@ -192,7 +205,7 @@ export class IssuesList extends Component {
     this.setState({ currentImage: this.state.currentImage + 1 });
   };
   getColumns() {
-    return [
+    const columns = [
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
@@ -321,6 +334,34 @@ export class IssuesList extends Component {
         },
       },
     ];
+    const loginData = this.props.monitor.loginData;
+    if (loginData && loginData.roles) {
+      loginData.roles.map(item => {
+        if ('admin' === item.roleName) {
+          columns.push({
+            title: this.props.intl.formatMessage({ id: 'issue_table_title_delete' }),
+            dataIndex: 'id',
+            key: 'id',
+            align: 'center',
+            render: (text, record) => {
+              return (
+                <span>
+                  <Popconfirm
+                    title={this.props.intl.formatMessage({ id: 'issue_delete_message' })}
+                    onConfirm={this.handleDelete.bind(this, record.id)}
+                  >
+                    <div className="itemSpan">
+                      {this.props.intl.formatMessage({ id: 'issue_delete' })}
+                    </div>
+                  </Popconfirm>
+                </span>
+              );
+            },
+          });
+        }
+      });
+    }
+    return columns;
   }
   handleDimensionChange = value => {
     this.setState({
