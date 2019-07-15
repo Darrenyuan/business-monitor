@@ -352,6 +352,7 @@ export class Projects extends Component {
             title: this.props.intl.formatMessage({ id: 'projects_table_title_operator' }),
             dataIndex: 'operatort',
             key: 'operator',
+            align: 'center',
             render: (text, record) => {
               return (
                 <div>

@@ -277,7 +277,6 @@ export class accounList extends Component {
           }
         },
       },
-
       {
         title: this.props.intl.formatMessage({ id: 'sidePanel_operation' }),
         dataIndex: 'id',
