@@ -3,10 +3,20 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
-import { Tabs, Pagination, Input, Table, Breadcrumb, InputNumber ,Select, Button} from 'antd';
+import {
+  Tabs,
+  Pagination,
+  Input,
+  Table,
+  Breadcrumb,
+  InputNumber,
+  Select,
+  Button,
+  Popconfirm,
+} from 'antd';
 import moment from 'moment';
 import { FormattedMessage, injectIntl } from 'react-intl';
-import { URL } from './axios/api';
+import { URL, apiIssueDelete } from './axios/api';
 import { Link } from 'react-router-dom';
 import { createSelector } from 'reselect';
 import { loadIssueListPageSize, saveIssueListPageSize } from '../../common/sessionStorage';
@@ -122,7 +132,6 @@ export class Issues extends Component {
 
   getDataSource = dataSourceSelector;
 
-
   componentDidMount() {
     console.log(this.getDataSource(this.props.monitor));
     const page = this.props.match.params.page || '1';
@@ -185,7 +194,20 @@ export class Issues extends Component {
       currentImage: 0,
     });
   };
-
+  handleDelete = id => {
+    console.log('delete issue:id', id);
+    apiIssueDelete({ issueId: id }).then(res => {
+      const page = this.props.match.params.page || '1';
+      if (
+        page !== this.props.monitor.issueList.page ||
+        !this.getDataSource(this.props.monitor.issueList, this.props.monitor.issueList.byId)
+          .length ||
+        this.props.monitor.issueList.listNeedReload
+      ) {
+        this.fetchData(parseInt(page, 10));
+      }
+    });
+  };
   handleClick = paths => {
     const imageObjectList = [];
     paths.forEach(path => {
@@ -204,7 +226,7 @@ export class Issues extends Component {
     this.setState({ currentImage: this.state.currentImage + 1 });
   };
   getColumns() {
-    return [
+    const columns = [
       {
         title: this.props.intl.formatMessage({ id: 'issue_table_title_name' }),
         dataIndex: 'name',
@@ -327,6 +349,34 @@ export class Issues extends Component {
         render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
       },
     ];
+    const loginData = this.props.monitor.loginData;
+    if (loginData && loginData.roles) {
+      loginData.roles.map(item => {
+        if ('admin' === item.roleName) {
+          columns.push({
+            title: this.props.intl.formatMessage({ id: 'issue_table_title_delete' }),
+            dataIndex: 'id',
+            key: 'id',
+            align: 'center',
+            render: (text, record) => {
+              return (
+                <span>
+                  <Popconfirm
+                    title={this.props.intl.formatMessage({ id: 'issue_delete_message' })}
+                    onConfirm={this.handleDelete.bind(this, record.id)}
+                  >
+                    <div className="itemSpan">
+                      {this.props.intl.formatMessage({ id: 'issue_delete' })}
+                    </div>
+                  </Popconfirm>
+                </span>
+              );
+            },
+          });
+        }
+      });
+    }
+    return columns;
   }
   handleDimensionChange = value => {
     this.setState({
@@ -416,8 +466,7 @@ export class Issues extends Component {
       value: this.props.intl.formatMessage({ id: 'issue_content_type_other' }),
     });
 
-    
-    console.log('88888888',this.getDataSource(this.props.monitor));
+    console.log('88888888', this.getDataSource(this.props.monitor));
 
     const statusList = [
       {
@@ -532,87 +581,87 @@ export class Issues extends Component {
             tab={this.props.intl.formatMessage({ id: 'projects_table_title_operator_issue' })}
             key="2"
           >
-                <table>
-                <tbody>
-                  <tr>
-                    <td className="table_title">
-                      <label>
-                        <Input
-                          placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
-                          onChange={e => {
-                            this.setState({ issueName: e.target.value });
-                          }}
-                          value={this.state.issueName}
-                        />
-                      </label>
-                    </td>
+            <table>
+              <tbody>
+                <tr>
+                  <td className="table_title">
+                    <label>
+                      <Input
+                        placeholder={this.props.intl.formatMessage({ id: 'sidePanel_issueTitle' })}
+                        onChange={e => {
+                          this.setState({ issueName: e.target.value });
+                        }}
+                        value={this.state.issueName}
+                      />
+                    </label>
+                  </td>
+                  <td className="table_title">
+                    <Select
+                      style={{ width: 120 }}
+                      value={
+                        this.state.type === 0
+                          ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' })
+                          : this.state.type
+                      }
+                      onChange={this.handleTypeChange}
+                    >
+                      {typeList.map(typeMap => (
+                        <Option key={typeMap.value} value={typeMap.key}>
+                          {typeMap.value}
+                        </Option>
+                      ))}
+                    </Select>
+                  </td>
+                  <td className="table_title">
+                    <Select
+                      style={{ width: 120 }}
+                      value={
+                        this.state.status === 0
+                          ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' })
+                          : this.state.status
+                      }
+                      onChange={this.handleStatusChange}
+                    >
+                      {statusList.map(statusMap => (
+                        <Option key={statusMap.value} value={statusMap.key}>
+                          {statusMap.value}
+                        </Option>
+                      ))}
+                    </Select>
+                  </td>
+                  {Boolean(this.state.hasInteraction) && (
                     <td className="table_title">
                       <Select
                         style={{ width: 120 }}
                         value={
-                          this.state.type === 0
-                            ? this.props.intl.formatMessage({ id: 'sidePanel_issueType' })
-                            : this.state.type
+                          this.state.interaction === 0
+                            ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' })
+                            : this.state.interaction
                         }
-                        onChange={this.handleTypeChange}
+                        onChange={this.handleInteractionChange}
                       >
-                        {typeList.map(typeMap => (
-                          <Option key={typeMap.value} value={typeMap.key}>
-                            {typeMap.value}
+                        {interactionList.map(interactionMap => (
+                          <Option key={interactionMap.value} value={interactionMap.key}>
+                            {interactionMap.value}
                           </Option>
                         ))}
                       </Select>
                     </td>
-                    <td className="table_title">
-                      <Select
-                        style={{ width: 120 }}
-                        value={
-                          this.state.status === 0
-                            ? this.props.intl.formatMessage({ id: 'sidePanel_issueStatus' })
-                            : this.state.status
-                        }
-                        onChange={this.handleStatusChange}
-                      >
-                        {statusList.map(statusMap => (
-                          <Option key={statusMap.value} value={statusMap.key}>
-                            {statusMap.value}
-                          </Option>
-                        ))}
-                      </Select>
-                    </td>
-                    {Boolean(this.state.hasInteraction) && (
-                      <td className="table_title">
-                        <Select
-                          style={{ width: 120 }}
-                          value={
-                            this.state.interaction === 0
-                              ? this.props.intl.formatMessage({ id: 'sidePanel_issueInteraction' })
-                              : this.state.interaction
-                          }
-                          onChange={this.handleInteractionChange}
-                        >
-                          {interactionList.map(interactionMap => (
-                            <Option key={interactionMap.value} value={interactionMap.key}>
-                              {interactionMap.value}
-                            </Option>
-                          ))}
-                        </Select>
-                      </td>
-                    )}
-                    <td className="table_title">
-                      <Button icon="search" onClick={this.handleSearch}>
-                        <FormattedMessage id="issue_search_label_search" />
-                      </Button>
-                    </td>
-                    <td className="table_title">
-                      <Button icon="reload" onClick={this.handleReset}>
-                        <FormattedMessage id="issue_search_label_reset" />
-                      </Button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <br />
+                  )}
+                  <td className="table_title">
+                    <Button icon="search" onClick={this.handleSearch}>
+                      <FormattedMessage id="issue_search_label_search" />
+                    </Button>
+                  </td>
+                  <td className="table_title">
+                    <Button icon="reload" onClick={this.handleReset}>
+                      <FormattedMessage id="issue_search_label_reset" />
+                    </Button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <br />
 
             <Table
               dataSource={this.getDataSource(this.props.monitor)}
@@ -620,7 +669,6 @@ export class Issues extends Component {
               pagination={false}
               loading={this.props.monitor.issueList.fetchIssueListPending}
               className="issues_table"
-              
             />
             <div className="projects_title_pagination">
               <Pagination

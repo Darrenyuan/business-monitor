@@ -164,6 +164,11 @@ export function apiFetchIssueList(args = {}) {
     }&issueName=${args.issueName}&startTime=${args.startTime}&endTime=${args.endTime}`,
   );
 }
+
+export function apiIssueDelete(args = {}) {
+  return instance.put(`${baseUrl}/issues/delete?issueId=${args.issueId}`);
+}
+
 export function apiIssueDetail(args = {}) {
   return instance.get(`${baseUrl}/issues/${args.issueId}`);
 }
